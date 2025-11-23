@@ -3,43 +3,23 @@
     <x-slot name="style">
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
-        {{-- SELECT2 CSS --}}
-        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
         <style>
             #map {
                 width: 100%;
                 height: 80vh;
-            }
-
-            .select2-container--default .select2-selection--single {
-                height: 42px !important;
-                border: 1px solid #d1d5db !important;
-                /* border-gray-300 */
-                border-radius: 0.375rem !important;
-                /* rounded-md */
-                padding: 6px 10px !important;
-            }
-
-            .select2-container--default .select2-selection--single .select2-selection__arrow {
-                height: 38px !important;
-                right: 10px !important;
             }
         </style>
     </x-slot>
 
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Koperasi &raquo; Tambah
+            Koperasi &raquo; Edit &raquo; {{ $cooperation->name }}
         </h2>
     </x-slot>
 
     <x-slot name="script">
 
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-        {{-- SELECT2 JS --}}
-        <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script>
             // Inisialisasi peta
             var map = L.map('map').setView([-3.4126, 119.3435], 10);
@@ -100,39 +80,24 @@
                 var lng = e.latlng.lng.toFixed(7);
 
                 document.getElementById('latitude').value = lat;
-                document.getElementById('longtitude').value = lng;
+                document.getElementById('longitude').value = lng;
 
                 setMarker(lat, lng);
             });
 
             // Jika user isi manual lat/lng, update marker
             document.getElementById('latitude').addEventListener('change', updateMarkerFromInput);
-            document.getElementById('longtitude').addEventListener('change', updateMarkerFromInput);
+            document.getElementById('longitude').addEventListener('change', updateMarkerFromInput);
 
             function updateMarkerFromInput() {
                 var lat = parseFloat(document.getElementById('latitude').value);
-                var lng = parseFloat(document.getElementById('longtitude').value);
+                var lng = parseFloat(document.getElementById('longitude').value);
                 if (!isNaN(lat) && !isNaN(lng)) {
                     setMarker(lat, lng);
                     map.setView([lat, lng], 15);
                 }
             }
-
-            $(document).ready(function() {
-                $('#village_id').select2({
-                    placeholder: "-- Pilih Desa --",
-                    allowClear: true,
-                    width: '100%' // agar lebar select2 mengikuti container
-                });
-
-                $('#bussiness_assistant_id').select2({
-                    placeholder: "-- Pilih BA --",
-                    allowClear: true,
-                    width: '100%' // agar lebar select2 mengikuti container
-                });
-            });
         </script>
-
     </x-slot>
 
     <div class="py-12">
@@ -152,73 +117,50 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('cooperations.store') }}">
+            <form method="POST" action="{{ route('cooperations.update', $cooperation) }}">
                 @csrf
+                @method('PUT')
 
                 <label class="block mb-2 font-medium">Nama KDKMP : </label>
-                <input type="text" name="name" value="{{ old('name') }}"
+                <input type="text" name="name" value="{{ old('name', $cooperation->name) }}"
                     class="w-full border
                     rounded p-2 mb-4">
 
                 <label class="block mb-2 font-medium">SK AHU : </label>
-                <input type="text" name="legal_entity_number" value="{{ old('legal_entity_number') }}"
+                <input type="text" name="legal_entity_number"
+                    value="{{ old('legal_entity_number', $cooperation->legal_entity_number) }}"
                     class="w-full border
                     rounded p-2 mb-4">
 
                 <label class="block mb-2 font-medium">Tanggal SK AHU : </label>
-                <input type="date" value="{{ old('date_legal_entity_number') }}" name="date_legal_entity_number"
-                    class="w-full border rounded p-2 mb-4">
+                <input type="date"
+                    value="{{ old('date_legal_entity_number', $cooperation->date_legal_entity_number) }}"
+                    name="date_legal_entity_number" class="w-full border rounded p-2 mb-4">
 
-                <label class="block mb-2 font-medium">Alamat Lengkap :</label>
-                <textarea name="full_address" class="w-full border rounded p-2 mb-4">{{ old('full_address') }}</textarea>
-
-                <div class="mb-6">
-                    <label class="block mb-2 font-medium">Desa : </label>
-                    <select name="village_id" id="village_id" class="w-full border rounded p-2 mb-4 select2">
-                        <option value="">-- Pilih Desa --</option>
-                        @foreach ($villages as $id => $name)
-                            <option value="{{ $id }}" {{ old('village_id') == $id ? 'selected' : '' }}>
-                                {{ $id }} - {{ $name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="mb-6">
-                    <label class="block mb-2 font-medium">Bussiness Assistant : </label>
-                    <select name="bussiness_assistant_id" id="bussiness_assistant_id"
-                        class="w-full border rounded p-2 mb-4 select2">
-                        <option value="">-- Pilih Bussiness Assistant --</option>
-                        @foreach ($bussinessAssistants as $id => $name)
-                            <option value="{{ $id }}"
-                                {{ old('bussiness_assistant_id') == $id ? 'selected' : '' }}>
-                                {{ $id }} - {{ $name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+                <label class="block mb-2 font-medium">Alamat Lengkap</label>
+                <textarea name="full_address" class="w-full border rounded p-2 mb-4">{{ old('full_address', $cooperation->full_address) }}</textarea>
 
                 <label class="block mb-2 font-medium">Nomor Telepon : </label>
-                <input type="text" name="phone_number" value="{{ old('phone_number') }}"
+                <input type="text" name="phone_number" value="{{ old('phone_number', $cooperation->phone_number) }}"
                     class="w-full border rounded p-2 mb-4">
 
                 <label class="block mb-2 font-medium">Email : </label>
-                <input type="email" name="email" alue="{{ old('email') }}" class="w-full border rounded p-2 mb-4">
+                <input type="text" name="email" alue="{{ old('email', $cooperation->email) }}"
+                    class="w-full border rounded p-2 mb-4">
 
                 <label class="block mb-2 font-medium">Tabungan Pokok : </label>
-                <input type="number" name="principal_saving" value="{{ old('principal_saving') }}"
+                <input type="text" name="principal_saving"
+                    alue="{{ old('principal_saving', $cooperation->principal_saving) }}"
                     class="w-full border rounded p-2 mb-4">
 
                 <label class="block mb-2 font-medium">Tabungan Wajib : </label>
-                <input type="number" name="mandatory_saving" value="{{ old('mandatory_saving') }}"
-                    class="w-full border rounded p-2 mb-4">
+                <input type="text" name="mandatory_saving" class="w-full border rounded p-2 mb-4">
 
                 <label class="block mb-2 font-medium">Sub Domain : </label>
-                <input type="text" name="subdomain" value="{{ old('subdomain') }}"
-                    class="w-full border rounded p-2 mb-4">
+                <input type="url" name="subdomain" class="w-full border rounded p-2 mb-4">
 
                 <label class="block mb-2 font-medium">Nama Ketua : </label>
-                <input type="text" name="leader_name" value="{{ old('leader_name') }}"
+                <input type="text" name="leader_name" value="{{ old('leader_name', $cooperation->leader_name) }}"
                     class="w-full border rounded p-2 mb-4">
 
                 <div class="flex flex-wrap -mx-3 mb-6">
@@ -230,13 +172,14 @@
                             <label class="inline-flex items-center">
                                 <input type="radio" name="grocery_outlet" value="1"
                                     class="form-radio text-green-600"
-                                    {{ old('grocery_outlet', 1) == 1 ? 'checked' : '' }}>
+                                    {{ old('grocery_outlet', $cooperation->grocery_outlet ?? 1) == 1 ? 'checked' : '' }}>
                                 <span class="ml-2 text-gray-700">Ada</span>
                             </label>
 
                             <label class="inline-flex items-center">
                                 <input type="radio" name="grocery_outlet" value="0"
-                                    class="form-radio text-red-600" {{ old('grocery_outlet') == 0 ? 'checked' : '' }}>
+                                    class="form-radio text-red-600"
+                                    {{ old('grocery_outlet', $cooperation->grocery_outlet ?? 1) == 0 ? 'checked' : '' }}>
                                 <span class="ml-2 text-gray-700">Tidak Ada</span>
                             </label>
                         </div>
@@ -252,14 +195,14 @@
                             <label class="inline-flex items-center">
                                 <input type="radio" name="village_pharmacy_outlet" value="1"
                                     class="form-radio text-green-600"
-                                    {{ old('village_pharmacy_outlet', 1) == 1 ? 'checked' : '' }}>
+                                    {{ old('village_pharmacy_outlet', $cooperation->village_pharmacy_outlet ?? 1) == 1 ? 'checked' : '' }}>
                                 <span class="ml-2 text-gray-700">Ada</span>
                             </label>
 
                             <label class="inline-flex items-center">
                                 <input type="radio" name="village_pharmacy_outlet" value="0"
                                     class="form-radio text-red-600"
-                                    {{ old('village_pharmacy_outlet') == 0 ? 'checked' : '' }}>
+                                    {{ old('village_pharmacy_outlet', $cooperation->village_pharmacy_outlet ?? 1) == 0 ? 'checked' : '' }}>
                                 <span class="ml-2 text-gray-700">Tidak Ada</span>
                             </label>
                         </div>
@@ -273,16 +216,16 @@
                         </label>
                         <div class="flex items-center gap-8"> <!-- gunakan gap-8 agar jarak lebih lebar -->
                             <label class="inline-flex items-center">
-                                <input type="radio" name="coopeative_office_outlet" value="1"
+                                <input type="radio" name="cooperative_office_outlet" value="1"
                                     class="form-radio text-green-600"
-                                    {{ old('coopeative_office_outlet', 1) == 1 ? 'checked' : '' }}>
+                                    {{ old('cooperative_office_outlet', $cooperation->cooperative_office_outlet ?? 1) == 1 ? 'checked' : '' }}>
                                 <span class="ml-2 text-gray-700">Ada</span>
                             </label>
 
                             <label class="inline-flex items-center">
-                                <input type="radio" name="coopeative_office_outlet" value="0"
+                                <input type="radio" name="cooperative_office_outlet" value="0"
                                     class="form-radio text-red-600"
-                                    {{ old('coopeative_office_outlet') == 0 ? 'checked' : '' }}>
+                                    {{ old('cooperative_office_outlet', $cooperation->cooperative_office_outlet ?? 1) == 0 ? 'checked' : '' }}>
                                 <span class="ml-2 text-gray-700">Tidak Ada</span>
                             </label>
                         </div>
@@ -298,14 +241,14 @@
                             <label class="inline-flex items-center">
                                 <input type="radio" name="savings_and_loan_outlet" value="1"
                                     class="form-radio text-green-600"
-                                    {{ old('savings_and_loan_outlet', 1) == 1 ? 'checked' : '' }}>
+                                    {{ old('savings_and_loan_outlet', $cooperation->savings_and_loan_outlet ?? 1) == 1 ? 'checked' : '' }}>
                                 <span class="ml-2 text-gray-700">Ada</span>
                             </label>
 
                             <label class="inline-flex items-center">
                                 <input type="radio" name="savings_and_loan_outlet" value="0"
                                     class="form-radio text-red-600"
-                                    {{ old('savings_and_loan_outlet') == 0 ? 'checked' : '' }}>
+                                    {{ old('savings_and_loan_outlet', $cooperation->savings_and_loan_outlet ?? 1) == 0 ? 'checked' : '' }}>
                                 <span class="ml-2 text-gray-700">Tidak Ada</span>
                             </label>
                         </div>
@@ -321,20 +264,19 @@
                             <label class="inline-flex items-center">
                                 <input type="radio" name="village_clinic_outlet" value="1"
                                     class="form-radio text-green-600"
-                                    {{ old('village_clinic_outlet', 1) == 1 ? 'checked' : '' }}>
+                                    {{ old('village_clinic_outlet', $cooperation->village_clinic_outlet ?? 1) == 1 ? 'checked' : '' }}>
                                 <span class="ml-2 text-gray-700">Ada</span>
                             </label>
 
                             <label class="inline-flex items-center">
                                 <input type="radio" name="village_clinic_outlet" value="0"
                                     class="form-radio text-red-600"
-                                    {{ old('village_clinic_outlet') == 0 ? 'checked' : '' }}>
+                                    {{ old('village_clinic_outlet', $cooperation->village_clinic_outlet ?? 1) == 0 ? 'checked' : '' }}>
                                 <span class="ml-2 text-gray-700">Tidak Ada</span>
                             </label>
                         </div>
                     </div>
                 </div>
-
 
 
                 <div class="flex flex-wrap -mx-3 mb-6">
@@ -346,14 +288,14 @@
                             <label class="inline-flex items-center">
                                 <input type="radio" name="cold_storage_outlet" value="1"
                                     class="form-radio text-green-600"
-                                    {{ old('cold_storage_outlet', 1) == 1 ? 'checked' : '' }}>
+                                    {{ old('cold_storage_outlet', $cooperation->cold_storage_outlet ?? 1) == 1 ? 'checked' : '' }}>
                                 <span class="ml-2 text-gray-700">Ada</span>
                             </label>
 
                             <label class="inline-flex items-center">
                                 <input type="radio" name="cold_storage_outlet" value="0"
                                     class="form-radio text-red-600"
-                                    {{ old('cold_storage_outlet') == 0 ? 'checked' : '' }}>
+                                    {{ old('cold_storage_outlet', $cooperation->cold_storage_outlet ?? 1) == 0 ? 'checked' : '' }}>
                                 <span class="ml-2 text-gray-700">Tidak Ada</span>
                             </label>
                         </div>
@@ -369,14 +311,14 @@
                             <label class="inline-flex items-center">
                                 <input type="radio" name="logistics_outlet" value="1"
                                     class="form-radio text-green-600"
-                                    {{ old('logistics_outlet', 1) == 1 ? 'checked' : '' }}>
+                                    {{ old('logistics_outlet', $cooperation->logistics_outlet ?? 1) == 1 ? 'checked' : '' }}>
                                 <span class="ml-2 text-gray-700">Ada</span>
                             </label>
 
                             <label class="inline-flex items-center">
                                 <input type="radio" name="logistics_outlet" value="0"
                                     class="form-radio text-red-600"
-                                    {{ old('logistics_outlet') == 0 ? 'checked' : '' }}>
+                                    {{ old('logistics_outlet', $cooperation->logistics_outlet ?? 1) == 0 ? 'checked' : '' }}>
                                 <span class="ml-2 text-gray-700">Tidak Ada</span>
                             </label>
                         </div>
@@ -392,14 +334,14 @@
                             <label class="inline-flex items-center">
                                 <input type="radio" name="fertilize_outlet" value="1"
                                     class="form-radio text-green-600"
-                                    {{ old('fertilize_outlet', 1) == 1 ? 'checked' : '' }}>
+                                    {{ old('fertilize_outlet', $cooperation->fertilize_outlet ?? 1) == 1 ? 'checked' : '' }}>
                                 <span class="ml-2 text-gray-700">Ada</span>
                             </label>
 
                             <label class="inline-flex items-center">
                                 <input type="radio" name="fertilize_outlet" value="0"
                                     class="form-radio text-red-600"
-                                    {{ old('fertilize_outlet') == 0 ? 'checked' : '' }}>
+                                    {{ old('fertilize_outlet', $cooperation->fertilize_outlet ?? 1) == 0 ? 'checked' : '' }}>
                                 <span class="ml-2 text-gray-700">Tidak Ada</span>
                             </label>
                         </div>
@@ -415,14 +357,14 @@
                             <label class="inline-flex items-center">
                                 <input type="radio" name="lpg_base_outlet" value="1"
                                     class="form-radio text-green-600"
-                                    {{ old('lpg_base_outlet', 1) == 1 ? 'checked' : '' }}>
+                                    {{ old('lpg_base_outlet', $cooperation->lpg_base_outlet ?? 1) == 1 ? 'checked' : '' }}>
                                 <span class="ml-2 text-gray-700">Ada</span>
                             </label>
 
                             <label class="inline-flex items-center">
                                 <input type="radio" name="lpg_base_outlet" value="0"
                                     class="form-radio text-red-600"
-                                    {{ old('lpg_base_outlet') == 0 ? 'checked' : '' }}>
+                                    {{ old('lpg_base_outlet', $cooperation->lpg_base_outlet ?? 1) == 0 ? 'checked' : '' }}>
                                 <span class="ml-2 text-gray-700">Tidak Ada</span>
                             </label>
                         </div>
@@ -438,14 +380,14 @@
                             <label class="inline-flex items-center">
                                 <input type="radio" name="postal_agent_outlet" value="1"
                                     class="form-radio text-green-600"
-                                    {{ old('postal_agent_outlet', 1) == 1 ? 'checked' : '' }}>
+                                    {{ old('postal_agent_outlet', $cooperation->postal_agent_outlet ?? 1) == 1 ? 'checked' : '' }}>
                                 <span class="ml-2 text-gray-700">Ada</span>
                             </label>
 
                             <label class="inline-flex items-center">
                                 <input type="radio" name="postal_agent_outlet" value="0"
                                     class="form-radio text-red-600"
-                                    {{ old('postal_agent_outlet') == 0 ? 'checked' : '' }}>
+                                    {{ old('postal_agent_outlet', $cooperation->postal_agent_outlet ?? 1) == 0 ? 'checked' : '' }}>
                                 <span class="ml-2 text-gray-700">Tidak Ada</span>
                             </label>
                         </div>
@@ -461,14 +403,14 @@
                             <label class="inline-flex items-center">
                                 <input type="radio" name="smart_agent_outlet" value="1"
                                     class="form-radio text-green-600"
-                                    {{ old('smart_agent_outlet', 1) == 1 ? 'checked' : '' }}>
+                                    {{ old('smart_agent_outlet', $cooperation->smart_agent_outlet ?? 1) == 1 ? 'checked' : '' }}>
                                 <span class="ml-2 text-gray-700">Ada</span>
                             </label>
 
                             <label class="inline-flex items-center">
                                 <input type="radio" name="smart_agent_outlet" value="0"
                                     class="form-radio text-red-600"
-                                    {{ old('smart_agent_outlet') == 0 ? 'checked' : '' }}>
+                                    {{ old('smart_agent_outlet', $cooperation->smart_agent_outlet ?? 1) == 0 ? 'checked' : '' }}>
                                 <span class="ml-2 text-gray-700">Tidak Ada</span>
                             </label>
                         </div>
@@ -485,14 +427,14 @@
                             <label class="inline-flex items-center">
                                 <input type="radio" name="microsite_account" value="1"
                                     class="form-radio text-green-600"
-                                    {{ old('microsite_account', 1) == 1 ? 'checked' : '' }}>
+                                    {{ old('microsite_account', $cooperation->microsite_account ?? 1) == 1 ? 'checked' : '' }}>
                                 <span class="ml-2 text-gray-700">Ada</span>
                             </label>
 
                             <label class="inline-flex items-center">
                                 <input type="radio" name="microsite_account" value="0"
                                     class="form-radio text-red-600"
-                                    {{ old('microsite_account') == 0 ? 'checked' : '' }}>
+                                    {{ old('microsite_account', $cooperation->microsite_account ?? 1) == 0 ? 'checked' : '' }}>
                                 <span class="ml-2 text-gray-700">Tidak Ada</span>
                             </label>
                         </div>
@@ -507,13 +449,14 @@
                         <div class="flex items-center gap-8"> <!-- gunakan gap-8 agar jarak lebih lebar -->
                             <label class="inline-flex items-center">
                                 <input type="radio" name="nib" value="1"
-                                    class="form-radio text-green-600" {{ old('nib', 1) == 1 ? 'checked' : '' }}>
+                                    class="form-radio text-green-600"
+                                    {{ old('nib', $cooperation->nib ?? 1) == 1 ? 'checked' : '' }}>
                                 <span class="ml-2 text-gray-700">Ada</span>
                             </label>
 
                             <label class="inline-flex items-center">
                                 <input type="radio" name="nib" value="0" class="form-radio text-red-600"
-                                    {{ old('nib', 1) == 0 ? 'checked' : '' }}>
+                                    {{ old('nib', $cooperation->nib ?? 1) == 0 ? 'checked' : '' }}>
                                 <span class="ml-2 text-gray-700">Tidak Ada</span>
                             </label>
                         </div>
@@ -534,7 +477,7 @@
                     </div>
                     <div>
                         <label class="block mb-2 font-medium">Longitude:</label>
-                        <input type="text" id="longtitude" name="longtitude" class="w-full border rounded p-2">
+                        <input type="text" id="longitude" name="longitude" class="w-full border rounded p-2">
                     </div>
                 </div>
 

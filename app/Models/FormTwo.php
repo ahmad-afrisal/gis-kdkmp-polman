@@ -6,16 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class BussinessAssistant extends Model
+class FormTwo extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $guarded = ['id'];
+    protected $guarded = [];
 
-   
-
-    public function cooperations()
+    public function cooperation()
     {
-        return $this->hasMany(Cooperation::class, 'bussiness_assistant_id');
+        return $this->belongsTo(Cooperation::class, 'cooperation_id');
     }
 }

@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             DistrictTableSeeder::class,
             VillageTableSeeder::class,
             BussinessAssistantTableSeeder::class,
-            // CooperationTableSeeder::class,
+            CooperationTableSeeder::class,
         ]);
     }
 }

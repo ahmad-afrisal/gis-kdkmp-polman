@@ -20,7 +20,6 @@
     </x-slot>
 
     <x-slot name="script">
-        {{-- DataTable JS --}}
         <script>
             var datatable = $('#crudTable').DataTable({
                 responsive: true,
@@ -46,13 +45,12 @@
                 ]
             })
         </script>
-
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
         <script>
-            // Inisialisasi peta
+            // ==== INISIALISASI PETA ====
             var map = L.map('map').setView([-3.4126, 119.3435], 10);
 
-            // Basemap
+            // ==== BASEMAPS ====
             var googleHybrid = L.tileLayer('https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
                 maxZoom: 20,
                 subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
@@ -72,9 +70,15 @@
                 "Google Streets": googleStreets,
                 "Google Hybrid": googleHybrid,
             };
-            L.control.layers(baseMaps).addTo(map);
 
-            // Custom icon marker
+            // ==== DATA DARI BACKEND ====
+            var cooperations = @json($locations);
+            var villages = @json($villages);
+            var districts = @json($districts);
+
+            // ==== LAYER SEBARAN KOPERASI ====
+            var coopLayer = L.layerGroup();
+
             var customIcon = L.icon({
                 iconUrl: '/images/icon-marker.png',
                 iconSize: [80, 60],
@@ -82,33 +86,111 @@
                 popupAnchor: [0, -32]
             });
 
-            // Data lokasi dari backend (Blade -> JS)
-            var cooperations = @json($locations);
-
-            // Tambahkan marker untuk setiap koperasi
             cooperations.forEach(function(coop) {
                 if (coop.latitude && coop.longtitude) {
                     var lat = parseFloat(coop.latitude);
                     var lng = parseFloat(coop.longtitude);
+                    var mapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
+                    var imageUrl = 'https://placehold.co/600x400.png';
 
-                    var marker = L.marker([lat, lng], {
-                        icon: customIcon
-                    }).addTo(map);
-                    marker.bindPopup(`
-                <b>${coop.name}</b><br>
-                ${coop.full_address}
-            `);
+                    var popupContent = `
+                <div class="max-w-[260px] bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="${imageUrl}" alt="${coop.name}" class="w-full h-32 object-cover">
+                    <div class="p-3 max-h-48 overflow-y-auto">
+                        <h3 class="text-lg font-semibold mb-1">${coop.name}</h3>
+                        <p class="text-sm text-gray-600 mb-1"><b>Ketua:</b> ${coop.leader_name ?? '-'}</p>
+                        <p class="text-sm text-gray-600 mb-1"><b>Alamat:</b> ${coop.full_address}</p>
+                        <p class="text-sm text-gray-600 mb-1"><b>Telepon:</b> ${coop.legal_entity_number ?? '-'}</p>
+                        <p class="text-sm text-gray-600 mb-1"><b>Email:</b> ${coop.email ?? '-'}</p>
+                        <p class="text-sm text-gray-600 mb-1"><b>NIB:</b> ${coop.nib ? 'Ada' : 'Tidak Ada'}</p>
+                        <div class="mt-2 flex justify-between">
+                            <a href="${coop.subdomain}" target="_blank" class="text-blue-600 text-xs font-semibold hover:underline">Detail</a>
+                            <a href="${mapsUrl}" target="_blank" class="text-green-600 text-xs font-semibold hover:underline">Kunjungi di Maps</a>
+                        </div>
+                    </div>
+                </div>`;
+
+                    L.marker([lat, lng], {
+                            icon: customIcon
+                        })
+                        .bindPopup(popupContent)
+                        .addTo(coopLayer);
                 }
             });
 
-            // Optional: zoom agar semua titik terlihat
-            if (cooperations.length > 0) {
-                var bounds = L.latLngBounds(cooperations.map(c => [c.latitude, c.longtitude]));
-                map.fitBounds(bounds);
+            // ==== LAYER GEOJSON DESA ====
+            var villageLayer = L.layerGroup();
+
+            villages.forEach(function(v) {
+                if (v.geojson) {
+                    try {
+                        var gj = JSON.parse(v.geojson);
+                        var layer = L.geoJSON(gj, {
+                            style: {
+                                color: '#1E90FF',
+                                weight: 1,
+                                fillColor: '#ADD8E6',
+                                fillOpacity: 0.3
+                            }
+                        }).bindPopup(`<strong>${v.type} ${v.name}</strong>`);
+                        layer.addTo(villageLayer);
+                    } catch (e) {
+                        console.error("GeoJSON tidak valid untuk desa:", v.name);
+                    }
+                }
+            });
+
+            // ==== LAYER GEOJSON KECAMATAN ====
+            var districtLayer = L.layerGroup();
+
+            districts.forEach(function(d) {
+                if (d.geojson) {
+                    try {
+                        var gj = JSON.parse(d.geojson);
+                        var layer = L.geoJSON(gj, {
+                            style: {
+                                color: '#FF6600',
+                                weight: 2,
+                                fillColor: '#FFA500',
+                                fillOpacity: 0.1
+                            }
+                        }).bindPopup(`<strong>Kecamatan ${d.name}</strong>`);
+                        layer.addTo(districtLayer);
+                    } catch (e) {
+                        console.error("GeoJSON tidak valid untuk kecamatan:", d.name);
+                    }
+                }
+            });
+
+            // ==== TAMBAHKAN KE PETA ====
+            coopLayer.addTo(map);
+            // villageLayer.addTo(map);
+            // districtLayer.addTo(map);
+
+            // ==== CONTROL LAYERS ====
+            var overlayMaps = {
+                "Sebaran Koperasi": coopLayer,
+                "Batas Desa": villageLayer,
+                "Batas Kecamatan": districtLayer
+            };
+
+            L.control.layers(baseMaps, overlayMaps, {
+                collapsed: false
+            }).addTo(map);
+
+            // ==== FIT BOUNDS ====
+            var validCoords = cooperations
+                .filter(c => c.latitude && c.longtitude)
+                .map(c => [parseFloat(c.latitude), parseFloat(c.longtitude)]);
+
+            if (validCoords.length > 0) {
+                map.fitBounds(L.latLngBounds(validCoords));
+            } else {
+                map.setView([-3.4126, 119.3435], 10);
             }
         </script>
-
     </x-slot>
+
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -137,7 +219,7 @@
 
             {{-- PETA --}}
             <div class="shadow overflow-hidden sm-rounded-md bg-white p-4">
-                <h3 class="text-lg font-bold mb-2">Peta Kecamatan</h3>
+                <h3 class="text-lg font-bold mb-2">Peta Sebaran KDKMP</h3>
                 <div id="map"></div>
             </div>
         </div>

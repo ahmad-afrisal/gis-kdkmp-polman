@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\BussinessAssistantController;
 use App\Http\Controllers\CooperationController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DistrictController;
+use App\Http\Controllers\DocumentationPmoController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VillageController;
@@ -16,19 +18,64 @@ Route::get('/', [HomeController::class, 'index'])->name('welcomet');
 Route::get('/map/filter', [HomeController::class, 'filter'])->name('map.filter');
 
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+
 
 Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('districts', DistrictController::class);
+
+    Route::get('bussiness-assistants/{bussinessAssistant}/form-1', [BussinessAssistantController::class, 'form1'])
+        ->name('bussiness-assistants.form-1');
+    Route::post(
+        'bussiness-assistants/{bussinessAssistant}/form-1',
+        [BussinessAssistantController::class, 'storeOrUpdateFormOne']
+    )->name('bussiness-assistants.form-1.store');
+
+    Route::get('bussiness-assistants/{bussinessAssistant}/form-2', [BussinessAssistantController::class, 'form2'])
+        ->name('bussiness-assistants.form-2');
+
+    Route::post(
+        'bussiness-assistants/{bussinessAssistant}/form-2',
+        [BussinessAssistantController::class, 'storeOrUpdateFormTwo']
+    )->name('bussiness-assistants.form-2.store');
+
+    Route::get('bussiness-assistants/{bussinessAssistant}/form-3', [BussinessAssistantController::class, 'form3'])
+        ->name('bussiness-assistants.form-3');
+    Route::post(
+        'bussiness-assistants/{bussinessAssistant}/form-3',
+        [BussinessAssistantController::class, 'storeOrUpdateFormThree']
+    )->name('bussiness-assistants.form-3.store');
+
+
+    Route::get('bussiness-assistants/{bussinessAssistant}/form-4', [BussinessAssistantController::class, 'form4'])
+        ->name('bussiness-assistants.form-4');
+    Route::post(
+        'bussiness-assistants/{bussinessAssistant}/form-4',
+        [BussinessAssistantController::class, 'storeOrUpdateFormFour']
+    )->name('bussiness-assistants.form-4.store');
+
+    Route::get('bussiness-assistants/{bussinessAssistant}/form-5', [BussinessAssistantController::class, 'form5'])
+        ->name('bussiness-assistants.form-5');
+    Route::post(
+        'bussiness-assistants/{bussinessAssistant}/form-5',
+        [BussinessAssistantController::class, 'storeOrUpdateFormFive']
+    )->name('bussiness-assistants.form-5.store');
+
+
+
+    Route::get('bussiness-assistants/{bussinessAssistant}/form-6', [BussinessAssistantController::class, 'form6'])
+        ->name('bussiness-assistants.form-6');
+
+
     Route::resource('bussiness-assistants', BussinessAssistantController::class);
     Route::resource('cooperations', CooperationController::class);
     Route::resource('villages', VillageController::class);
+    Route::resource('pmo-documentations', DocumentationPmoController::class);
 });
 
 require __DIR__ . '/auth.php';

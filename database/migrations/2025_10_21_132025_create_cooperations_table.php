@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->integer('principal_saving');
             $table->integer('mandatory_saving');
-            $table->integer('subdomain');
+            $table->string('subdomain');
             $table->boolean('grocery_outlet');
             $table->boolean('village_pharmacy_outlet');
             $table->boolean('coopeative_office_outlet');
@@ -37,7 +37,11 @@ return new class extends Migration
             $table->boolean('lpg_base_outlet');
             $table->boolean('postal_agent_outlet');
             $table->boolean('smart_agent_outlet');
-            $table->boolean('microsite_account');
+            $table->boolean('microsite_account')->default(true);
+            $table->boolean('bank_account')->default(false);
+            $table->boolean('ba_musdes')->default(false)->nullable();
+            $table->boolean('ba_rapat_anggota')->default(false)->nullable();
+            $table->string('potential')->default(null)->nullable();
             $table->string('leader_name')->nullable();
             $table->timestamps();
             $table->softDeletes();
