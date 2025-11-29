@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Form Pendataan Koperasi</h2>
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Form 5</h2>
     </x-slot>
 
     <x-slot name="script">
@@ -12,12 +12,25 @@
             // =============================
             // Add new gerai row
             // =============================
+            // =============================
+            // Add new gerai row
+            // =============================
             function tambahGerai(btn) {
                 const tbody = btn.closest('tbody');
                 const row = btn.closest('tr');
-                const newIndex = tbody.querySelectorAll('tr').length;
+
+                // 1. Dapatkan index KDKMP (misal: 0) dari data-coop-index
+                const coopIndex = row.getAttribute('data-coop-index');
+
+                // 2. Hitung jumlah *gerai* yang sudah ada untuk KDKMP ini
+                // Dengan mencari semua baris yang memiliki data-coop-index yang sama
+                const existingGeraiCount = tbody.querySelectorAll(`tr[data-coop-index="${coopIndex}"]`).length;
+                const newRowIndex = existingGeraiCount; // Index baru dimulai dari jumlah yang ada
 
                 const newRow = row.cloneNode(true);
+
+                // 3. Update atribut data-coop-index pada baris baru (seharusnya sama, tapi untuk jaga-jaga)
+                newRow.setAttribute('data-coop-index', coopIndex);
 
                 // kosongkan nilai input kecuali cooperation_id
                 newRow.querySelectorAll('input, select').forEach(el => {
@@ -26,17 +39,36 @@
                     }
                 });
 
-                // perbaiki nama index
+                // 4. Perbaiki nama index (KRUSIAL)
+                // Gunakan regex yang lebih spesifik untuk mengganti *HANYA* rowIndex (index kedua)
                 newRow.querySelectorAll('[name]').forEach(el => {
                     let name = el.getAttribute('name');
-                    name = name.replace(/\[\d+\]/, `[${newIndex}]`);
-                    el.setAttribute('name', name);
+
+                    // Pola: Ganti angka kedua setelah [X_ (misal: [0_0] jadi [0_1])
+                    // name.replace(/\[\d+_(\d+)\]/, `[${coopIndex}_${newRowIndex}]`);
+                    // Cara paling aman adalah membangun ulang namanya:
+                    const oldIndexPattern = name.match(/data\[(\d+)_(\d+)\]/);
+
+                    if (oldIndexPattern) {
+                        // Bagian pertama (cooperation_id) harus tetap $coopIndex
+                        // Bagian kedua (rowIndex) harus menggunakan $newRowIndex
+                        const newName = name.replace(oldIndexPattern[0], `data[${coopIndex}_${newRowIndex}]`);
+                        el.setAttribute('name', newName);
+                    } else {
+                        // Untuk jaga-jaga jika ada name lain yang tidak mengikuti pola data[X_Y]
+                        // Biarkan saja, atau sesuaikan jika ada kebutuhan lain.
+                    }
                 });
 
                 // kosongkan ID supaya create baru
                 newRow.querySelector('input[name*="[id]"]').value = "";
 
+                // Perbarui data-group pada baris baru (jika ada) untuk rowspan
+                newRow.setAttribute('data-group', row.getAttribute('data-group'));
+
+                // Masukkan baris baru setelah baris saat ini
                 row.insertAdjacentElement('afterend', newRow);
+
                 applyRowspan();
             }
 
@@ -100,6 +132,32 @@
                     </div>
                 </div>
             @endif
+            <div class="mb-10">
+                <a href="{{ route('bussiness-assistants.form-1', $bussinessAssistant->id) }}"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded shadow-lg">+ Form 1</a>
+
+                <a href="{{ route('bussiness-assistants.form-2', $bussinessAssistant->id) }}"
+                    class="bg-emerald-500 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded shadow-lg">+ Form
+                    2</a>
+
+                <a href="{{ route('bussiness-assistants.form-3', $bussinessAssistant->id) }}"
+                    class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded shadow-lg">+ Form
+                    3</a>
+
+                <a href="{{ route('bussiness-assistants.form-4', $bussinessAssistant->id) }}"
+                    class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-3 px-4 rounded shadow-lg">+ Form
+                    4</a>
+
+                <a href="{{ route('bussiness-assistants.form-5', $bussinessAssistant->id) }}"
+                    class="bg-pink-500 hover:bg-pink-700 text-white font-bold py-3 px-4 rounded shadow-lg">+ Form 5</a>
+
+                <a href="{{ route('bussiness-assistants.form-6', $bussinessAssistant->id) }}"
+                    class="bg-teal-500 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded shadow-lg">+ Form 6</a>
+
+                <a href="{{ route('bussiness-assistants.report', $bussinessAssistant->id) }}" target="_blank"
+                    class="bg-teal-500 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded shadow-lg">+ Laporan</a>
+
+            </div>
             <div class="bg-white shadow-xl rounded-lg p-6">
 
                 <form action="{{ route('bussiness-assistants.form-5.store', $bussinessAssistant->id) }}" method="POST">
@@ -129,7 +187,8 @@
                                     @endphp
 
                                     @foreach ($rows as $rowIndex => $formFive)
-                                        <tr data-group="{{ $coop->id }}"
+                                        <tr data-group="{{ $coop->id }}" data-coop-index="{{ $index }}"
+                                            {{-- <--- TAMBAHKAN INI --}}
                                             class="odd:bg-gray-50 even:bg-white hover:bg-green-50 transition">
 
                                             <td class="border px-2 py-1">
@@ -143,14 +202,14 @@
 
                                             <td class="border px-2 py-1 kdkmp-cell">
                                                 <input type="text" value="{{ $coop->name }}"
-                                                    class="w-64 border rounded p-2" disabled>
+                                                    class="w-96 border rounded p-2" disabled>
                                             </td>
 
                                             {{-- GERAI --}}
                                             <td class="border px-2 py-1">
                                                 <select
                                                     name="data[{{ $index }}_{{ $rowIndex }}][branch_type]"
-                                                    class="w-full border rounded p-2">
+                                                    class="w-full md:w-40 border rounded p-2">
                                                     <option value="">Pilih Gerai</option>
                                                     @foreach (['Sembako', 'Apotik', 'Klinik', 'Simpan Pinjam', 'Pergudangan', 'Logistik', 'Usaha Lain'] as $g)
                                                         <option value="{{ $g }}"
@@ -162,30 +221,30 @@
                                             </td>
 
                                             <td class="border px-2 py-1">
-                                                <input
+                                                <input type="number"
                                                     name="data[{{ $index }}_{{ $rowIndex }}][business_volume]"
-                                                    class="w-full border rounded p-2"
+                                                    class="w-full md:w-40 border rounded p-2"
                                                     value="{{ $formFive?->business_volume }}">
                                             </td>
 
                                             <td class="border px-2 py-1">
-                                                <input
+                                                <input type="number"
                                                     name="data[{{ $index }}_{{ $rowIndex }}][total_assets]"
-                                                    class="w-full border rounded p-2"
+                                                    class="w-full md:w-40 border rounded p-2"
                                                     value="{{ $formFive?->total_assets }}">
                                             </td>
 
                                             <td class="border px-2 py-1">
-                                                <input
+                                                <input type="number"
                                                     name="data[{{ $index }}_{{ $rowIndex }}][profit_loss]"
-                                                    class="w-full border rounded p-2"
+                                                    class="w-full md:w-40 border rounded p-2"
                                                     value="{{ $formFive?->profit_loss }}">
                                             </td>
 
                                             <td class="border px-2 py-1">
-                                                <input
+                                                <input type="text"
                                                     name="data[{{ $index }}_{{ $rowIndex }}][information]"
-                                                    class="w-full border rounded p-2"
+                                                    class="w-full md:w-40 border rounded p-2"
                                                     value="{{ $formFive?->information }}">
 
                                                 {{-- Hidden --}}
@@ -206,8 +265,14 @@
                         </table>
                     </div>
 
-                    <div class="mt-6 text-right">
-                        <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow">
+                    <div class="mt-6 text-right space-x-2">
+                        <a href="{{ route('bussiness-assistants.show', $bussinessAssistant->id) }}"
+                            class="inline-block bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-lg shadow transition text-center">
+                            Kembali
+                        </a>
+
+                        <button type="submit"
+                            class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow transition text-center">
                             💾 Simpan Data
                         </button>
                     </div>

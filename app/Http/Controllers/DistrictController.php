@@ -69,17 +69,39 @@ class DistrictController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(District $district)
     {
-        //
+        return view('district.edit', [
+            'data' => $district
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, District $district)
     {
-        //
+        // Jika upload file
+        if ($request->hasFile('file_json')) {
+
+            $request->validate([
+                'file_json' => 'mimes:json',
+            ]);
+
+            $fileContent = file_get_contents($request->file('file_json')->getRealPath());
+            $jsonData = json_decode($fileContent, true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                return back()->withErrors(['file_json' => 'Format JSON tidak valid.']);
+            }
+
+            // Update via Eloquent
+            $district->update([
+                'geojson' => $jsonData
+            ]);
+        }
+
+        return to_route('districts.index')->with('success', 'GeoJSON berhasil diperbarui!');
     }
 
     /**

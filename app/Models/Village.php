@@ -11,4 +11,9 @@ class Village extends Model
     use HasFactory, SoftDeletes;
 
     protected $guarded = ['id'];
+
+    public function cooperation()
+    {
+        return $this->hasOne(Cooperation::class);
+    }
 }

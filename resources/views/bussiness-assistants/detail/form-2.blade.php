@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Form Pendataan Koperasi
+            Form 2
         </h2>
     </x-slot>
 
@@ -34,6 +34,33 @@
                     </div>
                 </div>
             @endif
+
+            <div class="mb-10">
+                <a href="{{ route('bussiness-assistants.form-1', $bussinessAssistant->id) }}"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded shadow-lg">+ Form 1</a>
+
+                <a href="{{ route('bussiness-assistants.form-2', $bussinessAssistant->id) }}"
+                    class="bg-emerald-500 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded shadow-lg">+ Form
+                    2</a>
+
+                <a href="{{ route('bussiness-assistants.form-3', $bussinessAssistant->id) }}"
+                    class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded shadow-lg">+ Form
+                    3</a>
+
+                <a href="{{ route('bussiness-assistants.form-4', $bussinessAssistant->id) }}"
+                    class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-3 px-4 rounded shadow-lg">+ Form
+                    4</a>
+
+                <a href="{{ route('bussiness-assistants.form-5', $bussinessAssistant->id) }}"
+                    class="bg-pink-500 hover:bg-pink-700 text-white font-bold py-3 px-4 rounded shadow-lg">+ Form 5</a>
+
+                <a href="{{ route('bussiness-assistants.form-6', $bussinessAssistant->id) }}"
+                    class="bg-teal-500 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded shadow-lg">+ Form 6</a>
+
+                <a href="{{ route('bussiness-assistants.report', $bussinessAssistant->id) }}" target="_blank"
+                    class="bg-teal-500 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded shadow-lg">+ Laporan</a>
+
+            </div>
             <div class="bg-white shadow-xl rounded-lg p-6">
 
                 <form action="{{ route('bussiness-assistants.form-2.store', $bussinessAssistant->id) }}" method="POST">
@@ -142,13 +169,14 @@
                                         {{-- Usaha Simpan Pinjam --}}
                                         <td class="border border-gray-300 px-2 py-1 text-center">
                                             <input type="checkbox" class="checkbox-status"
-                                                name="data[{{ $index }}][savings_and_loan_exist]" value="1"
-                                                {{ $form?->savings_and_loan_exist ? 'checked' : '' }}>
+                                                name="data[{{ $index }}][savings_and_loan_exist]"
+                                                value="1" {{ $form?->savings_and_loan_exist ? 'checked' : '' }}>
                                         </td>
                                         <td class="border border-gray-300 px-2 py-1 text-center">
                                             <input type="checkbox" class="checkbox-status"
                                                 name="data[{{ $index }}][savings_and_loan_running]"
-                                                value="1" {{ $form?->savings_and_loan_running ? 'checked' : '' }}>
+                                                value="1"
+                                                {{ $form?->savings_and_loan_running ? 'checked' : '' }}>
                                         </td>
 
                                         {{-- Apotek Desa --}}
@@ -226,9 +254,14 @@
                         </table>
                     </div>
 
-                    <div class="mt-6 text-right">
+                    <div class="mt-6 text-right space-x-2">
+                        <a href="{{ route('bussiness-assistants.show', $bussinessAssistant->id) }}"
+                            class="inline-block bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-lg shadow transition text-center">
+                            Kembali
+                        </a>
+
                         <button type="submit"
-                            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow transition">
+                            class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow transition text-center">
                             💾 Simpan Data
                         </button>
                     </div>

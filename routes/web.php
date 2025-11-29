@@ -70,6 +70,13 @@ Route::middleware('auth')->group(function () {
 
     Route::get('bussiness-assistants/{bussinessAssistant}/form-6', [BussinessAssistantController::class, 'form6'])
         ->name('bussiness-assistants.form-6');
+    Route::post(
+        'bussiness-assistants/{bussinessAssistant}/form-6',
+        [BussinessAssistantController::class, 'storeOrUpdateFormSix']
+    )->name('bussiness-assistants.form-6.store');
+
+    Route::get('bussiness-assistants/{bussinessAssistant}/report', [BussinessAssistantController::class, 'generateReport'])
+        ->name('bussiness-assistants.report');
 
 
     Route::resource('bussiness-assistants', BussinessAssistantController::class);

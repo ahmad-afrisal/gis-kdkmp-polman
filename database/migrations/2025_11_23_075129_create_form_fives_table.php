@@ -20,7 +20,6 @@ return new class extends Migration
             $table->bigInteger('profit_loss')->nullable();
             $table->text('information')->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

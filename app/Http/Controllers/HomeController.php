@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BussinessAssistant;
+use App\Models\Cooperation;
 use App\Models\District;
 use App\Models\Village;
 use Illuminate\Http\Request;
@@ -14,7 +15,14 @@ class HomeController extends Controller
         $districts = District::select('id', 'name')->get();
         $assistants = BussinessAssistant::select('id', 'name')->get();
 
-        return view('welcome', compact('districts', 'assistants'));
+        // Ambil data titik untuk peta
+        $locations = Cooperation::select('name', 'latitude', 'longtitude', 'full_address',  'subdomain')->whereNotNull('latitude')->get();
+
+        $villages = Village::select('id', 'type', 'name', 'geojson')->get();
+
+        $districts = District::select('id', 'name', 'geojson')->get();
+
+        return view('welcome', compact('districts', 'assistants', 'locations', 'villages'));
     }
 
     public function filter(Request $request)

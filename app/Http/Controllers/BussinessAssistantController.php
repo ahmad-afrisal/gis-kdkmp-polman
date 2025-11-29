@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\BussinessAssistant;
 use App\Models\Cooperation;
 use App\Models\FormFive;
+use Barryvdh\DomPDF\Facade\Pdf;
+// use Barryvdh\DomPDF\PDF;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -360,49 +362,6 @@ class BussinessAssistantController extends Controller
         return view('bussiness-assistants.detail.form-5', compact('bussinessAssistant', 'cooperations'));
     }
 
-    // public function storeOrUpdateFormFive(Request $request)
-    // {
-    //     // dd($request->data);
-    //     foreach ($request->data as $row) {
-
-    //         // pastikan semua field selalu ada
-    //         $row = array_merge([
-    //             'id'             => null,
-    //             'cooperation_id' => null,
-    //             'branch_type'    => null,
-    //             'business_volume' => null,
-    //             'total_assets'   => null,
-    //             'profit_loss'    => null,
-    //             'information'    => null,
-    //         ], $row);
-
-    //         $validated = validator($row, [
-    //             'id'             => 'nullable|integer',
-    //             'cooperation_id' => 'required|exists:cooperations,id',
-    //             'branch_type'    => 'nullable|string',
-    //             'business_volume' => 'nullable|numeric',
-    //             'total_assets'   => 'nullable|numeric',
-    //             'profit_loss'    => 'nullable|numeric',
-    //             'information'    => 'nullable|string',
-    //         ])->validate();
-
-    //         // ✔ jika id ada → update
-    //         // ✔ jika id kosong → create baru
-    //         FormFive::updateOrCreate(
-    //             ['id' => $validated['id']],
-    //             [
-    //                 'cooperation_id' => $validated['cooperation_id'],
-    //                 'branch_type'    => $validated['branch_type'],     // boleh null
-    //                 'business_volume' => $validated['business_volume'],
-    //                 'total_assets'   => $validated['total_assets'],
-    //                 'profit_loss'    => $validated['profit_loss'],
-    //                 'information'    => $validated['information'],
-    //             ]
-    //         );
-    //     }
-
-    //     return back()->with('success', 'Form 5 berhasil disimpan.');
-    // }
 
     public function storeOrUpdateFormFive(Request $request, BussinessAssistant $bussinessAssistant)
     {
@@ -447,18 +406,62 @@ class BussinessAssistantController extends Controller
         return back()->with('success', 'Data Form 5 berhasil disimpan ulang!');
     }
 
-
-
-
-
-
-
     public function form6(BussinessAssistant $bussinessAssistant)
     {
         // Ambil semua koperasi yang dimiliki oleh Business Assistant ini
-        $cooperations = $bussinessAssistant->cooperations()->get();
+        $cooperations = $bussinessAssistant->cooperations()->with('formSix')->get();
 
         // Kirim ke view form-1.blade.php
         return view('bussiness-assistants.detail.form-6', compact('bussinessAssistant', 'cooperations'));
+    }
+
+    public function storeOrUpdateFormSix(Request $request, BussinessAssistant $bussinessAssistant)
+    {
+        foreach ($request->data as $row) {
+
+            $validated = validator($row, [
+                'cooperation_id' => 'required|exists:cooperations,id',
+                'picture_land' => 'nullable|string',
+                'latitude' => 'nullable|string',
+                'longitude' => 'nullable|string',
+                'width_land' => 'nullable|numeric',
+                'long_land' => 'nullable|numeric',
+                'letter_land' => 'nullable|string',
+                'road_condition' => 'nullable|string',
+                'asset' => 'nullable|string',
+                'distance' => 'nullable|numeric',
+                'internet_access' => 'nullable|string',
+                'water_access' => 'nullable|string',
+                'electricity_access' => 'nullable|string',
+            ])->validate();
+
+            // Ambil cooperation → update langsung
+            $cooperation = Cooperation::find($validated['cooperation_id']);
+
+            // Cek apakah FormThree sudah ada
+            $formSix = $cooperation->formSix;
+
+            if ($formSix) {
+                $formSix->update($validated);
+            } else {
+                $cooperation->formSix()->create($validated);
+            }
+        }
+
+        return back()->with('success', 'Form 6 berhasil disimpan.');
+    }
+
+    public function generateReport(BussinessAssistant $bussinessAssistant)
+    {
+
+        $cooperations = $bussinessAssistant->cooperations()->with('formTwo')->get();
+
+
+        $pdf = Pdf::loadView('bussiness-assistants.detail.report', [
+            'cooperations' => $cooperations,
+            'bussinessAssistant' => $bussinessAssistant,
+        ])->setPaper('a4', 'landscape');;
+
+        return $pdf->download('itsolutionstuff.pdf');
     }
 }

@@ -147,27 +147,348 @@
                     </div>
                 </div>
 
+                <!-- CARD 4 - Rekening Bank -->
+                <div class="bg-white shadow-md rounded-lg p-6 flex flex-col items-center">
+                    <h3 class="text-lg font-semibold mb-4">Rekening Bank</h3>
+                    <div class="w-48 h-48">
+                        <canvas id="chartRekeningBank"></canvas>
+                    </div>
+                </div>
+
             </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6 mt-6">
+
+                <div class="bg-white shadow-lg rounded-xl overflow-hidden border border-gray-200">
+
+                    <div class="px-6 py-4 border-b bg-gray-50">
+                        <h3 class="text-lg font-semibold text-gray-700">Laporan Rekapitulasi KDKMP Berdasarkan
+                            Kabupaten/Kota</h3>
+                    </div>
+
+                    <div class="p-6 overflow-x-auto">
+
+                        <table class="w-full border-collapse text-sm">
+                            <thead>
+                                <tr class="bg-blue-600 text-white text-center">
+                                    <th class="p-2">No.</th>
+                                    <th class="p-2">Nama Kecamatan</th>
+                                    <th class="p-2">Jumlah Desa/Kelurahan</th>
+                                    <th class="p-2">Jumlah KDKMP</th>
+                                    <th class="p-2">Jumlah SK AHU Koperasi</th>
+                                    <th class="p-2">Jumlah NIB</th>
+                                    <th class="p-2">Jumlah NIK</th>
+                                </tr>
+                                <tr class="bg-blue-500 text-white text-center">
+                                    <th>1</th>
+                                    <th>2</th>
+                                    <th>3</th>
+                                    <th>4</th>
+                                    <th>5</th>
+                                    <th>6</th>
+                                    <th>7</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach ($reportOnes as $index => $r)
+                                    <tr class="text-center border-b">
+                                        <td class="p-2">{{ $index + 1 }}</td>
+                                        <td class="p-2">{{ $r['district'] }}</td>
+                                        <td class="p-2">{{ $r['total_villages'] }}</td>
+                                        <td class="p-2">{{ $r['total_kdkmp'] }}</td>
+                                        <td class="p-2">{{ $r['total_sk_ahu'] }}</td>
+                                        <td class="p-2">{{ $r['total_nib'] }}</td>
+                                        <td class="p-2">{{ $r['total_nik'] }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6 mt-6">
+
+                <div class="bg-white shadow-lg rounded-xl overflow-hidden border border-gray-200">
+
+                    <div class="px-6 py-4 border-b bg-gray-50">
+                        <h3 class="text-lg font-semibold text-gray-700">Laporan Rekapitulasi Bisnis Proses KDKMP</h3>
+                    </div>
+
+                    <div class="p-6 overflow-x-auto">
+
+                        <table class="w-full border-collapse text-sm">
+                            <thead>
+                                <tr class="bg-blue-600 text-white text-center">
+                                    <th rowspan="3" class="p-2">No.</th>
+                                    <th rowspan="3" class="p-2">Nama Kecamatan</th>
+                                    <th rowspan="3" class="p-2">Jumlah Desa/Kelurahan</th>
+                                    <th rowspan="3" class="p-2">Jumlah KDKMP</th>
+                                    <th colspan="12" class="p-2">Jumlah Gerai</th>
+
+                                </tr>
+                                <tr class="bg-blue-600 text-white text-center">
+                                    <th colspan="2" class="p-2">Gerai Sembako</th>
+                                    <th colspan="2" class="p-2">Gerai Apotik</th>
+                                    <th colspan="2" class="p-2">Gerai Klinik</th>
+                                    <th colspan="2" class="p-2">Gerai Simpan Pinjam</th>
+                                    <th colspan="2" class="p-2">Gerai Pergudangan</th>
+                                    <th colspan="2" class="p-2">Gerai Usaha Lain</th>
+                                </tr class="bg-blue-600 text-white text-center">
+                                <tr>
+                                    <th class="p-2">Ada Rencana Bisnis</th>
+                                    <th class="p-2">Tidak Ada Rencana Bisnis</th>
+                                    <th class="p-2">Ada Rencana Bisnis</th>
+                                    <th class="p-2">Tidak Ada Rencana Bisnis</th>
+                                    <th class="p-2">Ada Rencana Bisnis</th>
+                                    <th class="p-2">Tidak Ada Rencana Bisnis</th>
+                                    <th class="p-2">Ada Rencana Bisnis</th>
+                                    <th class="p-2">Tidak Ada Rencana Bisnis</th>
+                                    <th class="p-2">Ada Rencana Bisnis</th>
+                                    <th class="p-2">Tidak Ada Rencana Bisnis</th>
+                                    <th class="p-2">Ada Rencana Bisnis</th>
+                                    <th class="p-2">Tidak Ada Rencana Bisnis</th>
+
+                                </tr>
+                                <tr class="bg-blue-500 text-white text-center">
+                                    <th>1</th>
+                                    <th>2</th>
+                                    <th>3</th>
+                                    <th>4</th>
+                                    <th>5</th>
+                                    <th>6</th>
+                                    <th>7</th>
+                                    <th>8</th>
+                                    <th>9</th>
+                                    <th>10</th>
+                                    <th>11</th>
+                                    <th>12</th>
+                                    <th>13</th>
+                                    <th>14</th>
+                                    <th>15</th>
+                                    <th>16</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach ($reportTwos as $index => $r)
+                                    <tr class="text-center">
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $r['district'] }}</td>
+                                        <td>{{ $r['total_villages'] }}</td>
+                                        <td>{{ $r['total_villages'] }}</td> {{-- jika KDKMP sama dengan jumlah desa --}}
+
+                                        <td>{{ $r['basic_yes'] }}</td>
+                                        <td>{{ $r['basic_no'] }}</td>
+
+                                        <td>{{ $r['pharmacy_yes'] }}</td>
+                                        <td>{{ $r['pharmacy_no'] }}</td>
+
+                                        <td>{{ $r['clinic_yes'] }}</td>
+                                        <td>{{ $r['clinic_no'] }}</td>
+
+                                        <td>{{ $r['loan_yes'] }}</td>
+                                        <td>{{ $r['loan_no'] }}</td>
+
+                                        <td>{{ $r['logistics_yes'] }}</td>
+                                        <td>{{ $r['logistics_no'] }}</td>
+
+                                        <td>{{ $r['other_yes'] }}</td>
+                                        <td>{{ $r['other_no'] }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6 mt-6">
+
+                <div class="bg-white shadow-lg rounded-xl overflow-hidden border border-gray-200">
+
+                    <div class="px-6 py-4 border-b bg-gray-50">
+                        <h3 class="text-lg font-semibold text-gray-700">Laporan Rekapitulasi Gerai Koperasi KDKMP Yang
+                            Sudah Berjalan </h3>
+                    </div>
+
+                    <div class="p-6 overflow-x-auto">
+
+                        <table class="w-full border-collapse text-sm" border="1">
+                            <thead>
+                                <tr class="bg-blue-600 text-white text-center">
+                                    <th rowspan="2">No.</th>
+                                    <th rowspan="2">Nama Kecamatan</th>
+                                    <th rowspan="2">Jumlah Desa/Kelurahan</th>
+                                    <th rowspan="2">Jumlah KDKMP</th>
+                                    <th rowspan="2">Nama Gerai</th>
+                                    <th colspan="4">Volume Gerai</th>
+                                </tr>
+
+                                <tr class="bg-blue-500 text-white text-center">
+                                    <th>Jumlah Omset</th>
+                                    <th>Jumlah Aset</th>
+                                    <th>Jumlah Laba</th>
+                                    <th>Jumlah Rugi</th>
+                                </tr>
+
+                                <tr class="bg-blue-500 text-white text-center">
+                                    <th>1</th>
+                                    <th>2</th>
+                                    <th>3</th>
+                                    <th>4</th>
+                                    <th>5</th>
+                                    <th>6</th>
+                                    <th>7</th>
+                                    <th>8</th>
+                                    <th>9</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach ($reportThrees as $index => $r)
+                                    @foreach ($r['rows'] as $rowIndex => $row)
+                                        <tr class="text-center">
+
+                                            @if ($rowIndex == 0)
+                                                <td rowspan="6">{{ $index + 1 }}</td>
+                                                <td rowspan="6">{{ $r['district'] }}</td>
+                                                <td rowspan="6">{{ $r['total_villages'] }}</td>
+                                                <td rowspan="6">{{ $r['total_kdkmp'] }}</td>
+                                            @endif
+
+                                            <td class="text-left px-2">{{ $row['branch_type'] }}</td>
+                                            <td>{{ number_format($row['business_volume']) }}</td>
+                                            <td>{{ number_format($row['total_assets']) }}</td>
+                                            <td>{{ number_format($row['profit']) }}</td>
+                                            <td>{{ number_format($row['loss']) }}</td>
+
+                                        </tr>
+                                    @endforeach
+                                @endforeach
+                            </tbody>
+
+                            <tfoot>
+                                <tr class="font-bold">
+                                    <td colspan="5" class="text-center">TOTAL</td>
+
+                                    <td>{{ number_format($reportThrees->flatMap->rows->sum('business_volume')) }}</td>
+                                    <td>{{ number_format($reportThrees->flatMap->rows->sum('total_assets')) }}</td>
+                                    <td>{{ number_format($reportThrees->flatMap->rows->sum('profit')) }}</td>
+                                    <td>{{ number_format($reportThrees->flatMap->rows->sum('loss')) }}</td>
+                                </tr>
+                            </tfoot>
+
+                        </table>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6 mt-6">
+
+                <div class="bg-white shadow-lg rounded-xl overflow-hidden border border-gray-200">
+
+                    <div class="px-6 py-4 border-b bg-gray-50">
+                        <h3 class="text-lg font-semibold text-gray-700">Laporan Rekapitulasi Gerai Koperasi KDKMP Yang
+                            Sudah Berjalan </h3>
+                    </div>
+
+                    <div class="p-6 overflow-x-auto">
+
+                        <table class="w-full border-collapse text-sm">
+                            <thead>
+                                <tr class="bg-blue-600 text-white text-center">
+                                    <th rowspan="3" class="p-2">No.</th>
+                                    <th rowspan="3" class="p-2">Nama Kecamatan</th>
+                                    <th rowspan="3" class="p-2">Jumlah Desa/Kelurahan</th>
+                                    <th rowspan="3" class="p-2">Jumlah KDKMP</th>
+                                    <th colspan="6" class="p-2">Jumlah Yang Sudah Berjalan</th>
+
+                                </tr>
+                                <tr class="bg-blue-600 text-white text-center">
+                                    <th class="p-2">Gerai Sembako</th>
+                                    <th class="p-2">Gerai Apotik</th>
+                                    <th class="p-2">Gerai Klinik</th>
+                                    <th class="p-2">Gerai Simpan Pinjam</th>
+                                    <th class="p-2">Gerai Pergudangan</th>
+                                    <th class="p-2">Gerai Usaha Lain</th>
+                                </tr class="bg-blue-600 text-white text-center">
+                                <tr>
+                                    <th class="p-2"></th>
+                                    <th class="p-2"></th>
+                                    <th class="p-2"></th>
+                                    <th class="p-2"></th>
+                                    <th class="p-2"></th>
+                                    <th class="p-2"></th>
+                                </tr>
+                                <tr class="bg-blue-500 text-white text-center">
+                                    <th>1</th>
+                                    <th>2</th>
+                                    <th>3</th>
+                                    <th>4</th>
+                                    <th>5</th>
+                                    <th>6</th>
+                                    <th>7</th>
+                                    <th>8</th>
+                                    <th>9</th>
+                                    <th>10</th>
+
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach ($reportFours as $index => $r)
+                                    <tr class="text-center">
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $r['district'] }}</td>
+                                        <td>{{ $r['total_villages'] }}</td>
+                                        <td>{{ $r['total_villages'] }}</td> {{-- jika KDKMP sama dengan jumlah desa --}}
+
+                                        <td>{{ $r['basic_yes'] }}</td>
+
+                                        <td>{{ $r['pharmacy_yes'] }}</td>
+
+                                        <td>{{ $r['clinic_yes'] }}</td>
+
+                                        <td>{{ $r['loan_yes'] }}</td>
+
+                                        <td>{{ $r['logistics_yes'] }}</td>
+
+                                        <td>{{ $r['other_yes'] }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+            </div>
+
 
 
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 
             <script>
-                // --- Data Chart ---
-                const totalDesa = 167;
+                // Data dari database
+                const totalDesa = {{ $totalDesa }};
+                const desaNIB = {{ $desaNIB }};
+                const desaBelumNIB = {{ $desaBelumNIB }};
+                const simkopdesYa = {{ $simkopdesYa }};
+                const simkopdesTidak = {{ $simkopdesTidak }};
+                const npwpYa = {{ $npwpYa }};
+                const npwpTidak = {{ $npwpTidak }};
+                const bankYa = {{ $bankYa }};
+                const bankTidak = {{ $bankTidak }};
 
-                // NIB
-                const desaNIB = 50;
-                const desaBelumNIB = totalDesa - desaNIB;
-
-                // SIMKOPDES
-                const simkopdesYa = 167;
-                const simkopdesTidak = 0;
-
-                // NPWP
-                const npwpYa = 79;
-                const npwpTidak = totalDesa - npwpYa;
 
                 const options = {
                     responsive: true,
@@ -232,7 +553,22 @@
                     options,
                     plugins: [ChartDataLabels]
                 });
+
+                // Chart 4 - Rekening Bank 
+                new Chart(document.getElementById("chartRekeningBank"), {
+                    type: "doughnut",
+                    data: {
+                        labels: ["Sudah Memiliki", "Belum"],
+                        datasets: [{
+                            data: [bankYa, bankTidak],
+                            backgroundColor: ["#FF9800", "#E0E0E0"]
+                        }]
+                    },
+                    options,
+                    plugins: [ChartDataLabels]
+                });
             </script>
+
 
 
 

@@ -11,4 +11,9 @@ class District extends Model
     use HasFactory, SoftDeletes;
 
     protected $guarded = ['id'];
+
+    public function villages()
+    {
+        return $this->hasMany(Village::class);
+    }
 }

@@ -1,21 +1,92 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Form Pendataan Koperasi
+            Form 6
         </h2>
     </x-slot>
 
-    <x-slot name="script">
-        <script></script>
+    <x-slot name="style">
+        <style>
+            /* Hilangkan input file asli */
+            .hidden-file-input {
+                display: none;
+            }
+        </style>
     </x-slot>
+
+    <x-slot name="script">
+        <script>
+            function previewImage(input, previewId) {
+                const file = input.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = document.getElementById(previewId);
+                    img.src = e.target.result;
+                    img.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        </script>
+    </x-slot>
+
 
 
 
     <div class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            @if (session('error'))
+                <div class="mb-5" role="alert">
+                    <div class="bg-red-500 text-white font-bold rounded-t px-4 py-2">
+                        Error
+                    </div>
+                    <div class="border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700">
+                        {{ session('error') }}
+                    </div>
+                </div>
+            @endif
+
+            @if (session('success'))
+                <div class="mb-5" role="alert">
+                    <div class="bg-green-500 text-white font-bold rounded-t px-4 py-2">
+                        Berhasil
+                    </div>
+                    <div class="border border-t-0 border-green-400 rounded-b bg-green-100 px-4 py-3 text-green-700">
+                        {{ session('success') }}
+                    </div>
+                </div>
+            @endif
+            <div class="mb-10">
+                <a href="{{ route('bussiness-assistants.form-1', $bussinessAssistant->id) }}"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded shadow-lg">+ Form 1</a>
+
+                <a href="{{ route('bussiness-assistants.form-2', $bussinessAssistant->id) }}"
+                    class="bg-emerald-500 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded shadow-lg">+ Form
+                    2</a>
+
+                <a href="{{ route('bussiness-assistants.form-3', $bussinessAssistant->id) }}"
+                    class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded shadow-lg">+ Form
+                    3</a>
+
+                <a href="{{ route('bussiness-assistants.form-4', $bussinessAssistant->id) }}"
+                    class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-3 px-4 rounded shadow-lg">+ Form
+                    4</a>
+
+                <a href="{{ route('bussiness-assistants.form-5', $bussinessAssistant->id) }}"
+                    class="bg-pink-500 hover:bg-pink-700 text-white font-bold py-3 px-4 rounded shadow-lg">+ Form 5</a>
+
+                <a href="{{ route('bussiness-assistants.form-6', $bussinessAssistant->id) }}"
+                    class="bg-teal-500 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded shadow-lg">+ Form 6</a>
+
+                <a href="{{ route('bussiness-assistants.report', $bussinessAssistant->id) }}" target="_blank"
+                    class="bg-teal-500 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded shadow-lg">+ Laporan</a>
+
+            </div>
             <div class="bg-white shadow-xl rounded-lg p-6">
 
-                <form action="" method="POST">
+                <form action="{{ route('bussiness-assistants.form-6.store', $bussinessAssistant->id) }}" method="POST"
+                    enctype="multipart/form-data">
                     @csrf
 
                     {{-- Scroll container --}}
@@ -28,23 +99,27 @@
                                     <th class="w-[800px] min-w-[600px] border border-gray-300 px-2 py-1">
                                         Nama KDKMP
                                     </th>
-                                    <th class="border border-gray-300 px-3 py-2">Foto Tanah</th>
-                                    <th class="border border-gray-300 px-3 py-2">Titik Koordinat</th>
-                                    <th class="border border-gray-300 px-3 py-2">Lebar Tanah</th>
-                                    <th class="border border-gray-300 px-3 py-2">Panjang Tanah</th>
-                                    <th class="border border-gray-300 px-3 py-2">Surat Tanah</th>
-                                    <th class="border border-gray-300 px-3 py-2">Kondisi Jalan</th>
-                                    <th class="border border-gray-300 px-3 py-2">Tipe Aset</th>
-                                    <th class="border border-gray-300 px-3 py-2">Jarak Permukiman</th>
-                                    <th class="border border-gray-300 px-3 py-2">Akses Internet</th>
-                                    <th class="border border-gray-300 px-3 py-2">Akses Air</th>
-                                    <th class="border border-gray-300 px-3 py-2">Akses Listrik</th>
+                                    <th class=" min-w-[300px] border border-gray-300 px-3 py-2">Foto Tanah</th>
+                                    <th class="w-[400px] min-w-[300px] border border-gray-300 px-3 py-2">Titik Koordinat
+                                    </th>
+                                    <th class="min-w-[120px] border border-gray-300 px-3 py-2">Lebar Tanah</th>
+                                    <th class="min-w-[120px] border border-gray-300 px-3 py-2">Panjang Tanah</th>
+                                    <th class="min-w-[250px] border border-gray-300 px-3 py-2">Surat Tanah</th>
+                                    <th class="min-w-[220px] border border-gray-300 px-3 py-2">Kondisi Jalan</th>
+                                    <th class="min-w-[220px] border border-gray-300 px-3 py-2">Tipe Aset</th>
+                                    <th class="min-w-[120px] border border-gray-300 px-3 py-2">Jarak Permukiman</th>
+                                    <th class="min-w-[120px] border border-gray-300 px-3 py-2">Akses Internet</th>
+                                    <th class="min-w-[120px] border border-gray-300 px-3 py-2">Akses Air</th>
+                                    <th class="min-w-[120px] border border-gray-300 px-3 py-2">Akses Listrik</th>
                                 </tr>
 
                             </thead>
 
                             <tbody class="text-gray-700">
                                 @forelse ($cooperations as $index => $coop)
+                                    @php
+                                        $form = $coop->formSix; // Bisa null, aman
+                                    @endphp
                                     <tr class="odd:bg-gray-50 even:bg-white hover:bg-green-50 transition">
                                         <td class="border border-gray-300 px-2 py-1 font-medium text-center">
                                             {{ $index + 1 }}
@@ -59,58 +134,152 @@
 
 
                                         <td class="border border-gray-300 px-2 py-1">
-                                            <input type="file" name="data[{{ $index }}][nama]"
-                                                value="{{ $coop->name ?? '' }}"
-                                                class="w-full border-gray-300 rounded-lg text-sm p-2 focus:ring-2 focus:ring-green-400 focus:outline-none">
+                                            <div class="flex items-center gap-3">
+                                                <!-- Preview gambar -->
+                                                @if (!empty($coop->name))
+                                                    <img id="preview-{{ $index }}" src="{{ $coop->name }}"
+                                                        class="w-12 h-12 rounded-md object-cover border" />
+                                                @else
+                                                    <img id="preview-{{ $index }}"
+                                                        class="w-12 h-12 rounded-md object-cover border hidden" />
+                                                @endif
+
+
+                                                <!-- Tombol Upload Bulat -->
+                                                <label
+                                                    class="w-10 h-10 rounded-full cursor-pointer flex items-center justify-center
+                 bg-blue-600 hover:bg-blue-700 text-white shadow transition">
+
+                                                    <!-- Icon upload -->
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5"
+                                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1M12 12V4m0 0L8 8m4-4l4 4" />
+                                                    </svg>
+
+                                                    <input type="file" accept="image/*"
+                                                        name="data[{{ $index }}][nama]"
+                                                        id="file-{{ $index }}" class="hidden"
+                                                        onchange="previewImage(this, 'preview-{{ $index }}')">
+                                                </label>
+                                            </div>
+
+
+
                                         </td>
                                         <td class="border border-gray-300 px-2 py-1 text-center">
-                                            <input type="checkbox" class="checkbox-status"
-                                                data-group="{{ $index }}" data-type="belum"
-                                                name="data[{{ $index }}][belum_terdaftar]" value="1"
-                                                {{ !$coop->microsite_account ? 'checked' : '' }}>
+                                            <div class="flex gap-2">
+                                                <input type="text" name="data[{{ $index }}][latitude]"
+                                                    value="{{ $form?->latitude ?? '' }}"
+                                                    class="w-1/2 border-gray-300 rounded-lg text-sm p-2 focus:ring-2 focus:ring-green-400 focus:outline-none">
+
+                                                <input type="text" name="data[{{ $index }}][longitude]"
+                                                    value="{{ $form?->longitude ?? '' }}"
+                                                    class="w-1/2 border-gray-300 rounded-lg text-sm p-2 focus:ring-2 focus:ring-green-400 focus:outline-none">
+                                            </div>
                                         </td>
+
 
                                         {{-- Profil Koperasi --}}
                                         <td class="border border-gray-300 px-2 py-1">
-                                            <select name="data[{{ $index }}][berita_acara_musdes]"
-                                                class="border-gray-300 rounded w-full p-1">
-                                                <option value="">-- Pilih --</option>
-                                                <option value="Ada">Ada</option>
-                                                <option value="Belum Ada">Belum Ada</option>
-                                            </select>
+                                            <input type="number" name="data[{{ $index }}][width_land]"
+                                                value="{{ $form?->width_land ?? '' }}"
+                                                class="w-full border-gray-300 rounded-lg text-sm p-2 focus:ring-2 focus:ring-green-400 focus:outline-none">
                                         </td>
                                         <td class="border border-gray-300 px-2 py-1">
-                                            <select name="data[{{ $index }}][berita_acara_rapat]"
-                                                class="border-gray-300 rounded w-full p-1">
-                                                <option value="">-- Pilih --</option>
-                                                <option value="Ada">Ada</option>
-                                                <option value="Belum Ada">Belum Ada</option>
-                                            </select>
-                                        </td>
-                                        <td class="border border-gray-300 px-2 py-1 text-center">
-
-                                            <input type="text" name="data[{{ $index }}][nama]"
-                                                value="{{ $coop->legal_entity_number ?? '' }}"
+                                            <input type="number" name="data[{{ $index }}][long_land]"
+                                                value="{{ $form?->long_land ?? '' }}"
                                                 class="w-full border-gray-300 rounded-lg text-sm p-2 focus:ring-2 focus:ring-green-400 focus:outline-none">
+                                        </td>
+                                        <td class="border border-gray-300 px-2 py-1">
+
+
+                                            <div class="w-full">
+                                                <label
+                                                    class="flex items-center justify-center gap-2 border border-gray-300 rounded-lg p-2 cursor-pointer 
+                  hover:bg-gray-100 transition text-gray-700 text-sm">
+
+                                                    <!-- Ikon Upload -->
+                                                    📁 Upload File
+
+                                                    <input type="file" name="data[{{ $index }}][nama]"
+                                                        class="hidden-file-input">
+                                                </label>
+                                            </div>
+
                                         </td>
 
                                         {{-- Gerai --}}
-                                        <td class="border border-gray-300 px-2 py-1 text-center"><input type="checkbox"
-                                                name="data[{{ $index }}][sembako]" value="1"></td>
-                                        <td class="border border-gray-300 px-2 py-1 text-center"><input type="checkbox"
-                                                name="data[{{ $index }}][apotek]" value="1"></td>
-                                        <td class="border border-gray-300 px-2 py-1 text-center"><input type="checkbox"
-                                                name="data[{{ $index }}][klinik]" value="1"></td>
-                                        <td class="border border-gray-300 px-2 py-1 text-center"><input type="checkbox"
-                                                name="data[{{ $index }}][unit_simpan_pinjam]" value="1">
+                                        <td class="border border-gray-300 px-2 py-1 text-center">
+                                            <select name="data[{{ $index }}][road_condition]"
+                                                class="border-gray-300 rounded w-full p-1">
+                                                <option value="">-- Pilih --</option>
+                                                @foreach (['Tanah', 'Batu', 'Beraspal', 'Beton', 'Belum Ada Akses Jalan'] as $g)
+                                                    <option value="{{ $g }}"
+                                                        {{ $form?->road_condition == $g ? 'selected' : '' }}>
+                                                        {{ $g }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
                                         </td>
-                                        <td class="border border-gray-300 px-2 py-1 text-center"><input type="checkbox"
-                                                name="data[{{ $index }}][cold_storage]" value="1"></td>
-                                        <td class="border border-gray-300 px-2 py-1 text-center"><input type="checkbox"
-                                                name="data[{{ $index }}][logistik]" value="1"></td>
+                                        <td class="border border-gray-300 px-2 py-1 text-center">
+                                            <select name="data[{{ $index }}][asset]"
+                                                class="border-gray-300 rounded w-full p-1">
+                                                <option value="">-- Pilih --</option>
+                                                @foreach (['Milik Sendiri', 'Hibah', 'Barang Milik Desa (BMDes)', 'Barang Milik Daerah (BMD)', 'Barang Milik Negara (BMN)'] as $g)
+                                                    <option value="{{ $g }}"
+                                                        {{ $form?->asset == $g ? 'selected' : '' }}>
+                                                        {{ $g }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                        <td class="border border-gray-300 px-2 py-1">
+                                            <input type="number" name="data[{{ $index }}][distance]"
+                                                value="{{ $form?->distance ?? '' }}"
+                                                class="w-full border-gray-300 rounded-lg text-sm p-2 focus:ring-2 focus:ring-green-400 focus:outline-none">
+                                        </td>
+                                        <td class="border border-gray-300 px-2 py-1 text-center">
+                                            <select name="data[{{ $index }}][internet_access]"
+                                                class="border-gray-300 rounded w-full p-1">
+                                                <option value="">-- Pilih --</option>
+                                                @foreach (['Sinyal Kuat', 'Sinyal Lemah', 'Internet Fiber', 'Tidak Ada'] as $g)
+                                                    <option value="{{ $g }}"
+                                                        {{ $form?->internet_access == $g ? 'selected' : '' }}>
+                                                        {{ $g }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                        <td class="border border-gray-300 px-2 py-1 text-center">
+                                            <select name="data[{{ $index }}][water_access]"
+                                                class="border-gray-300 rounded w-full p-1">
+                                                <option value="">-- Pilih --</option>
+                                                @foreach (['Sumur', 'PAM', 'Mata Air', 'Tidak'] as $g)
+                                                    <option value="{{ $g }}"
+                                                        {{ $form?->water_access == $g ? 'selected' : '' }}>
+                                                        {{ $g }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                        {{-- Hidden cooperation_id --}}
+                                        <input type="hidden" name="data[{{ $index }}][cooperation_id]"
+                                            value="{{ $coop->id }}">
 
-
-
+                                        <td class="border border-gray-300 px-2 py-1 text-center">
+                                            <select name="data[{{ $index }}][electricity_access]"
+                                                class="border-gray-300 rounded w-full p-1">
+                                                <option value="">-- Pilih --</option>
+                                                @foreach (['PLN', 'Surya', 'Diesel', 'Tidak'] as $g)
+                                                    <option value="{{ $g }}"
+                                                        {{ $form?->electricity_access == $g ? 'selected' : '' }}>
+                                                        {{ $g }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </td>
 
                                     </tr>
                                 @empty
@@ -125,12 +294,19 @@
                         </table>
                     </div>
 
-                    <div class="mt-6 text-right">
+
+                    <div class="mt-6 text-right space-x-2">
+                        <a href="{{ route('bussiness-assistants.show', $bussinessAssistant->id) }}"
+                            class="inline-block bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-lg shadow transition text-center">
+                            Kembali
+                        </a>
+
                         <button type="submit"
-                            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow transition">
+                            class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow transition text-center">
                             💾 Simpan Data
                         </button>
                     </div>
+
                 </form>
 
             </div>

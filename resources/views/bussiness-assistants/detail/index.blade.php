@@ -85,6 +85,9 @@
                 <a href="{{ route('bussiness-assistants.form-6', $bussinessAssistant->id) }}"
                     class="bg-teal-500 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded shadow-lg">+ Form 6</a>
 
+                <a href="{{ route('bussiness-assistants.report', $bussinessAssistant->id) }}" target="_blank"
+                    class="bg-teal-500 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded shadow-lg">+ Laporan</a>
+
             </div>
 
 

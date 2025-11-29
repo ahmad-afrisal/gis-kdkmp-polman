@@ -16,22 +16,22 @@ class DistrictTableSeeder extends Seeder
     public function run(): void
     {
         $districts = [
-            'Polewali',
-            'Binuang',
-            'Wonomulyo',
-            'Campalagian',
-            'Tapango',
-            'Mapilli',
-            'Luyo',
-            'Anreapi',
-            'Matakali',
-            'Balanipa',
-            'Tinambung',
             'Allu',
+            'Anreapi',
+            'Binuang',
+            'Balanipa',
             'Bulo',
+            'Campalagian',
             'Limboro',
+            'Luyo',
+            'Mapilli',
+            'Matakali',
             'Matangnga',
+            'Polewali',
+            'Tapango',
+            'Tinambung',
             'Tutar',
+            'Wonomulyo',
         ];
 
         foreach ($districts as $name) {
