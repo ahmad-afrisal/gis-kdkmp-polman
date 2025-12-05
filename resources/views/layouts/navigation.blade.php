@@ -19,6 +19,13 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('land-statistics.index')" :active="request()->routeIs('land-statistics.*')">
+                        {{ __('Statistik Lahan') }}
+                    </x-nav-link>
+                </div>
+
+                <!-- Navigation Links -->
+                {{-- <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('districts.index')" :active="request()->routeIs('districts.*')">
                         {{ __('Kecamatan') }}
                     </x-nav-link>
@@ -29,7 +36,7 @@
                     <x-nav-link :href="route('villages.index')" :active="request()->routeIs('villages.*')">
                         {{ __('Desa') }}
                     </x-nav-link>
-                </div>
+                </div> --}}
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
@@ -47,10 +54,17 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('polygons.index')" :active="request()->routeIs('polygons.*')">
+                        {{ __('Polygon') }}
+                    </x-nav-link>
+                </div>
+
+                <!-- Navigation Links -->
+                {{-- <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('pmo-documentations.index')" :active="request()->routeIs('pmo-documentations.*')">
                         {{ __('Dokumentasi PMO') }}
                     </x-nav-link>
-                </div>
+                </div> --}}
             </div>
 
             <!-- Settings Dropdown -->
@@ -113,6 +127,24 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('land-statistics.index')" :active="request()->routeIs('land-statistics.*')">
+                {{ __('Statistik Lahan') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('bussiness-assistants.index')" :active="request()->routeIs('bussiness-assistants.*')">
+                {{ __('Business Assistant') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('cooperations.index')" :active="request()->routeIs('cooperations.*')">
+                {{ __('Koperasi') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('polygons.index')" :active="request()->routeIs('polygons.*')">
+                {{ __('Polygon') }}
+            </x-responsive-nav-link>
+
+
         </div>
 
         <!-- Responsive Settings Options -->

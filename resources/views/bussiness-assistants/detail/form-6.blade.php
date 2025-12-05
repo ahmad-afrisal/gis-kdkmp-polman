@@ -57,32 +57,50 @@
                     </div>
                 </div>
             @endif
-            <div class="mb-10">
+            <div class="mb-10 flex flex-wrap gap-3">
                 <a href="{{ route('bussiness-assistants.form-1', $bussinessAssistant->id) }}"
-                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded shadow-lg">+ Form 1</a>
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-3 px-5 rounded-xl shadow-md 
+        w-full sm:w-auto text-center">
+                    + Form 1
+                </a>
 
                 <a href="{{ route('bussiness-assistants.form-2', $bussinessAssistant->id) }}"
-                    class="bg-emerald-500 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded shadow-lg">+ Form
-                    2</a>
+                    class="bg-emerald-500 hover:bg-emerald-700 text-white font-semibold py-3 px-5 rounded-xl shadow-md 
+        w-full sm:w-auto text-center">
+                    + Form 2
+                </a>
 
                 <a href="{{ route('bussiness-assistants.form-3', $bussinessAssistant->id) }}"
-                    class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded shadow-lg">+ Form
-                    3</a>
+                    class="bg-indigo-500 hover:bg-indigo-700 text-white font-semibold py-3 px-5 rounded-xl shadow-md 
+        w-full sm:w-auto text-center">
+                    + Form 3
+                </a>
 
                 <a href="{{ route('bussiness-assistants.form-4', $bussinessAssistant->id) }}"
-                    class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-3 px-4 rounded shadow-lg">+ Form
-                    4</a>
+                    class="bg-orange-500 hover:bg-orange-700 text-white font-semibold py-3 px-5 rounded-xl shadow-md 
+        w-full sm:w-auto text-center">
+                    + Form 4
+                </a>
 
                 <a href="{{ route('bussiness-assistants.form-5', $bussinessAssistant->id) }}"
-                    class="bg-pink-500 hover:bg-pink-700 text-white font-bold py-3 px-4 rounded shadow-lg">+ Form 5</a>
+                    class="bg-pink-500 hover:bg-pink-700 text-white font-semibold py-3 px-5 rounded-xl shadow-md 
+        w-full sm:w-auto text-center">
+                    + Form 5
+                </a>
 
                 <a href="{{ route('bussiness-assistants.form-6', $bussinessAssistant->id) }}"
-                    class="bg-teal-500 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded shadow-lg">+ Form 6</a>
+                    class="bg-teal-500 hover:bg-teal-700 text-white font-semibold py-3 px-5 rounded-xl shadow-md 
+        w-full sm:w-auto text-center">
+                    + Form 6
+                </a>
 
                 <a href="{{ route('bussiness-assistants.report', $bussinessAssistant->id) }}" target="_blank"
-                    class="bg-teal-500 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded shadow-lg">+ Laporan</a>
-
+                    class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 px-5 rounded-xl shadow-md 
+        w-full sm:w-auto text-center">
+                    + Laporan
+                </a>
             </div>
+
             <div class="bg-white shadow-xl rounded-lg p-6">
 
                 <form action="{{ route('bussiness-assistants.form-6.store', $bussinessAssistant->id) }}" method="POST"
@@ -99,18 +117,19 @@
                                     <th class="w-[800px] min-w-[600px] border border-gray-300 px-2 py-1">
                                         Nama KDKMP
                                     </th>
-                                    <th class=" min-w-[300px] border border-gray-300 px-3 py-2">Foto Tanah</th>
+                                    <th class=" min-w-[130px] border border-gray-300 px-3 py-2">Foto Tanah</th>
                                     <th class="w-[400px] min-w-[300px] border border-gray-300 px-3 py-2">Titik Koordinat
                                     </th>
                                     <th class="min-w-[120px] border border-gray-300 px-3 py-2">Lebar Tanah</th>
                                     <th class="min-w-[120px] border border-gray-300 px-3 py-2">Panjang Tanah</th>
-                                    <th class="min-w-[250px] border border-gray-300 px-3 py-2">Surat Tanah</th>
+                                    <th class="min-w-[120px] border border-gray-300 px-3 py-2">Surat Tanah</th>
                                     <th class="min-w-[220px] border border-gray-300 px-3 py-2">Kondisi Jalan</th>
                                     <th class="min-w-[220px] border border-gray-300 px-3 py-2">Tipe Aset</th>
                                     <th class="min-w-[120px] border border-gray-300 px-3 py-2">Jarak Permukiman</th>
                                     <th class="min-w-[120px] border border-gray-300 px-3 py-2">Akses Internet</th>
                                     <th class="min-w-[120px] border border-gray-300 px-3 py-2">Akses Air</th>
                                     <th class="min-w-[120px] border border-gray-300 px-3 py-2">Akses Listrik</th>
+                                    <th class="min-w-[400px] border border-gray-300 px-3 py-2">Keterangan</th>
                                 </tr>
 
                             </thead>
@@ -137,13 +156,14 @@
                                             <div class="flex items-center gap-3">
                                                 <!-- Preview gambar -->
                                                 @if (!empty($coop->name))
-                                                    <img id="preview-{{ $index }}" src="{{ $coop->name }}"
-                                                        class="w-12 h-12 rounded-md object-cover border" />
+                                                    <img id="preview-{{ $index }}"
+                                                        src="{{ $form?->picture_land ? asset('storage/' . $form->picture_land) : '' }}"
+                                                        class="w-12 h-12 rounded-md object-cover border {{ $form?->picture_land ? '' : 'hidden' }}" />
                                                 @else
                                                     <img id="preview-{{ $index }}"
-                                                        class="w-12 h-12 rounded-md object-cover border hidden" />
+                                                        src="{{ $form?->picture_land ? asset($form->picture_land) : '' }}"
+                                                        class="w-12 h-12 rounded-md object-cover border {{ $form?->picture_land ? '' : 'hidden' }}" />
                                                 @endif
-
 
                                                 <!-- Tombol Upload Bulat -->
                                                 <label
@@ -159,9 +179,10 @@
                                                     </svg>
 
                                                     <input type="file" accept="image/*"
-                                                        name="data[{{ $index }}][nama]"
+                                                        name="data[{{ $index }}][picture_land]"
                                                         id="file-{{ $index }}" class="hidden"
                                                         onchange="previewImage(this, 'preview-{{ $index }}')">
+
                                                 </label>
                                             </div>
 
@@ -194,21 +215,35 @@
                                         </td>
                                         <td class="border border-gray-300 px-2 py-1">
 
+                                            <div class="flex items-center gap-3">
 
-                                            <div class="w-full">
+                                                <!-- Preview Surat Tanah -->
+                                                <img id="preview-letter-{{ $index }}"
+                                                    src="{{ $form?->letter_land ? asset('storage/' . $form->letter_land) : '' }}"
+                                                    class="w-12 h-12 rounded-md object-cover border {{ $form?->letter_land ? '' : 'hidden' }}" />
+
+                                                <!-- Tombol Upload -->
                                                 <label
-                                                    class="flex items-center justify-center gap-2 border border-gray-300 rounded-lg p-2 cursor-pointer 
-                  hover:bg-gray-100 transition text-gray-700 text-sm">
+                                                    class="w-10 h-10 rounded-full cursor-pointer flex items-center justify-center
+                      bg-orange-600 hover:bg-orange-700 text-white shadow transition">
 
-                                                    <!-- Ikon Upload -->
-                                                    📁 Upload File
+                                                    <!-- Ikon upload -->
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5"
+                                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1M12 12V4m0 0L8 8m4-4l4 4" />
+                                                    </svg>
 
-                                                    <input type="file" name="data[{{ $index }}][nama]"
-                                                        class="hidden-file-input">
+                                                    <input type="file" accept="image/*"
+                                                        name="data[{{ $index }}][letter_land]"
+                                                        id="letter-land-{{ $index }}" class="hidden"
+                                                        onchange="previewImage(this, 'preview-letter-{{ $index }}')">
                                                 </label>
                                             </div>
 
                                         </td>
+
 
                                         {{-- Gerai --}}
                                         <td class="border border-gray-300 px-2 py-1 text-center">
@@ -227,7 +262,7 @@
                                             <select name="data[{{ $index }}][asset]"
                                                 class="border-gray-300 rounded w-full p-1">
                                                 <option value="">-- Pilih --</option>
-                                                @foreach (['Milik Sendiri', 'Hibah', 'Barang Milik Desa (BMDes)', 'Barang Milik Daerah (BMD)', 'Barang Milik Negara (BMN)'] as $g)
+                                                @foreach (['Milik Sendiri', 'Hibah', 'Barang Milik KUD', 'Barang Milik Desa (BMDes)', 'Barang Milik Daerah (BMD)', 'Barang Milik Negara (BMN)'] as $g)
                                                     <option value="{{ $g }}"
                                                         {{ $form?->asset == $g ? 'selected' : '' }}>
                                                         {{ $g }}
@@ -280,6 +315,12 @@
                                                 @endforeach
                                             </select>
                                         </td>
+                                        <td class="border border-gray-300 px-2 py-1">
+                                            <input type="text" name="data[{{ $index }}][description]"
+                                                value="{{ $form?->description }}"
+                                                class="w-full border-gray-300 rounded-lg text-sm p-2 focus:ring-2 focus:ring-green-400 focus:outline-none">
+                                        </td>
+
 
                                     </tr>
                                 @empty

@@ -8,6 +8,7 @@ use App\Models\FormFive;
 use Barryvdh\DomPDF\Facade\Pdf;
 // use Barryvdh\DomPDF\PDF;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 
 class BussinessAssistantController extends Controller
@@ -417,29 +418,56 @@ class BussinessAssistantController extends Controller
 
     public function storeOrUpdateFormSix(Request $request, BussinessAssistant $bussinessAssistant)
     {
-        foreach ($request->data as $row) {
+
+        // return dd($request->all());
+        foreach ($request->data as $index => $row) {
+
+            // Ambil file gambar jika ada
+            $file = $request->file("data.$index.picture_land");
 
             $validated = validator($row, [
                 'cooperation_id' => 'required|exists:cooperations,id',
-                'picture_land' => 'nullable|string',
+                // 'picture_land' => 'nullable|string',
                 'latitude' => 'nullable|string',
                 'longitude' => 'nullable|string',
                 'width_land' => 'nullable|numeric',
                 'long_land' => 'nullable|numeric',
-                'letter_land' => 'nullable|string',
+                'letter_land' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
                 'road_condition' => 'nullable|string',
                 'asset' => 'nullable|string',
                 'distance' => 'nullable|numeric',
                 'internet_access' => 'nullable|string',
                 'water_access' => 'nullable|string',
                 'electricity_access' => 'nullable|string',
+                'description' => 'nullable|string',
             ])->validate();
+
+            // Jika ada file upload → simpan file
+            if ($file) {
+                $path = $file->store('form-six/picture-land', 'public');
+                $validated['picture_land'] = $path;
+            }
+
+
 
             // Ambil cooperation → update langsung
             $cooperation = Cooperation::find($validated['cooperation_id']);
 
             // Cek apakah FormThree sudah ada
             $formSix = $cooperation->formSix;
+
+            // UPLOAD GAMBAR (Surat Tanah)
+            // =====================
+            if (isset($row['letter_land']) && $row['letter_land'] instanceof \Illuminate\Http\UploadedFile) {
+
+                // Hapus file lama jika ada
+                if ($formSix && $formSix->letter_land && Storage::disk('public')->exists($formSix->letter_land)) {
+                    Storage::disk('public')->delete($formSix->letter_land);
+                }
+
+                // Simpan file baru
+                $validated['letter_land'] = $row['letter_land']->store('form-six/letter', 'public');
+            }
 
             if ($formSix) {
                 $formSix->update($validated);

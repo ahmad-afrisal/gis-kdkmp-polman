@@ -17,6 +17,11 @@ class Cooperation extends Model
         return $this->belongsTo(BussinessAssistant::class, 'bussiness_assistant_id');
     }
 
+    public function village()
+    {
+        return $this->belongsTo(Village::class, 'village_id');
+    }
+
     public function formTwo()
     {
         return $this->hasOne(FormTwo::class, 'cooperation_id');

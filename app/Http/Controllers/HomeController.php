@@ -58,4 +58,15 @@ class HomeController extends Controller
 
         return response()->json($data);
     }
+
+    public function gallery()
+    {
+        return view('gallery');
+    }
+
+    public function performance($id)
+    {
+        $assistant = BussinessAssistant::findOrFail($id);
+        return view('performance', compact('assistant'));
+    }
 }

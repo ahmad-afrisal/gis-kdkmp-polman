@@ -16,4 +16,9 @@ class Village extends Model
     {
         return $this->hasOne(Cooperation::class);
     }
+
+    public function district()
+    {
+        return $this->belongsTo(District::class, 'district_id');
+    }
 }

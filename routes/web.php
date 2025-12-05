@@ -6,6 +6,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\DocumentationPmoController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LandStatisticController;
+use App\Http\Controllers\PolygonController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VillageController;
 use Illuminate\Support\Facades\Route;
@@ -14,7 +16,9 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
-Route::get('/', [HomeController::class, 'index'])->name('welcomet');
+Route::get('/', [HomeController::class, 'index'])->name('welcome');
+Route::get('/galleries', [HomeController::class, 'gallery'])->name('galleries');
+Route::get('/performance/{id}', [HomeController::class, 'performance'])->name('performance');
 Route::get('/map/filter', [HomeController::class, 'filter'])->name('map.filter');
 
 
@@ -79,6 +83,9 @@ Route::middleware('auth')->group(function () {
         ->name('bussiness-assistants.report');
 
 
+    Route::get('land-statistics/export', [LandStatisticController::class, 'export'])->name('land-statistic.export');
+    Route::resource('land-statistics', LandStatisticController::class);
+    Route::resource('polygons', PolygonController::class);
     Route::resource('bussiness-assistants', BussinessAssistantController::class);
     Route::resource('cooperations', CooperationController::class);
     Route::resource('villages', VillageController::class);
