@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BussinessAssistantController;
+use App\Http\Controllers\ContactManagementController;
 use App\Http\Controllers\CooperationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DistrictController;
@@ -8,8 +9,10 @@ use App\Http\Controllers\DocumentationPmoController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LandStatisticController;
 use App\Http\Controllers\PolygonController;
+use App\Http\Controllers\ProblemController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VillageController;
+use App\Http\Controllers\WeeklyReportController;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
@@ -18,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('welcome');
 Route::get('/galleries', [HomeController::class, 'gallery'])->name('galleries');
+Route::get('/contacts', [HomeController::class, 'contact'])->name('contacts');
 Route::get('/performance/{id}', [HomeController::class, 'performance'])->name('performance');
 Route::get('/map/filter', [HomeController::class, 'filter'])->name('map.filter');
 
@@ -79,6 +83,13 @@ Route::middleware('auth')->group(function () {
         [BussinessAssistantController::class, 'storeOrUpdateFormSix']
     )->name('bussiness-assistants.form-6.store');
 
+    Route::get('bussiness-assistants/{bussinessAssistant}/form-7', [BussinessAssistantController::class, 'form7'])
+        ->name('bussiness-assistants.form-7');
+    Route::post(
+        'bussiness-assistants/{bussinessAssistant}/form-7',
+        [BussinessAssistantController::class, 'storeOrUpdateFormSeven']
+    )->name('bussiness-assistants.form-7.store');
+
     Route::get('bussiness-assistants/{bussinessAssistant}/report', [BussinessAssistantController::class, 'generateReport'])
         ->name('bussiness-assistants.report');
 
@@ -86,10 +97,14 @@ Route::middleware('auth')->group(function () {
     Route::get('land-statistics/export', [LandStatisticController::class, 'export'])->name('land-statistic.export');
     Route::resource('land-statistics', LandStatisticController::class);
     Route::resource('polygons', PolygonController::class);
+    Route::get('bussiness-assistants/performance/{id}', [BussinessAssistantController::class, 'performance'])->name('bussiness-assistants.performance');
     Route::resource('bussiness-assistants', BussinessAssistantController::class);
     Route::resource('cooperations', CooperationController::class);
     Route::resource('villages', VillageController::class);
     Route::resource('pmo-documentations', DocumentationPmoController::class);
+    Route::resource('problems', ProblemController::class);
+    Route::resource('contact-managements', ContactManagementController::class);
+    Route::resource('weekly-reports', WeeklyReportController::class);
 });
 
 require __DIR__ . '/auth.php';

@@ -7,11 +7,27 @@ use App\Models\Cooperation;
 use App\Models\District;
 use App\Models\Village;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 
 class HomeController extends Controller
 {
     public function index()
     {
+
+        if (request()->ajax()) {
+            $query = Cooperation::with([
+                'village:id,name,district_id',
+                'village.district:id,name',
+                'bussinessAssistant:id,name',
+            ]);
+
+            return DataTables::of($query)
+                ->addColumn('ba', fn($item) => $item->bussinessAssistant->name ?? '-')
+                ->addColumn('district', fn($item) => $item->village->district->name ?? '-')
+
+                ->make(true);
+        }
+
         $districts = District::select('id', 'name')->get();
         $assistants = BussinessAssistant::select('id', 'name')->get();
 
@@ -62,6 +78,11 @@ class HomeController extends Controller
     public function gallery()
     {
         return view('gallery');
+    }
+
+    public function contact()
+    {
+        return view('contact');
     }
 
     public function performance($id)

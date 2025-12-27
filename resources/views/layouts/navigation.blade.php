@@ -29,14 +29,14 @@
                     <x-nav-link :href="route('districts.index')" :active="request()->routeIs('districts.*')">
                         {{ __('Kecamatan') }}
                     </x-nav-link>
-                </div>
+                </div> --}}
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('villages.index')" :active="request()->routeIs('villages.*')">
                         {{ __('Desa') }}
                     </x-nav-link>
-                </div> --}}
+                </div>
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
@@ -56,6 +56,24 @@
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('polygons.index')" :active="request()->routeIs('polygons.*')">
                         {{ __('Polygon') }}
+                    </x-nav-link>
+                </div>
+
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('problems.index')" :active="request()->routeIs('problems.*')">
+                        {{ __('Permasalahan') }}
+                    </x-nav-link>
+                </div>
+
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('contact-managements.index')" :active="request()->routeIs('contact-managements.*')">
+                        {{ __('Kontak Pengurus') }}
+                    </x-nav-link>
+                </div>
+
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('weekly-reports.index')" :active="request()->routeIs('weekly-reports.*')">
+                        {{ __('Laporan Mingguan') }}
                     </x-nav-link>
                 </div>
 
@@ -142,6 +160,14 @@
 
             <x-responsive-nav-link :href="route('polygons.index')" :active="request()->routeIs('polygons.*')">
                 {{ __('Polygon') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('problems.index')" :active="request()->routeIs('problems.*')">
+                {{ __('Permasalahan') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('contact-managements.index')" :active="request()->routeIs('contact-managements.*')">
+                {{ __('Kontak Pengurus') }}
             </x-responsive-nav-link>
 
 

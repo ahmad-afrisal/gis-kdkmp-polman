@@ -21,6 +21,10 @@ class BussinessAssistantController extends Controller
             return DataTables::of($query)
                 ->addColumn('action', function ($item) {
                     return '
+                    <a href="' . route('bussiness-assistants.performance', $item->id) . '" 
+                        class="inline-block bg-orange-500 hover:bg-orange-700 text-white font-bold py-1 px-2 rounded shadow-lg">
+                        Performa
+                    </a>
                     <a href="' . route('bussiness-assistants.show', $item->id) . '" 
                         class="inline-block bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-1 px-2 rounded shadow-lg">
                         Koperasi
@@ -479,6 +483,47 @@ class BussinessAssistantController extends Controller
         return back()->with('success', 'Form 6 berhasil disimpan.');
     }
 
+    public function form7(BussinessAssistant $bussinessAssistant)
+    {
+        // Ambil semua koperasi yang dimiliki oleh Business Assistant ini
+        $cooperations = $bussinessAssistant->cooperations()->with('formSix')->get();
+
+        // Kirim ke view form-1.blade.php
+        return view('bussiness-assistants.detail.form-7', compact('bussinessAssistant', 'cooperations'));
+    }
+
+    public function storeOrUpdateFormSeven(Request $request, BussinessAssistant $bussinessAssistant)
+    {
+        $request->validate([
+            'data' => 'required|array',
+        ]);
+
+        foreach ($request->data as $row) {
+
+            $validated = validator($row, [
+                'cooperation_id' => 'required|exists:cooperations,id',
+                'number_of_member' => 'nullable|numeric',
+            ])->validate();
+
+            $cooperation = Cooperation::findOrFail($validated['cooperation_id']);
+
+            $dataFormSeven = [
+                'number_of_member' => $validated['number_of_member'] ?? null,
+            ];
+
+            $formSeven = $cooperation->formSeven;
+
+            if ($formSeven) {
+                $formSeven->update($dataFormSeven);
+            } else {
+                $cooperation->formSeven()->create($dataFormSeven);
+            }
+        }
+
+        return back()->with('success', 'Form 7 berhasil disimpan.');
+    }
+
+
     public function generateReport(BussinessAssistant $bussinessAssistant)
     {
 
@@ -491,5 +536,54 @@ class BussinessAssistantController extends Controller
         ])->setPaper('a4', 'landscape');;
 
         return $pdf->download('itsolutionstuff.pdf');
+    }
+
+    public function performance($id)
+    {
+        $bussinessAssistant = BussinessAssistant::findOrFail($id);
+        $cooperations = $bussinessAssistant->cooperations()->get();
+
+        // Hitung cooperation milik BA
+        $cooperationCount = $bussinessAssistant->cooperations()->count();
+
+        $nibYes = Cooperation::where('bussiness_assistant_id', $id)
+            ->whereHas('formThree', function ($q) {
+                $q->where('nib', 1);
+            })->count();
+
+        $simkopdesYes = Cooperation::where('bussiness_assistant_id', $id)->where('microsite_account', 1)->count();
+
+
+        $npwpYes = Cooperation::where('bussiness_assistant_id', $id)
+            ->whereHas('formThree', function ($q) {
+                $q->where('npwp', 1);
+            })->count();
+
+        $cooperativeBankAccountYes = Cooperation::where('bussiness_assistant_id', $id)
+            ->whereHas('formThree', function ($q) {
+                $q->where('cooperative_bank_account', 1);
+            })->count();
+
+        $businessAcitivtyPlanYes = Cooperation::where('bussiness_assistant_id', $id)
+            ->whereHas('formThree', function ($q) {
+                $q->where('business_activity_plan', 1);
+            })->count();
+
+        $financingProposalYes = Cooperation::where('bussiness_assistant_id', $id)
+            ->whereHas('formFour', function ($q) {
+                $q->where('financing_proposal', 1);
+            })->count();
+
+        return view('bussiness-assistants.performance', compact(
+            'bussinessAssistant',
+            'cooperations',
+            'nibYes',
+            'simkopdesYes',
+            'npwpYes',
+            'cooperativeBankAccountYes',
+            'financingProposalYes',
+            'businessAcitivtyPlanYes',
+            'cooperationCount'
+        ));
     }
 }

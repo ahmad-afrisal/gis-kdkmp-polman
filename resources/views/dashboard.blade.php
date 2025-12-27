@@ -118,6 +118,22 @@
                     </div>
                 </div>
 
+                {{-- Card Jumlah Anggota --}}
+
+                <div class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6 flex items-center justify-between">
+                    <div>
+                        <div class="text-gray-500 text-sm font-medium">Jumlah Anggota Koperasi</div>
+                        <div class="text-3xl font-bold text-gray-900">{{ $totalMember }}</div>
+                    </div>
+                    <div class="text-blue-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 20l-5.447-2.724A2 2 0 013 15.382V5.618a2 2 0 01.553-1.382L9 2m0 18l6 2m-6-2V2m6 20l5.447-2.724A2 2 0 0021 17.618V7.382a2 2 0 00-.553-1.382L15 2m0 20V2m0 0L9 2" />
+                        </svg>
+                    </div>
+                </div>
+
             </div>
 
             <!-- Grid untuk 3 Chart -->
@@ -155,7 +171,42 @@
                     </div>
                 </div>
 
+                <!-- CARD 5 - Business Plan -->
+                <div class="bg-white shadow-md rounded-lg p-6 flex flex-col items-center">
+                    <h3 class="text-lg font-semibold mb-4">Rencana Kegiatan Bisnis</h3>
+                    <div class="w-48 h-48">
+                        <canvas id="chartBusinessPlan"></canvas>
+                    </div>
+                </div>
+
+                <!-- CARD 6 - Financing -->
+                <div class="bg-white shadow-md rounded-lg p-6 flex flex-col items-center">
+                    <h3 class="text-lg font-semibold mb-4">Proposal Bisnis</h3>
+                    <div class="w-48 h-48">
+                        <canvas id="chartFinancingProposal"></canvas>
+                    </div>
+                </div>
+
             </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
+
+                <!-- Line Chart Jumlah Anggota -->
+                <div class="bg-white shadow-md rounded-lg p-6">
+                    <h3 class="text-lg font-semibold mb-4">Perkembangan Jumlah Anggota</h3>
+                    <canvas id="lineMember"></canvas>
+                </div>
+
+                <!-- Line Chart Dokumen -->
+                <div class="bg-white shadow-md rounded-lg p-6">
+                    <h3 class="text-lg font-semibold mb-4">Perkembangan Dokumen & Kegiatan</h3>
+                    <canvas id="lineDocuments"></canvas>
+                </div>
+
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6 mt-6">
+            </div>
+
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6 mt-6">
 
@@ -488,6 +539,83 @@
                 const npwpTidak = {{ $npwpTidak }};
                 const bankYa = {{ $bankYa }};
                 const bankTidak = {{ $bankTidak }};
+                const businessPlanYes = {{ $businessPlanYes }};
+                const businessPlanNo = {{ $businessPlanNo }};
+                const financingProposalYes = {{ $financingProposalYes }};
+                const financingProposalNo = {{ $financingProposalNo }};
+
+
+                const memberData = @json($memberData);
+
+
+                const labels = @json($labels);
+                const rawDatasets = @json($datasets);
+                const datasets = Object.keys(rawDatasets).map(label => ({
+                    label: label,
+                    data: rawDatasets[label],
+                    tension: 0.4,
+                    borderWidth: 2,
+                    fill: false
+                }));
+
+                new Chart(document.getElementById('lineDocuments'), {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: datasets
+                    },
+                    options: {
+                        responsive: true,
+                        interaction: {
+                            mode: 'index',
+                            intersect: false
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    precision: 0
+                                }
+                            }
+                        }
+                    }
+                });
+
+
+
+                // Line Chart Jumlah Anggota
+                new Chart(document.getElementById('lineMember'), {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Jumlah Anggota',
+                            data: memberData,
+                            tension: 0.4,
+                            fill: false,
+                            borderWidth: 3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top'
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+
 
 
                 const options = {
@@ -561,7 +689,35 @@
                         labels: ["Sudah Memiliki", "Belum"],
                         datasets: [{
                             data: [bankYa, bankTidak],
-                            backgroundColor: ["#FF9800", "#E0E0E0"]
+                            backgroundColor: ["#C0392B", "#E0E0E0"]
+                        }]
+                    },
+                    options,
+                    plugins: [ChartDataLabels]
+                });
+
+                // Chart 5 - Rekening Bank 
+                new Chart(document.getElementById("chartBusinessPlan"), {
+                    type: "doughnut",
+                    data: {
+                        labels: ["Sudah Memiliki", "Belum"],
+                        datasets: [{
+                            data: [businessPlanYes, businessPlanNo],
+                            backgroundColor: ["#9B59B6", "#E0E0E0"]
+                        }]
+                    },
+                    options,
+                    plugins: [ChartDataLabels]
+                });
+
+                // Chart 5 - Rekening Bank 
+                new Chart(document.getElementById("chartFinancingProposal"), {
+                    type: "doughnut",
+                    data: {
+                        labels: ["Sudah Memiliki", "Belum"],
+                        datasets: [{
+                            data: [financingProposalYes, financingProposalNo],
+                            backgroundColor: ["#FF007F", "#E0E0E0"]
                         }]
                     },
                     options,

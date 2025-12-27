@@ -9,8 +9,98 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css" rel="stylesheet">
 
     <style>
+        /*Form fields*/
+        .dataTables_wrapper select,
+        .dataTables_wrapper .dataTables_filter input {
+            color: #4a5568;
+            /*text-gray-700*/
+            padding-left: 1rem;
+            /*pl-4*/
+            padding-right: 1rem;
+            /*pl-4*/
+            padding-top: .5rem;
+            /*pl-2*/
+            padding-bottom: .5rem;
+            /*pl-2*/
+            line-height: 1.25;
+            /*leading-tight*/
+            border-width: 2px;
+            /*border-2*/
+            border-radius: .25rem;
+            border-color: #edf2f7;
+            /*border-gray-200*/
+            background-color: #edf2f7;
+            /*bg-gray-200*/
+        }
+
+        /*Row Hover*/
+        table.dataTable.hover tbody tr:hover,
+        table.dataTable.display tbody tr:hover {
+            background-color: #ebf4ff;
+            /*bg-indigo-100*/
+        }
+
+        /*Pagination Buttons*/
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            font-weight: 700;
+            /*font-bold*/
+            border-radius: .25rem;
+            /*rounded*/
+            border: 1px solid transparent;
+            /*border border-transparent*/
+        }
+
+        /*Pagination Buttons - Current selected */
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+            color: #fff !important;
+            /*text-white*/
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .1), 0 1px 2px 0 rgba(0, 0, 0, .06);
+            /*shadow*/
+            font-weight: 700;
+            /*font-bold*/
+            border-radius: .25rem;
+            /*rounded*/
+            background: #667eea !important;
+            /*bg-indigo-500*/
+            border: 1px solid transparent;
+            /*border border-transparent*/
+        }
+
+        /*Pagination Buttons - Hover */
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            color: #fff !important;
+            /*text-white*/
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .1), 0 1px 2px 0 rgba(0, 0, 0, .06);
+            /*shadow*/
+            font-weight: 700;
+            /*font-bold*/
+            border-radius: .25rem;
+            /*rounded*/
+            background: #667eea !important;
+            /*bg-indigo-500*/
+            border: 1px solid transparent;
+            /*border border-transparent*/
+        }
+
+        /*Add padding to bottom border */
+        table.dataTable.no-footer {
+            border-bottom: 1px solid #e2e8f0;
+            /*border-b-1 border-gray-300*/
+            margin-top: 0.75em;
+            margin-bottom: 0.75em;
+        }
+
+        /*Change colour of responsive icon*/
+        table.dataTable.dtr-inline.collapsed>tbody>tr>td:first-child:before,
+        table.dataTable.dtr-inline.collapsed>tbody>tr>th:first-child:before {
+            background-color: #667eea !important;
+            /*bg-indigo-500*/
+        }
+
         #map {
             width: 100%;
             height: 600px;
@@ -177,23 +267,23 @@
             <div class="bg-white shadow-xl rounded-3xl py-10 px-6 grid grid-cols-2 md:grid-cols-4 gap-10 text-center">
 
                 <div>
-                    <p class="text-3xl font-bold text-gray-900">25M <span class="text-pink-500">+</span></p>
-                    <p class="text-gray-500">Customers</p>
+                    <p class="text-3xl font-bold text-gray-900">167</p>
+                    <p class="text-gray-500">Desa/Kelurahan</p>
                 </div>
 
                 <div>
-                    <p class="text-3xl font-bold text-gray-900">440M <span class="text-pink-500">+</span></p>
-                    <p class="text-gray-500">Products sold</p>
+                    <p class="text-3xl font-bold text-gray-900">167</p>
+                    <p class="text-gray-500">KDKMP</p>
                 </div>
 
                 <div>
-                    <p class="text-3xl font-bold text-gray-900">50K <span class="text-pink-500">+</span></p>
-                    <p class="text-gray-500">Online stores</p>
+                    <p class="text-3xl font-bold text-gray-900">167</p>
+                    <p class="text-gray-500">Akun Simkopdes</p>
                 </div>
 
                 <div>
-                    <p class="text-3xl font-bold text-gray-900">20K <span class="text-pink-500">+</span></p>
-                    <p class="text-gray-500">Transactions</p>
+                    <p class="text-3xl font-bold text-gray-900">167</p>
+                    <p class="text-gray-500">NIK</p>
                 </div>
 
             </div>
@@ -208,6 +298,33 @@
             <div id="map"></div>
         </div>
     </section>
+
+    <section class="max-w-7xl mx-auto px-6 mt-10 mb-10">
+        <div class="bg-white rounded-2xl shadow-lg p-4">
+            <div class="shadow overflow-hidden sm-rounded-md">
+
+                <div class="px-4 py-5 bg-white sm:p-6">
+
+                    <table id="crudTable" class="display cell-border">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nama Kecamatan</th>
+                                <th>Nama BA</th>
+                                <th>Nama KDKMP</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
 
     <section class="py-16 bg-white">
         <div class="max-w-7xl mx-auto px-6 text-center">
@@ -266,24 +383,7 @@
             <div
                 class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-4 gap-y-8 max-w-7xl mx-auto">
 
-                {{-- 
-                        ['Adam', 6],
-                        ['Alwi Syam', 7],
-                        ['Amalia Fadini', 8],
-                        ['Asty Esha Nadia', 9],
-                        ['Hasana', 10],
-                        ['Hendra Wahid', 11],
-                        ['Hernida Rahman', 12],
-                        ['Husnawati', 13],
-                        ['Irdah', 14],
-                        ['Mardiana H', 15],
-                        ['Muh Arasy', 16],
-                        ['Muhammad Aslam', 17],
-                        ['Muhammad Yusuf', 18],
-                        ['Nurul Pratiwi', 19],
-                        ['Nurul Ulya', 20],
-                        ['Rahmadani', 21],
-                        ['Rezky Amalia Sari', 22], --}}
+
 
                 <a href="{{ route('performance', 14) }}" target="_blank">
                     <div class="flex flex-col items-center text-center p-2">
@@ -397,6 +497,10 @@
     </section>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+
     <script>
         // ==== INISIALISASI PETA ====
         var map = L.map('map').setView([-3.4126, 119.3435], 10);
@@ -539,6 +643,33 @@
         } else {
             map.setView([-3.4126, 119.3435], 10);
         }
+
+        var datatable = $('#crudTable').DataTable({
+            // responsive: true, // <--- aktifkan fitur ini
+            ajax: {
+                url: '{!! url()->current() !!}'
+            },
+            columns: [{
+                    data: 'id',
+                    name: 'id',
+                    width: '10%'
+                },
+                {
+                    data: 'district',
+                    name: 'district',
+                },
+                {
+                    data: 'ba',
+                    name: 'ba',
+                },
+                {
+                    data: 'name',
+                    name: 'name',
+                },
+
+
+            ]
+        })
     </script>
 </body>
 

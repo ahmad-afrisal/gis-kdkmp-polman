@@ -35,49 +35,8 @@
                 </div>
             @endif
 
-            <div class="mb-10 flex flex-wrap gap-3">
-                <a href="{{ route('bussiness-assistants.form-1', $bussinessAssistant->id) }}"
-                    class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-3 px-5 rounded-xl shadow-md 
-        w-full sm:w-auto text-center">
-                    + Form 1
-                </a>
+            @include('components.button-form')
 
-                <a href="{{ route('bussiness-assistants.form-2', $bussinessAssistant->id) }}"
-                    class="bg-emerald-500 hover:bg-emerald-700 text-white font-semibold py-3 px-5 rounded-xl shadow-md 
-        w-full sm:w-auto text-center">
-                    + Form 2
-                </a>
-
-                <a href="{{ route('bussiness-assistants.form-3', $bussinessAssistant->id) }}"
-                    class="bg-indigo-500 hover:bg-indigo-700 text-white font-semibold py-3 px-5 rounded-xl shadow-md 
-        w-full sm:w-auto text-center">
-                    + Form 3
-                </a>
-
-                <a href="{{ route('bussiness-assistants.form-4', $bussinessAssistant->id) }}"
-                    class="bg-orange-500 hover:bg-orange-700 text-white font-semibold py-3 px-5 rounded-xl shadow-md 
-        w-full sm:w-auto text-center">
-                    + Form 4
-                </a>
-
-                <a href="{{ route('bussiness-assistants.form-5', $bussinessAssistant->id) }}"
-                    class="bg-pink-500 hover:bg-pink-700 text-white font-semibold py-3 px-5 rounded-xl shadow-md 
-        w-full sm:w-auto text-center">
-                    + Form 5
-                </a>
-
-                <a href="{{ route('bussiness-assistants.form-6', $bussinessAssistant->id) }}"
-                    class="bg-teal-500 hover:bg-teal-700 text-white font-semibold py-3 px-5 rounded-xl shadow-md 
-        w-full sm:w-auto text-center">
-                    + Form 6
-                </a>
-
-                <a href="{{ route('bussiness-assistants.report', $bussinessAssistant->id) }}" target="_blank"
-                    class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 px-5 rounded-xl shadow-md 
-        w-full sm:w-auto text-center">
-                    + Laporan
-                </a>
-            </div>
 
             <div class="bg-white shadow-xl rounded-lg p-6">
 
@@ -187,14 +146,13 @@
                                         {{-- Usaha Simpan Pinjam --}}
                                         <td class="border border-gray-300 px-2 py-1 text-center">
                                             <input type="checkbox" class="checkbox-status"
-                                                name="data[{{ $index }}][savings_and_loan_exist]"
-                                                value="1" {{ $form?->savings_and_loan_exist ? 'checked' : '' }}>
+                                                name="data[{{ $index }}][savings_and_loan_exist]" value="1"
+                                                {{ $form?->savings_and_loan_exist ? 'checked' : '' }}>
                                         </td>
                                         <td class="border border-gray-300 px-2 py-1 text-center">
                                             <input type="checkbox" class="checkbox-status"
                                                 name="data[{{ $index }}][savings_and_loan_running]"
-                                                value="1"
-                                                {{ $form?->savings_and_loan_running ? 'checked' : '' }}>
+                                                value="1" {{ $form?->savings_and_loan_running ? 'checked' : '' }}>
                                         </td>
 
                                         {{-- Apotek Desa --}}

@@ -46,4 +46,9 @@ class Cooperation extends Model
     {
         return $this->hasOne(FormSix::class, 'cooperation_id');
     }
+
+    public function formSeven()
+    {
+        return $this->hasOne(FormSeven::class, 'cooperation_id');
+    }
 }

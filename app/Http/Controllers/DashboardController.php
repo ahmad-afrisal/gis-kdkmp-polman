@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\BussinessAssistant;
 use App\Models\Cooperation;
 use App\Models\District;
+use App\Models\FormSeven;
 use App\Models\Village;
+use App\Models\WeeklyReport;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -18,6 +21,8 @@ class DashboardController extends Controller
     public function index()
     {
         $districtCount = District::count();
+
+        $totalMember = FormSeven::sum('number_of_member');
 
         $villageCount = Village::count();
 
@@ -54,6 +59,20 @@ class DashboardController extends Controller
         })->count();
 
         $npwpTidak = $totalDesa - $npwpYa;
+
+        $businessPlanYes = Village::whereHas('cooperation.formThree', function ($q) {
+            $q->whereNotNull('business_activity_plan')->where('business_activity_plan', '!=', '');
+        })->count();
+
+        $businessPlanNo = $totalDesa - $businessPlanYes;
+
+        $financingProposalYes = Village::whereHas('cooperation.formFour', function ($q) {
+            $q->whereNotNull('financing_proposal')->where('financing_proposal', '!=', '');
+        })->count();
+
+        $financingProposalNo = $totalDesa - $financingProposalYes;
+
+
 
         $districts = District::with(['villages.cooperation', 'villages.cooperation.formTwo'])->get();
 
@@ -198,6 +217,37 @@ class DashboardController extends Controller
             ];
         });
 
+        $weeklyReports = WeeklyReport::orderBy('created_at')->get();
+
+        $labels = $weeklyReports->map(function ($item) {
+            return Carbon::parse($item->created_at)->translatedFormat('d M Y');
+        });
+
+        $memberData = $weeklyReports->pluck('number_of_member');
+
+        // Setiap dokumen jadi dataset sendiri
+        $datasets = [
+            'SIMKOPDES' => $weeklyReports->pluck('simkopdes'),
+            'NIB' => $weeklyReports->pluck('nib'),
+            'NPWP' => $weeklyReports->pluck('npwp'),
+            'Rekening Bank' => $weeklyReports->pluck('bank_account'),
+            'Rencana Kegiatan Bisnis' => $weeklyReports->pluck('business_activity_plan'),
+            'Proposal Pembiayaan' => $weeklyReports->pluck('financing_proposal'),
+            'ODS Mandiri' => $weeklyReports->pluck('ods'),
+        ];
+
+        // Total dokumen + kegiatan per minggu
+        // $documentData = $weeklyReports->map(function ($item) {
+        //     return
+        //         $item->simkopdes +
+        //         $item->nib +
+        //         $item->npwp +
+        //         $item->bank_account +
+        //         $item->business_activity_plan +
+        //         $item->financing_proposal +
+        //         $item->ods;
+        // });
+
         // return view('reports.districts', compact('reports'));
 
         // Mengirimkan data ke view
@@ -219,6 +269,14 @@ class DashboardController extends Controller
             'npwpTidak' => $npwpTidak,
             'bankYa' => $bankYa,
             'bankTidak' => $bankTidak,
+            'businessPlanYes' => $businessPlanYes,
+            'businessPlanNo' => $businessPlanNo,
+            'financingProposalYes' => $financingProposalYes,
+            'financingProposalNo' => $financingProposalNo,
+            'labels' => $labels,
+            'datasets' => $datasets,
+            'memberData' => $memberData,
+            'totalMember' => $totalMember,
             // 'lands' => Land::with(['user', 'oilPalmType'])->get(),
         ]);
     }
