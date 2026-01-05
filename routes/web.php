@@ -11,6 +11,7 @@ use App\Http\Controllers\LandStatisticController;
 use App\Http\Controllers\PolygonController;
 use App\Http\Controllers\ProblemController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RecordFormSevenController;
 use App\Http\Controllers\VillageController;
 use App\Http\Controllers\WeeklyReportController;
 use Illuminate\Support\Facades\Route;
@@ -93,6 +94,16 @@ Route::middleware('auth')->group(function () {
     Route::get('bussiness-assistants/{bussinessAssistant}/report', [BussinessAssistantController::class, 'generateReport'])
         ->name('bussiness-assistants.report');
 
+    Route::get('bussiness-assistants/{bussinessAssistant}/simkopdes-completeness', [BussinessAssistantController::class, 'simkopdesCompletenes'])
+        ->name('bussiness-assistants.simkopdes-completeness');
+
+    Route::post(
+        'bussiness-assistants/{bussinessAssistant}/simkopdes-completeness',
+        [BussinessAssistantController::class, 'storeOrUpdateSimkopdesComplete']
+    )->name('bussiness-assistants.simkopdes-completeness.store');
+
+
+
 
     Route::get('land-statistics/export', [LandStatisticController::class, 'export'])->name('land-statistic.export');
     Route::resource('land-statistics', LandStatisticController::class);
@@ -105,6 +116,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('problems', ProblemController::class);
     Route::resource('contact-managements', ContactManagementController::class);
     Route::resource('weekly-reports', WeeklyReportController::class);
+    Route::post(
+        '/form-seven/record-all',
+        [RecordFormSevenController::class, 'storeAllRecord']
+    )->name('form-seven.record.all');
 });
 
 require __DIR__ . '/auth.php';

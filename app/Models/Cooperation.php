@@ -51,4 +51,15 @@ class Cooperation extends Model
     {
         return $this->hasOne(FormSeven::class, 'cooperation_id');
     }
+
+    public function simkopdesCompletenes()
+    {
+        return $this->hasOne(SimkopdesCompletenes::class, 'cooperation_id');
+    }
+
+
+    public function records()
+    {
+        return $this->hasMany(RecordFormSeven::class);
+    }
 }

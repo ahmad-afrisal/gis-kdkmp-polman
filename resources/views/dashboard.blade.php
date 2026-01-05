@@ -204,8 +204,19 @@
                 </div>
 
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6 mt-6">
+
+            <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-10">
+
+                <!-- Line Chart Jumlah Anggota -->
+                <div class="bg-white shadow-md rounded-lg p-6">
+                    <h2 class="text-center font-semibold mb-2">Jumlah Anggota per Kecamatan</h2>
+
+                    {{-- <div class="h-[220px]"> --}}
+                    <canvas id="districtBarChart"></canvas>
+                </div>
             </div>
+
+
 
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6 mt-6">
@@ -529,6 +540,7 @@
             <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 
             <script>
+                Chart.register(ChartDataLabels);
                 // Data dari database
                 const totalDesa = {{ $totalDesa }};
                 const desaNIB = {{ $desaNIB }};
@@ -651,7 +663,7 @@
                         }]
                     },
                     options,
-                    plugins: [ChartDataLabels]
+
                 });
 
                 // Chart 2 - SIMKOPDES
@@ -665,7 +677,7 @@
                         }]
                     },
                     options,
-                    plugins: [ChartDataLabels]
+
                 });
 
                 // Chart 3 - NPWP
@@ -679,7 +691,7 @@
                         }]
                     },
                     options,
-                    plugins: [ChartDataLabels]
+
                 });
 
                 // Chart 4 - Rekening Bank 
@@ -693,7 +705,7 @@
                         }]
                     },
                     options,
-                    plugins: [ChartDataLabels]
+
                 });
 
                 // Chart 5 - Rekening Bank 
@@ -707,7 +719,7 @@
                         }]
                     },
                     options,
-                    plugins: [ChartDataLabels]
+
                 });
 
                 // Chart 5 - Rekening Bank 
@@ -721,7 +733,44 @@
                         }]
                     },
                     options,
-                    plugins: [ChartDataLabels]
+
+                });
+
+
+
+                // Tren Anggota Per Kecamatan Bar Chart
+                new Chart(document.getElementById('districtBarChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: @json($labelMembers),
+                        datasets: [{
+                            label: 'Jumlah Anggota Koperasi per Kecamatan',
+                            data: @json($valueMembers)
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            datalabels: {
+                                anchor: 'end',
+                                align: 'top',
+                                font: {
+                                    weight: 'bold'
+                                },
+                                formatter: function(value) {
+                                    return value.toLocaleString(); // 1.250
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
                 });
             </script>
 

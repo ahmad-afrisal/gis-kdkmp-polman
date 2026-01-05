@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\District;
 use App\Models\WeeklyReport;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\DB;
 
 class WeeklyReportController extends Controller
 {
@@ -32,7 +34,50 @@ class WeeklyReportController extends Controller
         }
 
 
-        return view('weekly-report.index');
+
+        $districtId = request('district_id');
+
+        $records = DB::table('record_form_sevens')
+            ->join('cooperations', 'record_form_sevens.cooperation_id', '=', 'cooperations.id')
+            ->join('villages', 'cooperations.village_id', '=', 'villages.id')
+            ->join('districts', 'villages.district_id', '=', 'districts.id')
+            ->when($districtId, function ($q) use ($districtId) {
+                $q->where('districts.id', $districtId);
+            })
+            ->select(
+                'cooperations.id as coop_id',
+                'cooperations.name as coop_name',
+                'record_form_sevens.periode',
+                'record_form_sevens.number_of_member'
+            )
+            ->orderBy('record_form_sevens.periode')
+            ->get();
+
+        $periods = $records->pluck('periode')->unique()->values();
+
+        $datasets = $records
+            ->groupBy('coop_name')
+            ->map(function ($items, $coopName) use ($periods) {
+
+                $data = $periods->map(function ($periode) use ($items) {
+                    return optional(
+                        $items->firstWhere('periode', $periode)
+                    )->number_of_member ?? null;
+                });
+
+                return [
+                    'label' => $coopName,
+                    'data' => $data,
+                    'tension' => 0.3,
+                ];
+            })
+            ->values();
+
+        return view('weekly-report.index', [
+            'districts' => District::orderBy('name')->get(),
+            'labels' => $periods,
+            'datasets' => $datasets,
+        ]);
     }
 
     /**

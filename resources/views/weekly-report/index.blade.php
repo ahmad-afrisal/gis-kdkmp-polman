@@ -1,12 +1,43 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Kontak Pengurus') }}
+            {{ __('Laporan Mingguan') }}
         </h2>
     </x-slot>
 
 
     <x-slot name="script">
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
+        <script>
+            new Chart(document.getElementById('districtChart'), {
+                type: 'line',
+                data: {
+                    labels: @json($labels),
+                    datasets: @json($datasets)
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    },
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        </script>
+
         {{-- DataTable JS --}}
         <script>
             var datatable = $('#crudTable').DataTable({
@@ -73,13 +104,34 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
-            {{-- Tombol tambah --}}
-            <div class="mb-10">
-                <a href="{{ route('contact-managements.create') }}"
-                    class="bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-4 rounded shadow-lg">
-                    + Tambah Kontak Pengurus
+            {{-- Tombol aksi --}}
+            <div class="mb-10 flex flex-col sm:flex-row gap-4">
+
+                {{-- Tombol Buat Laporan --}}
+                <a href="{{ route('weekly-reports.create') }}"
+                    class="inline-flex items-center justify-center
+               bg-green-500 hover:bg-green-700
+               text-white font-bold
+               py-3 px-4 rounded shadow-lg
+               transition">
+                    + Buat Laporan
                 </a>
+
+                {{-- Tombol Catat Riwayat --}}
+                <form action="{{ route('form-seven.record.all') }}" method="POST">
+                    @csrf
+                    <button type="submit"
+                        class="inline-flex items-center justify-center
+                   bg-green-600 hover:bg-green-800
+                   text-white font-bold
+                   py-3 px-4 rounded shadow-lg
+                   transition w-full sm:w-auto">
+                        Catat Riwayat Anggota
+                    </button>
+                </form>
+
             </div>
+
 
             {{-- DATA TABLE --}}
             <div class="shadow overflow-hidden sm-rounded-md bg-white p-4">
@@ -102,6 +154,27 @@
                     </thead>
                     <tbody></tbody>
                 </table>
+            </div>
+
+            <div class="grid grid-cols-1  gap-6 mt-10">
+
+                <!-- Line Chart Dokumen -->
+                <div class="bg-white shadow-md rounded-lg p-6">
+                    <h3 class="text-lg font-semibold mb-4">Perkembangan Anggota Berdasrkan Kecamatan</h3>
+                    <form method="GET" class="mb-6">
+                        <select name="district_id" class="border rounded px-3 py-2" onchange="this.form.submit()">
+                            <option value="">-- Pilih Kecamatan --</option>
+                            @foreach ($districts as $district)
+                                <option value="{{ $district->id }}" @selected(request('district_id') == $district->id)>
+                                    {{ $district->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </form>
+
+                    <canvas id="districtChart"></canvas>
+                </div>
+
             </div>
         </div>
     </div>

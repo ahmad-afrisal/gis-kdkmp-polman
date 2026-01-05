@@ -41,6 +41,12 @@
         + Form 7
     </a>
 
+    <a href="{{ route('bussiness-assistants.simkopdes-completeness', $bussinessAssistant->id) }}"
+        class="bg-teal-500 hover:bg-teal-700 text-white font-semibold py-3 px-5 rounded-xl shadow-md 
+        w-full sm:w-auto text-center">
+        Simkopdes
+    </a>
+
     <a href="{{ route('bussiness-assistants.report', $bussinessAssistant->id) }}" target="_blank"
         class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 px-5 rounded-xl shadow-md 
         w-full sm:w-auto text-center">

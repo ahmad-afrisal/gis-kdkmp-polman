@@ -11,6 +11,9 @@ use App\Models\WeeklyReport;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\DB;
+
+
 class DashboardController extends Controller
 {
     /**
@@ -250,6 +253,25 @@ class DashboardController extends Controller
 
         // return view('reports.districts', compact('reports'));
 
+        // Anggota Perkecamtana
+
+        $dataMember = DB::table('form_sevens')
+            ->join('cooperations', 'form_sevens.cooperation_id', '=', 'cooperations.id')
+            ->join('villages', 'cooperations.village_id', '=', 'villages.id')
+            ->join('districts', 'villages.district_id', '=', 'districts.id')
+            ->whereNotNull('form_sevens.number_of_member')
+            ->select(
+                'districts.name as district_name',
+                DB::raw('SUM(form_sevens.number_of_member) as total_member')
+            )
+            ->groupBy('districts.name')
+            ->orderBy('districts.name')
+            ->get();
+
+        $labelMembers = $dataMember->pluck('district_name');
+        $valueMembers = $dataMember->pluck('total_member');
+
+
         // Mengirimkan data ke view
         return view('dashboard', [
             'districtCount' => $districtCount,
@@ -277,6 +299,8 @@ class DashboardController extends Controller
             'datasets' => $datasets,
             'memberData' => $memberData,
             'totalMember' => $totalMember,
+            'labelMembers' => $labelMembers,
+            'valueMembers' => $valueMembers,
             // 'lands' => Land::with(['user', 'oilPalmType'])->get(),
         ]);
     }

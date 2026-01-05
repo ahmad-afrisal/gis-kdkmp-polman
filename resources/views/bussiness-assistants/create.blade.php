@@ -2,7 +2,7 @@
 
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Laporan Mingguan &raquo; Tambah
+            Business Assistant &raquo; Tambah
         </h2>
     </x-slot>
 
@@ -31,57 +31,30 @@
                 class="bg-white p-6 rounded-lg shadow-md">
                 @csrf
 
-                <label class="block mb-2 font-medium">Ketua : </label>
+                <label class="block mb-2 font-medium">Nama : </label>
                 <input type="text" name="leader_name" value="{{ old('leader_name') }}"
                     class="w-full border
                     rounded p-2 mb-4">
 
-                <label class="block mb-2 font-medium">Kontak Ketua : </label>
+                <label class="block mb-2 font-medium">Nomor Handphone : </label>
                 <input type="text" name="leader_phone_number" value="{{ old('leader_phone_number') }}"
                     class="w-full border
                     rounded p-2 mb-4">
 
-                <label class="block mb-2 font-medium">Wakil Ketua Bidang Anggota : </label>
+                <label class="block mb-2 font-medium">Alamat : </label>
                 <input type="text" name="name_of_deputy_member" value="{{ old('name_of_deputy_member') }}"
                     class="w-full border
                     rounded p-2 mb-4">
 
-                <label class="block mb-2 font-medium">Kontak Wakil Ketua Bidang Anggota : </label>
-                <input type="text" name="deputy_member_phone_number" value="{{ old('deputy_member_phone_number') }}"
+                <label class="block mb-2 font-medium">Tanggal Lahir : </label>
+                <input type="date" name="deputy_member_phone_number" value="{{ old('deputy_member_phone_number') }}"
                     class="w-full border
                     rounded p-2 mb-4">
 
-                <label class="block mb-2 font-medium">Wakil Ketua Bidang Usaha : </label>
-                <input type="text" name="name_of_deputy_business" value="{{ old('name_of_deputy_business') }}"
+                <label class="block mb-2 font-medium">Foto : </label>
+                <input type="file" name="name_of_deputy_business" value="{{ old('name_of_deputy_business') }}"
                     class="w-full border
                     rounded p-2 mb-4">
-
-                <label class="block mb-2 font-medium">Kontak Wakil Ketua Bidang Usaha : </label>
-                <input type="text" name="deputy_business_phone_number"
-                    value="{{ old('deputy_business_phone_number') }}"
-                    class="w-full border
-                    rounded p-2 mb-4">
-
-                <label class="block mb-2 font-medium">Sekretaris : </label>
-                <input type="text" name="name_of_secretary" value="{{ old('name_of_secretary') }}"
-                    class="w-full border
-                    rounded p-2 mb-4">
-
-                <label class="block mb-2 font-medium">Kontak Sekretaris: </label>
-                <input type="text" name="secretary_phone_number" value="{{ old('secretary_phone_number') }}"
-                    class="w-full border
-                    rounded p-2 mb-4">
-
-                <label class="block mb-2 font-medium">Bendahara : </label>
-                <input type="text" name="name_of_treasurer" value="{{ old('name_of_treasurer') }}"
-                    class="w-full border
-                    rounded p-2 mb-4">
-
-                <label class="block mb-2 font-medium">Kontak Bendahara: </label>
-                <input type="text" name="treasurer_phone_number" value="{{ old('treasurer_phone_number') }}"
-                    class="w-full border
-                    rounded p-2 mb-4">
-
 
 
                 <div class="flex space-x-2">

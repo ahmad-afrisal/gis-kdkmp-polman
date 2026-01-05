@@ -16,4 +16,9 @@ class FormSeven extends Model
     {
         return $this->belongsTo(Cooperation::class, 'cooperation_id');
     }
+
+    public function records()
+    {
+        return $this->hasMany(RecordFormSeven::class, 'cooperation_id', 'cooperation_id');
+    }
 }

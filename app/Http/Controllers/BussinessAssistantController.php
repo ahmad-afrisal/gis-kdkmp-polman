@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BussinessAssistantUpdateRequest;
 use App\Models\BussinessAssistant;
 use App\Models\Cooperation;
 use App\Models\FormFive;
@@ -10,6 +11,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\DB;
 
 class BussinessAssistantController extends Controller
 {
@@ -49,6 +51,25 @@ class BussinessAssistantController extends Controller
     }
 
     /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return view('bussiness-assistants.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(ContactManagementStoreRequest $request)
+    {
+        $data = $request->validated();
+        ContactManagement::create($data);
+
+        return redirect()->route('contact-managements.index')->with('success', 'Contact Management berhasil ditambahkan.');
+    }
+
+    /**
      * Display the specified resource.
      */
     public function show(BussinessAssistant $bussinessAssistant)
@@ -81,6 +102,34 @@ class BussinessAssistantController extends Controller
 
         return view('bussiness-assistants.detail.index', compact('bussinessAssistant'));
     }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(BussinessAssistant $bussinessAssistant)
+    {
+
+
+        return view(
+            'bussiness-assistants.edit',
+            [
+                'data' => $bussinessAssistant,
+            ]
+        );
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(BussinessAssistantUpdateRequest $request, BussinessAssistant $bussinessAssistant)
+    {
+        $data = $request->validated();
+
+        $bussinessAssistant->update($data);
+        return to_route('bussiness-assistants.index')->with('success', 'Kontak Pengurus berhasil diupdate');
+    }
+
+
 
     public function form1(BussinessAssistant $bussinessAssistant)
     {
@@ -524,6 +573,47 @@ class BussinessAssistantController extends Controller
     }
 
 
+    public function simkopdesCompletenes(BussinessAssistant $bussinessAssistant)
+    {
+        // Ambil semua koperasi yang dimiliki oleh Business Assistant ini
+        $cooperations = $bussinessAssistant->cooperations()->with('simkopdesCompletenes')->get();
+
+        // Kirim ke view form-1.blade.php
+        return view('bussiness-assistants.detail.simkopdes-complete', compact('bussinessAssistant', 'cooperations'));
+    }
+
+    public function storeOrUpdateSimkopdesComplete(Request $request, BussinessAssistant $bussinessAssistant)
+    {
+        $request->validate([
+            'data' => 'required|array',
+        ]);
+
+        foreach ($request->data as $row) {
+
+            $validated = validator($row, [
+                'cooperation_id' => 'required|exists:cooperations,id',
+                'is_complete' => 'nullable|numeric',
+            ])->validate();
+
+            $cooperation = Cooperation::findOrFail($validated['cooperation_id']);
+
+            $dataSimkopdesComplete = [
+                'is_complete' => $validated['is_complete'] ?? null,
+            ];
+
+            $simkopdesComplete = $cooperation->simkopdesCompletenes;
+
+            if ($simkopdesComplete) {
+                $simkopdesComplete->update($dataSimkopdesComplete);
+            } else {
+                $cooperation->simkopdesCompletenes()->create($dataSimkopdesComplete);
+            }
+        }
+
+        return back()->with('success', 'Kelengkapan Simkopdes berhasil disimpan.');
+    }
+
+
     public function generateReport(BussinessAssistant $bussinessAssistant)
     {
 
@@ -559,6 +649,16 @@ class BussinessAssistantController extends Controller
                 $q->where('npwp', 1);
             })->count();
 
+        $bhDeedYes = Cooperation::where('bussiness_assistant_id', $id)
+            ->whereHas('formThree', function ($q) {
+                $q->where('bh_deed', 1);
+            })->count();
+
+        $cooperativeNikYes = Cooperation::where('bussiness_assistant_id', $id)
+            ->whereHas('formThree', function ($q) {
+                $q->where('cooperative_nik', 1);
+            })->count();
+
         $cooperativeBankAccountYes = Cooperation::where('bussiness_assistant_id', $id)
             ->whereHas('formThree', function ($q) {
                 $q->where('cooperative_bank_account', 1);
@@ -569,21 +669,167 @@ class BussinessAssistantController extends Controller
                 $q->where('business_activity_plan', 1);
             })->count();
 
+        $capexYes = Cooperation::where('bussiness_assistant_id', $id)
+            ->whereHas('formThree', function ($q) {
+                $q->where('capex', 1);
+            })->count();
+
+        $opexYes = Cooperation::where('bussiness_assistant_id', $id)
+            ->whereHas('formThree', function ($q) {
+                $q->where('opex', 1);
+            })->count();
+
+        $otherEquipmentYes = Cooperation::where('bussiness_assistant_id', $id)
+            ->whereHas('formThree', function ($q) {
+                $q->where('other_equipment', 1);
+            })->count();
+
         $financingProposalYes = Cooperation::where('bussiness_assistant_id', $id)
             ->whereHas('formFour', function ($q) {
                 $q->where('financing_proposal', 1);
             })->count();
 
+        $simkopdesCompletenesYes = Cooperation::where('bussiness_assistant_id', $id)
+            ->whereHas('simkopdesCompletenes', function ($q) {
+                $q->where('is_complete', 1);
+            })->count();
+
+        $landYes = Cooperation::where('bussiness_assistant_id', $id)
+            ->whereHas('formSix', function ($q) {
+                $q->whereNotNull('asset');
+            })->count();
+
+        $totalMembers = Cooperation::where('bussiness_assistant_id', $id)
+            ->withSum('formSeven as total_member', 'number_of_member')
+            ->get()
+            ->sum('total_member');
+
+        $scoreSimkopdesCompleteness = $cooperationCount > 0 ? ($simkopdesCompletenesYes / $cooperationCount) * 100 : 0;
+        $finalScoreSimkopdesCompleteness = round(
+            ($scoreSimkopdesCompleteness / 100) * 10,
+            2
+        );
+
+        $scoreBusinessActivityPlan = $cooperationCount > 0 ? ($businessAcitivtyPlanYes / $cooperationCount) * 100 : 0;
+        $finalScoreBusinessActivityPlan = round(
+            ($scoreBusinessActivityPlan / 100) * 15,
+            2
+        );
+
+        $requiredDocumentsPerCoop = 9;
+        $completedDocumentsCount = $nibYes +
+            $bhDeedYes +
+            $cooperativeNikYes +
+            $cooperativeBankAccountYes +
+            $npwpYes +
+            $businessAcitivtyPlanYes +
+            $capexYes +
+            $opexYes +
+            $otherEquipmentYes;
+
+        $totalRequiredDocuments = $cooperationCount * $requiredDocumentsPerCoop;
+
+        $finalScoreDocument = $totalRequiredDocuments > 0
+            ? round(($completedDocumentsCount / $totalRequiredDocuments) * 15, 2)
+            : 0;
+
+
+
+        $scoreBusinessActivityPlan = $cooperationCount > 0 ? ($businessAcitivtyPlanYes / $cooperationCount) * 100 : 0;
+        $finalScoreBusinessActivityPlan = round(
+            ($scoreBusinessActivityPlan / 100) * 15,
+            2
+        );
+
+        $scoreFinancingProposal = $cooperationCount > 0 ? ($financingProposalYes / $cooperationCount) * 100 : 0;
+        $finalScoreFinancingProposal = round(
+            ($scoreFinancingProposal / 100) * 15,
+            2
+        );
+
+        $scoreLand = $cooperationCount > 0 ? ($landYes / $cooperationCount) * 100 : 0;
+        $finalScoreLand = round(
+            ($scoreLand / 100) * 20,
+            2
+        );
+
+        $finalScoreMonthlyReport = 10; // nilai tetap 10 untuk laporan bulanan
+
+        $kpi = $finalScoreSimkopdesCompleteness +
+            $finalScoreBusinessActivityPlan +
+            $finalScoreDocument +
+            $finalScoreFinancingProposal +
+            $finalScoreLand +
+            $finalScoreMonthlyReport + 5;
+
+        // Tren Perkembangan Anggota Koperasi
+
+
+        $baId = $id;
+
+        $records = DB::table('record_form_sevens')
+            ->join('cooperations', 'record_form_sevens.cooperation_id', '=', 'cooperations.id')
+            ->where('cooperations.bussiness_assistant_id', $baId)
+            ->select(
+                'cooperations.id as coop_id',
+                'cooperations.name as coop_name',
+                'record_form_sevens.periode',
+                'record_form_sevens.number_of_member'
+            )
+            ->orderBy('record_form_sevens.periode')
+            ->get();
+
+        $periods = $records->pluck('periode')->unique()->values();
+
+        $datasets = $records
+            ->groupBy('coop_name')
+            ->map(function ($items, $coopName) use ($periods) {
+
+                // mapping agar tiap koperasi punya data lengkap per periode
+                $dataPerPeriod = $periods->map(function ($periode) use ($items) {
+                    return optional(
+                        $items->firstWhere('periode', $periode)
+                    )->number_of_member ?? 0;
+                });
+
+                return [
+                    'label' => $coopName,
+                    'data'  => $dataPerPeriod,
+                    'tension' => 0.3,
+                ];
+            })
+            ->values();
+
+
+
         return view('bussiness-assistants.performance', compact(
             'bussinessAssistant',
             'cooperations',
+            'landYes',
+            'capexYes',
+            'opexYes',
             'nibYes',
+            'bhDeedYes',
+            'cooperativeNikYes',
+            'otherEquipmentYes',
             'simkopdesYes',
             'npwpYes',
             'cooperativeBankAccountYes',
             'financingProposalYes',
             'businessAcitivtyPlanYes',
-            'cooperationCount'
+            'cooperationCount',
+            'simkopdesCompletenesYes',
+            'finalScoreSimkopdesCompleteness',
+            'finalScoreBusinessActivityPlan',
+            'finalScoreDocument',
+            'finalScoreFinancingProposal',
+            'finalScoreLand',
+            'finalScoreMonthlyReport',
+            'kpi',
+            'totalMembers',
+            // Tren Anggota Koperasi
+            'periods',
+            'datasets',
         ));
     }
 }
