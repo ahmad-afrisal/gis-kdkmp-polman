@@ -1,101 +1,121 @@
 <x-app-layout>
+    <div x-data="{ open: false }" class="flex h-screen bg-gray-100">
 
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Laporan Mingguan &raquo; Tambah
-        </h2>
-    </x-slot>
+        <!-- Sidebar -->
+        @include('components.sidebar')
 
-    <x-slot name="script">
+        <!-- Overlay (mobile only) -->
+        <div x-show="open" @click="open=false" class="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"></div>
 
-    </x-slot>
+        <x-slot name="script">
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            @if ($errors->any())
-                <div class="mb-5" role="alert">
-                    <div class="bg-red-500 text-white font-bold rounded-t px-4 py-2">
-                        Terdapat kesalahan
-                    </div>
-                    <div class="border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
+        </x-slot>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-y-auto">
+
+            @include('components.header')
+
+            <div class="py-12">
+
+                <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                    <!-- Breadcrumb -->
+                    <nav class="flex items-center text-sm text-gray-600 space-x-2 mb-7">
+                        <a href="{{ route('dashboard') }}" class="flex items-center hover:text-green-600">
+                            <i data-lucide="home" class="w-4 h-4 mr-1"></i> Home
+                        </a>
+                        <span>›</span>
+                        <span class="text-gray-500">Diagnosis</span>
+                    </nav>
+                    @if ($errors->any())
+                        <div class="mb-5" role="alert">
+                            <div class="bg-red-500 text-white font-bold rounded-t px-4 py-2">
+                                Terdapat kesalahan
+                            </div>
+                            <div class="border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                    @endif
+
+                    <form action="{{ route('contact-managements.store') }}" method="post" enctype="multipart/form-data"
+                        class="bg-white p-6 rounded-lg shadow-md">
+                        @csrf
+
+                        <label class="block mb-2 font-medium">Ketua : </label>
+                        <input type="text" name="leader_name" value="{{ old('leader_name') }}"
+                            class="w-full border
+                    rounded p-2 mb-4">
+
+                        <label class="block mb-2 font-medium">Kontak Ketua : </label>
+                        <input type="text" name="leader_phone_number" value="{{ old('leader_phone_number') }}"
+                            class="w-full border
+                    rounded p-2 mb-4">
+
+                        <label class="block mb-2 font-medium">Wakil Ketua Bidang Anggota : </label>
+                        <input type="text" name="name_of_deputy_member" value="{{ old('name_of_deputy_member') }}"
+                            class="w-full border
+                    rounded p-2 mb-4">
+
+                        <label class="block mb-2 font-medium">Kontak Wakil Ketua Bidang Anggota : </label>
+                        <input type="text" name="deputy_member_phone_number"
+                            value="{{ old('deputy_member_phone_number') }}"
+                            class="w-full border
+                    rounded p-2 mb-4">
+
+                        <label class="block mb-2 font-medium">Wakil Ketua Bidang Usaha : </label>
+                        <input type="text" name="name_of_deputy_business"
+                            value="{{ old('name_of_deputy_business') }}"
+                            class="w-full border
+                    rounded p-2 mb-4">
+
+                        <label class="block mb-2 font-medium">Kontak Wakil Ketua Bidang Usaha : </label>
+                        <input type="text" name="deputy_business_phone_number"
+                            value="{{ old('deputy_business_phone_number') }}"
+                            class="w-full border
+                    rounded p-2 mb-4">
+
+                        <label class="block mb-2 font-medium">Sekretaris : </label>
+                        <input type="text" name="name_of_secretary" value="{{ old('name_of_secretary') }}"
+                            class="w-full border
+                    rounded p-2 mb-4">
+
+                        <label class="block mb-2 font-medium">Kontak Sekretaris: </label>
+                        <input type="text" name="secretary_phone_number" value="{{ old('secretary_phone_number') }}"
+                            class="w-full border
+                    rounded p-2 mb-4">
+
+                        <label class="block mb-2 font-medium">Bendahara : </label>
+                        <input type="text" name="name_of_treasurer" value="{{ old('name_of_treasurer') }}"
+                            class="w-full border
+                    rounded p-2 mb-4">
+
+                        <label class="block mb-2 font-medium">Kontak Bendahara: </label>
+                        <input type="text" name="treasurer_phone_number" value="{{ old('treasurer_phone_number') }}"
+                            class="w-full border
+                    rounded p-2 mb-4">
+
+
+
+                        <div class="flex space-x-2">
+                            <button type="submit"
+                                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow-lg">
+                                Simpan
+                            </button>
+                            <a href="{{ route('weekly-reports.index') }}"
+                                class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded shadow-lg">
+                                Kembali
+                            </a>
+                        </div>
+                    </form>
                 </div>
-            @endif
+            </div>
+        </main>
 
-            <form action="{{ route('contact-managements.store') }}" method="post" enctype="multipart/form-data"
-                class="bg-white p-6 rounded-lg shadow-md">
-                @csrf
-
-                <label class="block mb-2 font-medium">Ketua : </label>
-                <input type="text" name="leader_name" value="{{ old('leader_name') }}"
-                    class="w-full border
-                    rounded p-2 mb-4">
-
-                <label class="block mb-2 font-medium">Kontak Ketua : </label>
-                <input type="text" name="leader_phone_number" value="{{ old('leader_phone_number') }}"
-                    class="w-full border
-                    rounded p-2 mb-4">
-
-                <label class="block mb-2 font-medium">Wakil Ketua Bidang Anggota : </label>
-                <input type="text" name="name_of_deputy_member" value="{{ old('name_of_deputy_member') }}"
-                    class="w-full border
-                    rounded p-2 mb-4">
-
-                <label class="block mb-2 font-medium">Kontak Wakil Ketua Bidang Anggota : </label>
-                <input type="text" name="deputy_member_phone_number" value="{{ old('deputy_member_phone_number') }}"
-                    class="w-full border
-                    rounded p-2 mb-4">
-
-                <label class="block mb-2 font-medium">Wakil Ketua Bidang Usaha : </label>
-                <input type="text" name="name_of_deputy_business" value="{{ old('name_of_deputy_business') }}"
-                    class="w-full border
-                    rounded p-2 mb-4">
-
-                <label class="block mb-2 font-medium">Kontak Wakil Ketua Bidang Usaha : </label>
-                <input type="text" name="deputy_business_phone_number"
-                    value="{{ old('deputy_business_phone_number') }}"
-                    class="w-full border
-                    rounded p-2 mb-4">
-
-                <label class="block mb-2 font-medium">Sekretaris : </label>
-                <input type="text" name="name_of_secretary" value="{{ old('name_of_secretary') }}"
-                    class="w-full border
-                    rounded p-2 mb-4">
-
-                <label class="block mb-2 font-medium">Kontak Sekretaris: </label>
-                <input type="text" name="secretary_phone_number" value="{{ old('secretary_phone_number') }}"
-                    class="w-full border
-                    rounded p-2 mb-4">
-
-                <label class="block mb-2 font-medium">Bendahara : </label>
-                <input type="text" name="name_of_treasurer" value="{{ old('name_of_treasurer') }}"
-                    class="w-full border
-                    rounded p-2 mb-4">
-
-                <label class="block mb-2 font-medium">Kontak Bendahara: </label>
-                <input type="text" name="treasurer_phone_number" value="{{ old('treasurer_phone_number') }}"
-                    class="w-full border
-                    rounded p-2 mb-4">
-
-
-
-                <div class="flex space-x-2">
-                    <button type="submit"
-                        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow-lg">
-                        Simpan
-                    </button>
-                    <a href="{{ route('problems.index') }}"
-                        class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded shadow-lg">
-                        Kembali
-                    </a>
-                </div>
-            </form>
-        </div>
     </div>
 
 </x-app-layout>

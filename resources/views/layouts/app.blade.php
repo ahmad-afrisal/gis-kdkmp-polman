@@ -120,7 +120,8 @@
 
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-gray-100">
-        @include('layouts.navigation')
+
+        {{-- @include('layouts.navigation') --}}
 
         <!-- Page Heading -->
         @isset($header)
@@ -136,6 +137,12 @@
             {{ $slot }}
         </main>
     </div>
+    <!-- Alpine.js for sidebar toggle -->
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        lucide.createIcons();
+    </script>
     {{ $script ?? '' }}
 </body>
 
