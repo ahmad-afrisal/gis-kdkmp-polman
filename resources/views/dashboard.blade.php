@@ -40,95 +40,196 @@
                             <i data-lucide="home" class="w-4 h-4 mr-1"></i> Home
                         </a>
                         <span>›</span>
-                        <span class="text-gray-500">Diagnosis</span>
+                        <span class="text-gray-500">Dashboard</span>
                     </nav>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
                         <!-- Card Petani -->
                         <div
-                            class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6 flex items-center justify-between">
+                            class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6 flex items-center justify-between hover:scale-105 transition">
                             <div>
                                 <div class="text-gray-500 text-sm font-medium">Jumlah Kecamatan</div>
                                 <div class="text-3xl font-bold text-gray-900">{{ $districtCount }}</div>
                             </div>
-                            <div class="text-green-500">
+                            <div class="text-emerald-500">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5.121 17.804A9 9 0 1118.364 4.561 9 9 0 015.121 17.804zM15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        d="M9 20l-5.447-2.724A2 2 0 013 15.382V5.618a2 2 0 01.553-1.382L9 2m0 18l6 2m-6-2V2m6 20l5.447-2.724A2 2 0 0021 17.618V7.382a2 2 0 00-.553-1.382L15 2" />
                                 </svg>
                             </div>
+
+
+                        </div>
+
+                        <div
+                            class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6 flex items-center justify-between hover:scale-105 transition">
+                            <div>
+                                <div class="text-gray-500 text-sm font-medium">Jumlah Desa</div>
+                                <div class="text-3xl font-bold text-gray-900">{{ $villageTypeDesaCount }}</div>
+                            </div>
+                            <div class="text-sky-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                                </svg>
+                            </div>
+
+                        </div>
+
+                        <div
+                            class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6 flex items-center justify-between hover:scale-105 transition">
+                            <div>
+                                <div class="text-gray-500 text-sm font-medium">Jumlah Kelurahan</div>
+                                <div class="text-3xl font-bold text-gray-900">{{ $villageTypeKelurahanCount }}</div>
+                            </div>
+                            <div class="text-indigo-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 21V3h16v18M9 21v-6h6v6" />
+                                </svg>
+                            </div>
+
                         </div>
 
                         <!-- Card Jenis Sawit -->
                         <div
-                            class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6 flex items-center justify-between">
+                            class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6 flex items-center justify-between hover:scale-105 transition">
                             <div>
                                 <div class="text-gray-500 text-sm font-medium">Jumlah Desa/Keluarahan</div>
                                 <div class="text-3xl font-bold text-gray-900">{{ $villageCount }}</div>
                             </div>
-                            <div class="text-green-600">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path
-                                        d="M12 2c1.657 0 3 1.79 3 4h-6c0-2.21 1.343-4 3-4zm-7 8c1.657 0 3-1.79 3-4H2c0 2.21 1.343 4 3 4zm14 0c1.657 0 3-1.79 3-4h-6c0 2.21 1.343 4 3 4zm-7 2c-3.866 0-7 2.91-7 6.5V22h14v-3.5c0-3.59-3.134-6.5-7-6.5z" />
+                            <div class="text-teal-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 2l9 5-9 5-9-5 9-5zm0 10l9 5-9 5-9-5 9-5z" />
                                 </svg>
                             </div>
+
                         </div>
 
                         <!-- Card Banyak Lahan -->
                         <div
-                            class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6 flex items-center justify-between">
+                            class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6 flex items-center justify-between hover:scale-105 transition">
                             <div>
                                 <div class="text-gray-500 text-sm font-medium">Bussiness Asisstant</div>
                                 <div class="text-3xl font-bold text-gray-900">{{ $bussinessAssistantCount }}</div>
                             </div>
-                            <div class="text-blue-500">
+                            <div class="text-amber-500">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 20l-5.447-2.724A2 2 0 013 15.382V5.618a2 2 0 01.553-1.382L9 2m0 18l6 2m-6-2V2m6 20l5.447-2.724A2 2 0 0021 17.618V7.382a2 2 0 00-.553-1.382L15 2m0 20V2m0 0L9 2" />
+                                        d="M10 6h4m-7 4h10m-11 0a2 2 0 00-2 2v6a2 2 0 002 2h12a2 2 0 002-2v-6a2 2 0 00-2-2" />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6 flex items-center justify-between hover:scale-105 transition">
+                            <div>
+                                <div class="text-gray-500 text-sm font-medium">Project Management Officer</div>
+                                <div class="text-3xl font-bold text-gray-900">2</div>
+                            </div>
+                            <div class="text-violet-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5h6a2 2 0 012 2v14H7V7a2 2 0 012-2z" />
                                 </svg>
                             </div>
                         </div>
 
                         <!-- Card Banyak Lahan -->
                         <div
-                            class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6 flex items-center justify-between">
+                            class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6 flex items-center justify-between hover:scale-105 transition">
                             <div>
                                 <div class="text-gray-500 text-sm font-medium">Jumlah Koperasi</div>
                                 <div class="text-3xl font-bold text-gray-900">{{ $cooperationCount }}</div>
                             </div>
-                            <div class="text-blue-500">
+                            <div class="text-cyan-500">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 20l-5.447-2.724A2 2 0 013 15.382V5.618a2 2 0 01.553-1.382L9 2m0 18l6 2m-6-2V2m6 20l5.447-2.724A2 2 0 0021 17.618V7.382a2 2 0 00-.553-1.382L15 2m0 20V2m0 0L9 2" />
+                                        d="M3 21h18M9 8h6M10 12h4M6 21V5l6-3 6 3v16" />
                                 </svg>
                             </div>
+
                         </div>
 
                         {{-- Card Jumlah Anggota --}}
 
                         <div
-                            class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6 flex items-center justify-between">
+                            class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6 flex items-center justify-between hover:scale-105 transition">
                             <div>
                                 <div class="text-gray-500 text-sm font-medium">Jumlah Anggota Koperasi</div>
                                 <div class="text-3xl font-bold text-gray-900">{{ $totalMember }}</div>
                             </div>
-                            <div class="text-blue-500">
+                            <div class="text-rose-500">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 20l-5.447-2.724A2 2 0 013 15.382V5.618a2 2 0 01.553-1.382L9 2m0 18l6 2m-6-2V2m6 20l5.447-2.724A2 2 0 0021 17.618V7.382a2 2 0 00-.553-1.382L15 2m0 20V2m0 0L9 2" />
+                                        d="M17 20h5v-2a4 4 0 00-4-4h-1M9 20H4v-2a4 4 0 014-4h1m3-4a4 4 0 110-8 4 4 0 010 8z" />
                                 </svg>
                             </div>
                         </div>
 
+
                     </div>
 
                     <!-- Grid untuk 3 Chart -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-10">
+                        <!-- CARD 2 - SIMKOPDES -->
+                        <div class="bg-white shadow-md rounded-lg p-6 flex flex-col items-center">
+                            <h3 class="text-lg font-semibold mb-4">Kepemilikan SIMKOPDES</h3>
+                            <div class="w-48 h-48">
+                                <canvas id="chartSIMKOPDES"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- CARD 6 - Financing -->
+                        <div class="bg-white shadow-md rounded-lg p-6 flex flex-col items-center">
+                            <h3 class="text-lg font-semibold mb-4">Kelengkapan Simkopdes</h3>
+                            <div class="w-48 h-48">
+                                <canvas id="chartSimkopdesCompleteness"></canvas>
+                            </div>
+                        </div>
+
+
+                        <!-- CARD 6 - Financing -->
+                        <div class="bg-white shadow-md rounded-lg p-6 flex flex-col items-center">
+                            <h3 class="text-lg font-semibold mb-4">Data Lahan</h3>
+                            <div class="w-48 h-48">
+                                <canvas id="chartLand"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- CARD 6 - Financing -->
+                        <div class="bg-white shadow-md rounded-lg p-6 flex flex-col items-center">
+                            <h3 class="text-lg font-semibold mb-4">Proposal Bisnis</h3>
+                            <div class="w-48 h-48">
+                                <canvas id="chartFinancingProposal"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- CARD 6 - AKTA BH-->
+                        <div class="bg-white shadow-md rounded-lg p-6 flex flex-col items-center">
+                            <h3 class="text-lg font-semibold mb-4">Akta BH</h3>
+                            <div class="w-48 h-48">
+                                <canvas id="chartBhDeed"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- CARD 6 - Financing -->
+                        <div class="bg-white shadow-md rounded-lg p-6 flex flex-col items-center">
+                            <h3 class="text-lg font-semibold mb-4">NIK Koperasi</h3>
+                            <div class="w-48 h-48">
+                                <canvas id="chartCooperativeNik"></canvas>
+                            </div>
+                        </div>
+
 
                         <!-- CARD 1 - NIB -->
                         <div class="bg-white shadow-md rounded-lg p-6 flex flex-col items-center">
@@ -138,13 +239,7 @@
                             </div>
                         </div>
 
-                        <!-- CARD 2 - SIMKOPDES -->
-                        <div class="bg-white shadow-md rounded-lg p-6 flex flex-col items-center">
-                            <h3 class="text-lg font-semibold mb-4">Kepemilikan SIMKOPDES</h3>
-                            <div class="w-48 h-48">
-                                <canvas id="chartSIMKOPDES"></canvas>
-                            </div>
-                        </div>
+
 
                         <!-- CARD 3 - NPWP -->
                         <div class="bg-white shadow-md rounded-lg p-6 flex flex-col items-center">
@@ -170,11 +265,29 @@
                             </div>
                         </div>
 
-                        <!-- CARD 6 - Financing -->
+
+
+                        <!-- CARD 5 - Business Plan -->
                         <div class="bg-white shadow-md rounded-lg p-6 flex flex-col items-center">
-                            <h3 class="text-lg font-semibold mb-4">Proposal Bisnis</h3>
+                            <h3 class="text-lg font-semibold mb-4">Belanja Modal (Capex)</h3>
                             <div class="w-48 h-48">
-                                <canvas id="chartFinancingProposal"></canvas>
+                                <canvas id="chartCapex"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- CARD 5 - Business Plan -->
+                        <div class="bg-white shadow-md rounded-lg p-6 flex flex-col items-center">
+                            <h3 class="text-lg font-semibold mb-4">Belanja Operasional (Opex)</h3>
+                            <div class="w-48 h-48">
+                                <canvas id="chartOpex"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- CARD 5 - Business Plan -->
+                        <div class="bg-white shadow-md rounded-lg p-6 flex flex-col items-center">
+                            <h3 class="text-lg font-semibold mb-4">Kelengkapan Lain</h3>
+                            <div class="w-48 h-48">
+                                <canvas id="chartOtherEquipment"></canvas>
                             </div>
                         </div>
 
@@ -546,6 +659,28 @@
                         const desaBelumNIB = {{ $desaBelumNIB }};
                         const simkopdesYa = {{ $simkopdesYa }};
                         const simkopdesTidak = {{ $simkopdesTidak }};
+
+                        const bhDeedYes = {{ $bhDeedYes }};
+                        const bhDeedNo = {{ $bhDeedNo }};
+
+                        const cooperativeNikYes = {{ $cooperativeNikYes }};
+                        const cooperativeNikNo = {{ $cooperativeNikNo }};
+
+                        const capexYes = {{ $capexYes }};
+                        const capexNo = {{ $capexNo }};
+
+                        const opexYes = {{ $opexYes }};
+                        const opexNo = {{ $opexNo }};
+
+                        const otherEquipmentYes = {{ $otherEquipmentYes }};
+                        const otherEquipmentNo = {{ $otherEquipmentNo }};
+
+                        const simkopdesCompletenesYes = {{ $simkopdesCompletenesYes }};
+                        const simkopdesCompletenesNo = {{ $simkopdesCompletenesNo }};
+
+                        const landYes = {{ $landYes }};
+                        const landNo = {{ $landNo }};
+
                         const npwpYa = {{ $npwpYa }};
                         const npwpTidak = {{ $npwpTidak }};
                         const bankYa = {{ $bankYa }};
@@ -665,6 +800,60 @@
 
                         });
 
+                        // Kelengkapan Simkopdes
+                        new Chart(document.getElementById("chartSimkopdesCompleteness"), {
+                            type: "doughnut",
+                            data: {
+                                labels: ["Sudah Lengkap", "Belum"],
+                                datasets: [{
+                                    data: [simkopdesCompletenesYes, simkopdesCompletenesNo],
+                                    backgroundColor: ["#FF007F", "#E0E0E0"]
+                                }]
+                            },
+                            options,
+
+                        });
+
+                        // Data Lahan
+                        new Chart(document.getElementById("chartLand"), {
+                            type: "doughnut",
+                            data: {
+                                labels: ["Sudah Memiliki", "Belum"],
+                                datasets: [{
+                                    data: [landYes, landNo],
+                                    backgroundColor: ["#B1740F", "#E0E0E0"]
+                                }]
+                            },
+                            options,
+
+                        });
+
+                        new Chart(document.getElementById("chartBhDeed"), {
+                            type: "doughnut",
+                            data: {
+                                labels: ["Sudah Memiliki", "Belum"],
+                                datasets: [{
+                                    data: [bhDeedYes, bhDeedNo],
+                                    backgroundColor: ["#B3FFFC", "#E0E0E0"]
+                                }]
+                            },
+                            options,
+
+                        });
+
+                        new Chart(document.getElementById("chartCooperativeNik"), {
+                            type: "doughnut",
+                            data: {
+                                labels: ["Sudah Memiliki", "Belum"],
+                                datasets: [{
+                                    data: [cooperativeNikYes, cooperativeNikNo],
+                                    backgroundColor: ["#FF4242", "#E0E0E0"]
+                                }]
+                            },
+                            options,
+
+                        });
+
                         // Chart 2 - SIMKOPDES
                         new Chart(document.getElementById("chartSIMKOPDES"), {
                             type: "doughnut",
@@ -714,7 +903,7 @@
                                 labels: ["Sudah Memiliki", "Belum"],
                                 datasets: [{
                                     data: [businessPlanYes, businessPlanNo],
-                                    backgroundColor: ["#9B59B6", "#E0E0E0"]
+                                    backgroundColor: ["#30321C", "#E0E0E0"]
                                 }]
                             },
                             options,
@@ -728,7 +917,49 @@
                                 labels: ["Sudah Memiliki", "Belum"],
                                 datasets: [{
                                     data: [financingProposalYes, financingProposalNo],
-                                    backgroundColor: ["#FF007F", "#E0E0E0"]
+                                    backgroundColor: ["#4A4B2F", "#E0E0E0"]
+                                }]
+                            },
+                            options,
+
+                        });
+
+                        // Chart 5 - Rekening Bank 
+                        new Chart(document.getElementById("chartCapex"), {
+                            type: "doughnut",
+                            data: {
+                                labels: ["Sudah Memiliki", "Belum"],
+                                datasets: [{
+                                    data: [capexYes, capexNo],
+                                    backgroundColor: ["#6B654B", "#E0E0E0"]
+                                }]
+                            },
+                            options,
+
+                        });
+
+                        // Chart 5 - Rekening Bank 
+                        new Chart(document.getElementById("chartOpex"), {
+                            type: "doughnut",
+                            data: {
+                                labels: ["Sudah Memiliki", "Belum"],
+                                datasets: [{
+                                    data: [opexYes, opexNo],
+                                    backgroundColor: ["#D4DF9E", "#E0E0E0"]
+                                }]
+                            },
+                            options,
+
+                        });
+
+                        // Chart 5 - Rekening Bank 
+                        new Chart(document.getElementById("chartOtherEquipment"), {
+                            type: "doughnut",
+                            data: {
+                                labels: ["Sudah Memiliki", "Belum"],
+                                datasets: [{
+                                    data: [otherEquipmentYes, otherEquipmentNo],
+                                    backgroundColor: ["#9B59B6", "#E0E0E0"]
                                 }]
                             },
                             options,

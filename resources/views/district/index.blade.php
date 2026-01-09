@@ -109,7 +109,7 @@
                             <i data-lucide="home" class="w-4 h-4 mr-1"></i> Home
                         </a>
                         <span>›</span>
-                        <span class="text-gray-500">Statistik Lahan</span>
+                        <span class="text-gray-500">Kecamatan</span>
                     </nav>
                     {{-- Tombol tambah --}}
                     <div class="mb-10">

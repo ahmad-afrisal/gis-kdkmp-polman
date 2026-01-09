@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class LinkDrive extends Model
+class Announcement extends Model
 {
     protected $guarded = [];
 }

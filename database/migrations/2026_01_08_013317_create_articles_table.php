@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('link_drives', function (Blueprint $table) {
+        Schema::create('articles', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->foreignId('cooperation_id')->constrained('cooperations')->onDelete('cascade');
+            $table->string('title');
             $table->string('link');
             $table->string('status');
             $table->timestamps();
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('link_drives');
+        Schema::dropIfExists('articles');
     }
 };

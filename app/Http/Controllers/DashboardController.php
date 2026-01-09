@@ -29,11 +29,26 @@ class DashboardController extends Controller
 
         $villageCount = Village::count();
 
+        $villageTypeDesaCount = Village::where('type', 'Desa')->count();
+        $villageTypeKelurahanCount = Village::where('type', 'Kelurahan')->count();
+
+
         $bussinessAssistantCount = BussinessAssistant::count();
 
         $cooperationCount = Cooperation::count();
 
         $totalDesa = Village::count();
+
+        $bhDeedYes = Cooperation::whereHas('formThree', function ($q) {
+            $q->where('bh_deed', 1);
+        })->count();
+
+        $bhDeedNo = $cooperationCount - $bhDeedYes;
+
+        $cooperativeNikYes = Cooperation::whereHas('formThree', function ($q) {
+            $q->where('cooperative_nik', 1);
+        })->count();
+        $cooperativeNikNo = $cooperationCount - $cooperativeNikYes;
 
         // NIB
         $desaNIB = Village::whereHas('cooperation.formThree', function ($q) {
@@ -49,6 +64,19 @@ class DashboardController extends Controller
         })->count();
 
         $simkopdesTidak = $totalDesa - $simkopdesYa;
+
+        $simkopdesCompletenesYes = Cooperation::whereHas('simkopdesCompletenes', function ($q) {
+            $q->where('is_complete', 1);
+        })->count();
+
+        $simkopdesCompletenesNo = $cooperationCount - $simkopdesCompletenesYes;
+
+
+        $landYes = Cooperation::whereHas('formSix', function ($q) {
+            $q->whereNotNull('asset');
+        })->count();
+
+        $landNo = $cooperationCount - $landYes;
 
         // NPWP
         $bankYa = Village::whereHas('cooperation.formThree', function ($q) {
@@ -75,7 +103,23 @@ class DashboardController extends Controller
 
         $financingProposalNo = $totalDesa - $financingProposalYes;
 
+        $capexYes = Cooperation::whereHas('formThree', function ($q) {
+            $q->where('capex', 1);
+        })->count();
 
+        $capexNo = $cooperationCount - $capexYes;
+
+        $opexYes = Cooperation::whereHas('formThree', function ($q) {
+            $q->where('opex', 1);
+        })->count();
+
+        $opexNo = $cooperationCount - $opexYes;
+
+        $otherEquipmentYes = Cooperation::whereHas('formThree', function ($q) {
+            $q->where('other_equipment', 1);
+        })->count();
+
+        $otherEquipmentNo = $cooperationCount - $otherEquipmentYes;
 
         $districts = District::with(['villages.cooperation', 'villages.cooperation.formTwo'])->get();
 
@@ -239,19 +283,6 @@ class DashboardController extends Controller
             'ODS Mandiri' => $weeklyReports->pluck('ods'),
         ];
 
-        // Total dokumen + kegiatan per minggu
-        // $documentData = $weeklyReports->map(function ($item) {
-        //     return
-        //         $item->simkopdes +
-        //         $item->nib +
-        //         $item->npwp +
-        //         $item->bank_account +
-        //         $item->business_activity_plan +
-        //         $item->financing_proposal +
-        //         $item->ods;
-        // });
-
-        // return view('reports.districts', compact('reports'));
 
         // Anggota Perkecamtana
 
@@ -276,6 +307,8 @@ class DashboardController extends Controller
         return view('dashboard', [
             'districtCount' => $districtCount,
             'villageCount' => $villageCount,
+            'villageTypeDesaCount' => $villageTypeDesaCount,
+            'villageTypeKelurahanCount' => $villageTypeKelurahanCount,
             'bussinessAssistantCount' => $bussinessAssistantCount,
             'cooperationCount' => $cooperationCount,
             'reportOnes' => $reportOnes,
@@ -285,6 +318,20 @@ class DashboardController extends Controller
             'totalDesa' => $totalDesa,
             'desaNIB' => $desaNIB,
             'desaBelumNIB' => $desaBelumNIB,
+            'bhDeedYes' => $bhDeedYes,
+            'bhDeedNo' => $bhDeedNo,
+            'cooperativeNikYes' => $cooperativeNikYes,
+            'cooperativeNikNo' => $cooperativeNikNo,
+            'capexYes' => $capexYes,
+            'capexNo' => $capexNo,
+            'opexYes' => $opexYes,
+            'opexNo' => $opexNo,
+            'otherEquipmentYes' => $otherEquipmentYes,
+            'otherEquipmentNo' => $otherEquipmentNo,
+            'landYes' => $landYes,
+            'landNo' => $landNo,
+            'simkopdesCompletenesYes' => $simkopdesCompletenesYes,
+            'simkopdesCompletenesNo' => $simkopdesCompletenesNo,
             'simkopdesYa' => $simkopdesYa,
             'simkopdesTidak' => $simkopdesTidak,
             'npwpYa' => $npwpYa,

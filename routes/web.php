@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AnnouncementController;
+use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\BussinessAssistantController;
 use App\Http\Controllers\ContactManagementController;
 use App\Http\Controllers\CooperationController;
@@ -8,6 +10,7 @@ use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\DocumentationPmoController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LandStatisticController;
+use App\Http\Controllers\LinkDriveController;
 use App\Http\Controllers\PolygonController;
 use App\Http\Controllers\ProblemController;
 use App\Http\Controllers\ProfileController;
@@ -116,6 +119,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('problems', ProblemController::class);
     Route::resource('contact-managements', ContactManagementController::class);
     Route::resource('weekly-reports', WeeklyReportController::class);
+    Route::resource('link-drives', LinkDriveController::class);
+    Route::resource('articles', ArticleController::class);
+    Route::resource('announcements', AnnouncementController::class);
     Route::post(
         '/form-seven/record-all',
         [RecordFormSevenController::class, 'storeAllRecord']
