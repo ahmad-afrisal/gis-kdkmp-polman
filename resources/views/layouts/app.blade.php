@@ -134,6 +134,10 @@
             background-color: #667eea !important;
             /*bg-indigo-500*/
         }
+
+        [x-cloak] {
+            display: none !important;
+        }
     </style>
 
     <!--- Tambahkan setelah app.js --->

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\BussinessAssistantController;
+use App\Http\Controllers\CommodityController;
 use App\Http\Controllers\ContactManagementController;
 use App\Http\Controllers\CooperationController;
 use App\Http\Controllers\DashboardController;
@@ -24,6 +25,8 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::get('/', [HomeController::class, 'index'])->name('welcome');
+Route::get('/home/articles', [HomeController::class, 'articles'])->name('home-articles');
+Route::get('/home/announcements', [HomeController::class, 'announcements'])->name('home-announcements');
 Route::get('/galleries', [HomeController::class, 'gallery'])->name('galleries');
 Route::get('/contacts', [HomeController::class, 'contact'])->name('contacts');
 Route::get('/performance/{id}', [HomeController::class, 'performance'])->name('performance');
@@ -34,6 +37,11 @@ Route::get('/map/filter', [HomeController::class, 'filter'])->name('map.filter')
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/2026', [DashboardController::class, 'dashboard2026'])->name('dashboard.2026');
+    Route::get('/dashboard/2026/form-eight', [DashboardController::class, 'formEight'])->name('dashboard.form-eight');
+    Route::get('/dashboard/2026/form-nine', [DashboardController::class, 'formNine'])->name('dashboard.form-nine');
+    Route::get('/dashboard/2026/form-ten', [DashboardController::class, 'formTen'])->name('dashboard.form-ten');
+    Route::get('/dashboard/2026/form-eleven', [DashboardController::class, 'formEleven'])->name('dashboard.form-eleven');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -94,6 +102,36 @@ Route::middleware('auth')->group(function () {
         [BussinessAssistantController::class, 'storeOrUpdateFormSeven']
     )->name('bussiness-assistants.form-7.store');
 
+    Route::get('bussiness-assistants/{bussinessAssistant}/form-8', [BussinessAssistantController::class, 'form8'])
+        ->name('bussiness-assistants.form-8');
+    Route::post(
+        'bussiness-assistants/{bussinessAssistant}/form-8',
+        [BussinessAssistantController::class, 'storeOrUpdateFormEight']
+    )->name('bussiness-assistants.form-8.store');
+
+    Route::get('bussiness-assistants/{bussinessAssistant}/form-9', [BussinessAssistantController::class, 'form9'])
+        ->name('bussiness-assistants.form-9');
+    Route::post(
+        'bussiness-assistants/{bussinessAssistant}/form-9',
+        [BussinessAssistantController::class, 'storeOrUpdateFormNine']
+    )->name('bussiness-assistants.form-9.store');
+
+    Route::get('bussiness-assistants/{bussinessAssistant}/form-10', [BussinessAssistantController::class, 'form10'])
+        ->name('bussiness-assistants.form-10');
+    Route::post(
+        'bussiness-assistants/{bussinessAssistant}/form-10',
+        [BussinessAssistantController::class, 'storeOrUpdateFormTen']
+    )->name('bussiness-assistants.form-10.store');
+
+    Route::get('bussiness-assistants/{bussinessAssistant}/form-eleven', [BussinessAssistantController::class, 'form11'])
+        ->name('bussiness-assistants.form-11');
+    Route::post(
+        'bussiness-assistants/{bussinessAssistant}/form-11',
+        [BussinessAssistantController::class, 'storeOrUpdateFormEleven']
+    )->name('bussiness-assistants.form-11.store');
+
+
+
     Route::get('bussiness-assistants/{bussinessAssistant}/report', [BussinessAssistantController::class, 'generateReport'])
         ->name('bussiness-assistants.report');
 
@@ -107,6 +145,7 @@ Route::middleware('auth')->group(function () {
 
 
 
+    Route::get('form-two/export', [BussinessAssistantController::class, 'formTwoExport'])->name('bussiness-assistants.form-two.export');
 
     Route::get('land-statistics/export', [LandStatisticController::class, 'export'])->name('land-statistic.export');
     Route::resource('land-statistics', LandStatisticController::class);
@@ -122,6 +161,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('link-drives', LinkDriveController::class);
     Route::resource('articles', ArticleController::class);
     Route::resource('announcements', AnnouncementController::class);
+    Route::resource('commodities', CommodityController::class);
     Route::post(
         '/form-seven/record-all',
         [RecordFormSevenController::class, 'storeAllRecord']

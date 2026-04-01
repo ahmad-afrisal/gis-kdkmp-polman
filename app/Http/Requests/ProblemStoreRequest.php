@@ -25,6 +25,8 @@ class ProblemStoreRequest extends FormRequest
             'cooperation_id' => 'required|exists:cooperations,id',
             'problem' => 'required|string',
             'solution' => 'nullable|string',
+            'priority' => 'nullable|string',
+            'date_problem' => 'required|date',
             'status' => 'nullable|string',
         ];
     }

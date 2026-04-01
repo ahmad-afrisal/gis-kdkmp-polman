@@ -15,8 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('cooperation_id')->constrained()->onDelete('cascade');
             $table->text('problem');
+            $table->date('date_problem');
             $table->text('solution')->nullable();
             $table->string('status')->default('To Do');
+            $table->string('priority')->default('Rendah')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

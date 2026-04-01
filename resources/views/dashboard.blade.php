@@ -22,8 +22,44 @@
 
 
         <x-slot name="script">
+            <script>
+                var datatable = $('#crudTable').DataTable({
+                    responsive: true, // <--- aktifkan fitur ini
+                    ajax: {
+                        url: '{!! url()->current() !!}'
+                    },
+                    columns: [{
+                            data: 'id',
+                            name: 'id',
+                            width: '10%'
+                        },
+                        {
+                            data: 'district',
+                            name: 'district',
+                        },
+                        {
+                            data: 'ba',
+                            name: 'ba',
+                        },
+                        {
+                            data: 'cooperation',
+                            name: 'cooperation',
+                        },
+                        {
+                            data: 'number_of_member',
+                            name: 'number_of_member',
+                        },
 
-
+                        {
+                            data: 'action',
+                            name: 'action',
+                            orderable: false,
+                            searchable: false,
+                            width: '15%',
+                        }
+                    ]
+                });
+            </script>
         </x-slot>
 
         <!-- Main Content -->
@@ -309,7 +345,7 @@
 
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-10">
+                    <div class="grid grid-cols-1 md:grid-cols-1 gap-6 my-10">
 
                         <!-- Line Chart Jumlah Anggota -->
                         <div class="bg-white shadow-md rounded-lg p-6">
@@ -317,6 +353,28 @@
 
                             {{-- <div class="h-[220px]"> --}}
                             <canvas id="districtBarChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="shadow overflow-hidden sm-rounded-md">
+
+                        <div class="px-4 py-5 bg-white sm:p-6">
+
+                            <table id="crudTable" class="display cell-border">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nama Kecamatan</th>
+                                        <th>Nama BA</th>
+                                        <th>Nama KDKMP</th>
+                                        <th>Jumlah Anggota</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 
@@ -379,7 +437,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6 mt-6">
 
                         <div class="bg-white shadow-lg rounded-xl overflow-hidden border border-gray-200">
-
+                            <a href="{{ route('bussiness-assistants.form-two.export') }}">Export</a>
                             <div class="px-6 py-4 border-b bg-gray-50">
                                 <h3 class="text-lg font-semibold text-gray-700">Laporan Rekapitulasi Bisnis Proses
                                     KDKMP
@@ -461,8 +519,8 @@
                                                 <td>{{ $r['loan_yes'] }}</td>
                                                 <td>{{ $r['loan_no'] }}</td>
 
-                                                <td>{{ $r['logistics_yes'] }}</td>
-                                                <td>{{ $r['logistics_no'] }}</td>
+                                                <td>{{ $r['storage_yes'] }}</td>
+                                                <td>{{ $r['storage_no'] }}</td>
 
                                                 <td>{{ $r['other_yes'] }}</td>
                                                 <td>{{ $r['other_no'] }}</td>

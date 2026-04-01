@@ -89,8 +89,11 @@
 
                                     <thead>
                                         <tr class="bg-green-600 ">
-                                            <th class="border border-gray-300 px-3 py-2">No</th>
-                                            <th class="w-[800px] min-w-[600px] border border-gray-300 px-2 py-1">
+                                            <th
+                                                class="sticky left-0 z-20 border bg-green-600  border-gray-300 px-3 py-2">
+                                                No</th>
+                                            <th
+                                                class="sticky left-[45px] z-20 w-[800px] min-w-[600px] border border-gray-300 px-2 py-1">
                                                 Nama KDKMP
                                             </th>
                                             <th class=" min-w-[130px] border border-gray-300 px-3 py-2">Foto Tanah</th>
@@ -122,12 +125,14 @@
                                                 $form = $coop->formSix; // Bisa null, aman
                                             @endphp
                                             <tr class="odd:bg-gray-50 even:bg-white hover:bg-green-50 transition">
-                                                <td class="border border-gray-300 px-2 py-1 font-medium text-center">
+                                                <td
+                                                    class="sticky left-0 z-10 bg-inherit border border-gray-300 px-2 py-1 font-medium text-center">
                                                     {{ $index + 1 }}
                                                 </td>
 
                                                 {{-- Nama Koperasi --}}
-                                                <td class="border border-gray-300 px-2 py-1">
+                                                <td
+                                                    class="sticky left-[45px] z-10 bg-inherit border border-gray-300 px-2 py-1">
                                                     <input type="text" name="data[{{ $index }}][nama]"
                                                         value="{{ $coop->name ?? '' }}"
                                                         class="w-full border-gray-300 rounded-lg text-sm p-2 focus:ring-2 focus:ring-green-400 focus:outline-none">

@@ -58,17 +58,15 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('articles.store') }}" method="post" enctype="multipart/form-data"
+                    <form action="{{ route('announcements.store') }}" method="post" enctype="multipart/form-data"
                         class="bg-white p-6 rounded-lg shadow-md">
                         @csrf
-
 
                         <div class="mb-4">
                             <label class="block text-gray-700 font-bold mb-2">Judul Pengumuman</label>
                             <input type="text" name="title" value="{{ old('title') }}"
                                 class="block w-full bg-gray-100 text-gray-700 border border-gray-300 rounded-lg py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-green-500">
                         </div>
-
 
                         <div class="mb-4">
                             <label class="block text-gray-700 font-bold mb-2">Isi Pengumuman</label>
@@ -77,7 +75,7 @@
 
                         <div class="mb-4">
                             <label class="block text-gray-700 font-bold mb-2">File Pendukung</label>
-                            <input type="file" name="file" value="{{ old('title') }}"
+                            <input type="file" name="file" value="{{ old('file') }}"
                                 class="block w-full bg-gray-100 text-gray-700 border border-gray-300 rounded-lg py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-green-500">
                         </div>
 

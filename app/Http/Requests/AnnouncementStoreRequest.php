@@ -11,7 +11,7 @@ class AnnouncementStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,11 @@ class AnnouncementStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title'   => 'required|string|max:255',
+            'content' => 'required|string',
+            'publish_date' => 'nullable|date',
+            'file'    => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'is_active' => 'required|boolean'
         ];
     }
 }

@@ -43,34 +43,33 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('contact-managements.store') }}" method="post" enctype="multipart/form-data"
-                        class="bg-white p-6 rounded-lg shadow-md">
+                    <form action="{{ route('bussiness-assistants.update', $data->id) }}" method="post"
+                        enctype="multipart/form-data" class="bg-white p-6 rounded-lg shadow-md">
                         @csrf
+                        @method('PUT')
 
                         <label class="block mb-2 font-medium">Nama : </label>
-                        <input type="text" name="leader_name" value="{{ old('leader_name') }}"
+                        <input type="text" name="name" value="{{ $data->name }}"
                             class="w-full border
                     rounded p-2 mb-4">
 
                         <label class="block mb-2 font-medium">Nomor Handphone : </label>
-                        <input type="text" name="leader_phone_number" value="{{ old('leader_phone_number') }}"
+                        <input type="text" name="phone_number" value="{{ $data->phone_number }}"
                             class="w-full border
                     rounded p-2 mb-4">
 
                         <label class="block mb-2 font-medium">Alamat : </label>
-                        <input type="text" name="name_of_deputy_member" value="{{ old('name_of_deputy_member') }}"
+                        <input type="text" name="address" value="{{ $data->address }}"
                             class="w-full border
                     rounded p-2 mb-4">
 
                         <label class="block mb-2 font-medium">Tanggal Lahir : </label>
-                        <input type="date" name="deputy_member_phone_number"
-                            value="{{ old('deputy_member_phone_number') }}"
+                        <input type="date" name="date_of_birth" value="{{ $data->date_of_birth }}"
                             class="w-full border
                     rounded p-2 mb-4">
 
                         <label class="block mb-2 font-medium">Foto : </label>
-                        <input type="file" name="name_of_deputy_business"
-                            value="{{ old('name_of_deputy_business') }}"
+                        <input type="file" name="name_of_deputy_business" value="{{ $data->picture }}"
                             class="w-full border
                     rounded p-2 mb-4">
 

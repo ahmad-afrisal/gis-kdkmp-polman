@@ -163,278 +163,29 @@
                             class="w-full border rounded p-2 mb-4">
 
                         <label class="block mb-2 font-medium">Email : </label>
-                        <input type="text" name="email" alue="{{ old('email', $cooperation->email) }}"
+                        <input type="text" name="email" value="{{ old('email', $cooperation->email) }}"
                             class="w-full border rounded p-2 mb-4">
 
                         <label class="block mb-2 font-medium">Tabungan Pokok : </label>
                         <input type="text" name="principal_saving"
-                            alue="{{ old('principal_saving', $cooperation->principal_saving) }}"
+                            value="{{ old('principal_saving', $cooperation->principal_saving) }}"
                             class="w-full border rounded p-2 mb-4">
 
                         <label class="block mb-2 font-medium">Tabungan Wajib : </label>
-                        <input type="text" name="mandatory_saving" class="w-full border rounded p-2 mb-4">
+                        <input type="text" name="mandatory_saving"
+                            value="{{ old('mandatory_saving', $cooperation->mandatory_saving) }}"
+                            class="w-full border rounded p-2 mb-4">
 
                         <label class="block mb-2 font-medium">Sub Domain : </label>
-                        <input type="url" name="subdomain" class="w-full border rounded p-2 mb-4">
+                        <input type="url" name="subdomain" value="{{ old('subdomain', $cooperation->subdomain) }}"
+                            class="w-full border rounded p-2 mb-4">
 
                         <label class="block mb-2 font-medium">Nama Ketua : </label>
                         <input type="text" name="leader_name"
                             value="{{ old('leader_name', $cooperation->leader_name) }}"
                             class="w-full border rounded p-2 mb-4">
 
-                        <div class="flex flex-wrap -mx-3 mb-6">
-                            <div class="w-full px-3">
-                                <label class="block mb-2 font-medium">
-                                    Gerai Sembako :
-                                </label>
-                                <div class="flex items-center gap-8"> <!-- gunakan gap-8 agar jarak lebih lebar -->
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="grocery_outlet" value="1"
-                                            class="form-radio text-green-600"
-                                            {{ old('grocery_outlet', $cooperation->grocery_outlet ?? 1) == 1 ? 'checked' : '' }}>
-                                        <span class="ml-2 text-gray-700">Ada</span>
-                                    </label>
 
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="grocery_outlet" value="0"
-                                            class="form-radio text-red-600"
-                                            {{ old('grocery_outlet', $cooperation->grocery_outlet ?? 1) == 0 ? 'checked' : '' }}>
-                                        <span class="ml-2 text-gray-700">Tidak Ada</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="flex flex-wrap -mx-3 mb-6">
-                            <div class="w-full px-3">
-                                <label class="block mb-2 font-medium">
-                                    Gerai Apotek :
-                                </label>
-                                <div class="flex items-center gap-8"> <!-- gunakan gap-8 agar jarak lebih lebar -->
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="village_pharmacy_outlet" value="1"
-                                            class="form-radio text-green-600"
-                                            {{ old('village_pharmacy_outlet', $cooperation->village_pharmacy_outlet ?? 1) == 1 ? 'checked' : '' }}>
-                                        <span class="ml-2 text-gray-700">Ada</span>
-                                    </label>
-
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="village_pharmacy_outlet" value="0"
-                                            class="form-radio text-red-600"
-                                            {{ old('village_pharmacy_outlet', $cooperation->village_pharmacy_outlet ?? 1) == 0 ? 'checked' : '' }}>
-                                        <span class="ml-2 text-gray-700">Tidak Ada</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="flex flex-wrap -mx-3 mb-6">
-                            <div class="w-full px-3">
-                                <label class="block mb-2 font-medium">
-                                    Gerai Kantor Koperasi :
-                                </label>
-                                <div class="flex items-center gap-8"> <!-- gunakan gap-8 agar jarak lebih lebar -->
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="cooperative_office_outlet" value="1"
-                                            class="form-radio text-green-600"
-                                            {{ old('cooperative_office_outlet', $cooperation->cooperative_office_outlet ?? 1) == 1 ? 'checked' : '' }}>
-                                        <span class="ml-2 text-gray-700">Ada</span>
-                                    </label>
-
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="cooperative_office_outlet" value="0"
-                                            class="form-radio text-red-600"
-                                            {{ old('cooperative_office_outlet', $cooperation->cooperative_office_outlet ?? 1) == 0 ? 'checked' : '' }}>
-                                        <span class="ml-2 text-gray-700">Tidak Ada</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="flex flex-wrap -mx-3 mb-6">
-                            <div class="w-full px-3">
-                                <label class="block mb-2 font-medium">
-                                    Gerai Simpan Pinjam :
-                                </label>
-                                <div class="flex items-center gap-8"> <!-- gunakan gap-8 agar jarak lebih lebar -->
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="savings_and_loan_outlet" value="1"
-                                            class="form-radio text-green-600"
-                                            {{ old('savings_and_loan_outlet', $cooperation->savings_and_loan_outlet ?? 1) == 1 ? 'checked' : '' }}>
-                                        <span class="ml-2 text-gray-700">Ada</span>
-                                    </label>
-
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="savings_and_loan_outlet" value="0"
-                                            class="form-radio text-red-600"
-                                            {{ old('savings_and_loan_outlet', $cooperation->savings_and_loan_outlet ?? 1) == 0 ? 'checked' : '' }}>
-                                        <span class="ml-2 text-gray-700">Tidak Ada</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="flex flex-wrap -mx-3 mb-6">
-                            <div class="w-full px-3">
-                                <label class="block mb-2 font-medium">
-                                    Gerai Klinik :
-                                </label>
-                                <div class="flex items-center gap-8"> <!-- gunakan gap-8 agar jarak lebih lebar -->
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="village_clinic_outlet" value="1"
-                                            class="form-radio text-green-600"
-                                            {{ old('village_clinic_outlet', $cooperation->village_clinic_outlet ?? 1) == 1 ? 'checked' : '' }}>
-                                        <span class="ml-2 text-gray-700">Ada</span>
-                                    </label>
-
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="village_clinic_outlet" value="0"
-                                            class="form-radio text-red-600"
-                                            {{ old('village_clinic_outlet', $cooperation->village_clinic_outlet ?? 1) == 0 ? 'checked' : '' }}>
-                                        <span class="ml-2 text-gray-700">Tidak Ada</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="flex flex-wrap -mx-3 mb-6">
-                            <div class="w-full px-3">
-                                <label class="block mb-2 font-medium">
-                                    Gerai Cold Storage :
-                                </label>
-                                <div class="flex items-center gap-8"> <!-- gunakan gap-8 agar jarak lebih lebar -->
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="cold_storage_outlet" value="1"
-                                            class="form-radio text-green-600"
-                                            {{ old('cold_storage_outlet', $cooperation->cold_storage_outlet ?? 1) == 1 ? 'checked' : '' }}>
-                                        <span class="ml-2 text-gray-700">Ada</span>
-                                    </label>
-
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="cold_storage_outlet" value="0"
-                                            class="form-radio text-red-600"
-                                            {{ old('cold_storage_outlet', $cooperation->cold_storage_outlet ?? 1) == 0 ? 'checked' : '' }}>
-                                        <span class="ml-2 text-gray-700">Tidak Ada</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="flex flex-wrap -mx-3 mb-6">
-                            <div class="w-full px-3">
-                                <label class="block mb-2 font-medium">
-                                    Gerai Logistik :
-                                </label>
-                                <div class="flex items-center gap-8"> <!-- gunakan gap-8 agar jarak lebih lebar -->
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="logistics_outlet" value="1"
-                                            class="form-radio text-green-600"
-                                            {{ old('logistics_outlet', $cooperation->logistics_outlet ?? 1) == 1 ? 'checked' : '' }}>
-                                        <span class="ml-2 text-gray-700">Ada</span>
-                                    </label>
-
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="logistics_outlet" value="0"
-                                            class="form-radio text-red-600"
-                                            {{ old('logistics_outlet', $cooperation->logistics_outlet ?? 1) == 0 ? 'checked' : '' }}>
-                                        <span class="ml-2 text-gray-700">Tidak Ada</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="flex flex-wrap -mx-3 mb-6">
-                            <div class="w-full px-3">
-                                <label class="block mb-2 font-medium">
-                                    Gerai Pupuk :
-                                </label>
-                                <div class="flex items-center gap-8"> <!-- gunakan gap-8 agar jarak lebih lebar -->
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="fertilize_outlet" value="1"
-                                            class="form-radio text-green-600"
-                                            {{ old('fertilize_outlet', $cooperation->fertilize_outlet ?? 1) == 1 ? 'checked' : '' }}>
-                                        <span class="ml-2 text-gray-700">Ada</span>
-                                    </label>
-
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="fertilize_outlet" value="0"
-                                            class="form-radio text-red-600"
-                                            {{ old('fertilize_outlet', $cooperation->fertilize_outlet ?? 1) == 0 ? 'checked' : '' }}>
-                                        <span class="ml-2 text-gray-700">Tidak Ada</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="flex flex-wrap -mx-3 mb-6">
-                            <div class="w-full px-3">
-                                <label class="block mb-2 font-medium">
-                                    Gerai Pangkalan LPG :
-                                </label>
-                                <div class="flex items-center gap-8"> <!-- gunakan gap-8 agar jarak lebih lebar -->
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="lpg_base_outlet" value="1"
-                                            class="form-radio text-green-600"
-                                            {{ old('lpg_base_outlet', $cooperation->lpg_base_outlet ?? 1) == 1 ? 'checked' : '' }}>
-                                        <span class="ml-2 text-gray-700">Ada</span>
-                                    </label>
-
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="lpg_base_outlet" value="0"
-                                            class="form-radio text-red-600"
-                                            {{ old('lpg_base_outlet', $cooperation->lpg_base_outlet ?? 1) == 0 ? 'checked' : '' }}>
-                                        <span class="ml-2 text-gray-700">Tidak Ada</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="flex flex-wrap -mx-3 mb-6">
-                            <div class="w-full px-3">
-                                <label class="block mb-2 font-medium">
-                                    Gerai Agen POS :
-                                </label>
-                                <div class="flex items-center gap-8"> <!-- gunakan gap-8 agar jarak lebih lebar -->
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="postal_agent_outlet" value="1"
-                                            class="form-radio text-green-600"
-                                            {{ old('postal_agent_outlet', $cooperation->postal_agent_outlet ?? 1) == 1 ? 'checked' : '' }}>
-                                        <span class="ml-2 text-gray-700">Ada</span>
-                                    </label>
-
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="postal_agent_outlet" value="0"
-                                            class="form-radio text-red-600"
-                                            {{ old('postal_agent_outlet', $cooperation->postal_agent_outlet ?? 1) == 0 ? 'checked' : '' }}>
-                                        <span class="ml-2 text-gray-700">Tidak Ada</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="flex flex-wrap -mx-3 mb-6">
-                            <div class="w-full px-3">
-                                <label class="block mb-2 font-medium">
-                                    Gerai Laku Pandai :
-                                </label>
-                                <div class="flex items-center gap-8"> <!-- gunakan gap-8 agar jarak lebih lebar -->
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="smart_agent_outlet" value="1"
-                                            class="form-radio text-green-600"
-                                            {{ old('smart_agent_outlet', $cooperation->smart_agent_outlet ?? 1) == 1 ? 'checked' : '' }}>
-                                        <span class="ml-2 text-gray-700">Ada</span>
-                                    </label>
-
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="smart_agent_outlet" value="0"
-                                            class="form-radio text-red-600"
-                                            {{ old('smart_agent_outlet', $cooperation->smart_agent_outlet ?? 1) == 0 ? 'checked' : '' }}>
-                                        <span class="ml-2 text-gray-700">Tidak Ada</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
 
 
                         <div class="flex flex-wrap -mx-3 mb-6">
@@ -483,6 +234,66 @@
                             </div>
                         </div>
 
+                        <div class="bg-white mb-3 p-6 rounded-2xl border border-gray-100 shadow-sm">
+                            <h3 class="text-lg font-bold text-gray-800 mb-6 border-b pb-2">Ketersediaan Gerai Layanan
+                            </h3>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-6">
+
+                                @php
+                                    // Array untuk memudahkan looping agar kode tidak panjang berulang
+                                    $outlets = [
+                                        ['name' => 'grocery_outlet', 'label' => 'Gerai Sembako'],
+                                        ['name' => 'village_pharmacy_outlet', 'label' => 'Gerai Apotek'],
+                                        ['name' => 'cooperative_office_outlet', 'label' => 'Kantor Koperasi'],
+                                        ['name' => 'savings_and_loan_outlet', 'label' => 'Simpan Pinjam'],
+                                        ['name' => 'village_clinic_outlet', 'label' => 'Gerai Klinik'],
+                                        ['name' => 'cold_storage_outlet', 'label' => 'Cold Storage'],
+                                        ['name' => 'logistics_outlet', 'label' => 'Gerai Logistik'],
+                                        ['name' => 'fertilize_outlet', 'label' => 'Gerai Pupuk'],
+                                        ['name' => 'lpg_base_outlet', 'label' => 'Pangkalan LPG'],
+                                        ['name' => 'postal_agent_outlet', 'label' => 'Agen POS'],
+                                        ['name' => 'smart_agent_outlet', 'label' => 'Laku Pandai'],
+                                    ];
+                                @endphp
+
+                                @foreach ($outlets as $outlet)
+                                    <div
+                                        class="flex flex-col space-y-2 p-3 rounded-xl hover:bg-slate-50 transition-colors">
+                                        <label class="text-sm font-semibold text-gray-600 tracking-wide">
+                                            {{ $outlet['label'] }} :
+                                        </label>
+
+                                        <div class="flex items-center space-x-6">
+                                            <label class="inline-flex items-center cursor-pointer group">
+                                                <div class="relative flex items-center">
+                                                    <input type="radio" name="{{ $outlet['name'] }}"
+                                                        value="1"
+                                                        class="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 focus:ring-green-500 focus:ring-2 transition"
+                                                        {{ old($outlet['name'], $cooperation->{$outlet['name']} ?? 1) == 1 ? 'checked' : '' }}>
+                                                    <span
+                                                        class="ml-2 text-sm font-medium text-gray-700 group-hover:text-green-600 transition-colors">Ada</span>
+                                                </div>
+                                            </label>
+
+                                            <label class="inline-flex items-center cursor-pointer group">
+                                                <div class="relative flex items-center">
+                                                    <input type="radio" name="{{ $outlet['name'] }}"
+                                                        value="0"
+                                                        class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 focus:ring-2 transition"
+                                                        {{ old($outlet['name'], $cooperation->{$outlet['name']} ?? 1) == 0 ? 'checked' : '' }}>
+                                                    <span
+                                                        class="ml-2 text-sm font-medium text-gray-700 group-hover:text-red-600 transition-colors">Tidak
+                                                        Ada</span>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                @endforeach
+
+                            </div>
+                        </div>
+
 
 
 
@@ -494,11 +305,13 @@
                             <div>
                                 <label class="block mb-2 font-medium">Latitude:</label>
                                 <input type="text" id="latitude" name="latitude"
+                                    value="{{ old('latitude', $cooperation->latitude) }}"
                                     class="w-full border rounded p-2">
                             </div>
                             <div>
                                 <label class="block mb-2 font-medium">Longitude:</label>
                                 <input type="text" id="longitude" name="longitude"
+                                    value="{{ old('longtitude', $cooperation->longtitude) }}"
                                     class="w-full border rounded p-2">
                             </div>
                         </div>

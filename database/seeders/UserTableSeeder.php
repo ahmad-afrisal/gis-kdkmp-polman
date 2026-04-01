@@ -15,11 +15,13 @@ class UserTableSeeder extends Seeder
     public function run(): void
     {
 
-        User::create([
+        $user = User::create([
             'name' => 'Administrator',
             'email' => 'admin@example.com',
             'password' => Hash::make('password'), // ganti ke password aman
             'email_verified_at' => now()
         ]);
+
+        $user->assignRole('admin');
     }
 }

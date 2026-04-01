@@ -26,6 +26,26 @@
                             name: 'name',
                         },
                         {
+                            data: 'address',
+                            name: 'address',
+                        },
+                        {
+                            data: 'phone_number',
+                            name: 'phone_number',
+                        },
+                        {
+                            data: 'date_of_birth',
+                            name: 'date_of_birth',
+                        },
+                        {
+                            data: 'picture',
+                            name: 'picture',
+                        },
+                        {
+                            data: 'status',
+                            name: 'status',
+                        },
+                        {
                             data: 'action',
                             name: 'action',
                             orderable: false,
@@ -88,6 +108,11 @@
                                     <tr>
                                         <th>ID BA</th>
                                         <th>Nama</th>
+                                        <th>Alamat</th>
+                                        <th>No. Telepon</th>
+                                        <th>Tanggal Lahir</th>
+                                        <th>Foto</th>
+                                        <th>Status</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>

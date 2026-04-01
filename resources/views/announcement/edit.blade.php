@@ -31,7 +31,7 @@
                             <i data-lucide="home" class="w-4 h-4 mr-1"></i> Home
                         </a>
                         <span>›</span>
-                        <span class="text-gray-500">Artikel</span>
+                        <span class="text-gray-500">Pengumuman</span>
                         <span>›</span>
                         <span class="text-gray-500">Edit</span>
                         <span>›</span>
@@ -56,29 +56,23 @@
                         enctype="multipart/form-data" class="bg-white p-6 rounded-lg shadow-md">
                         @csrf
                         @method('PUT')
-                        <div class="mb-4">
-                            <label class="block text-gray-700 font-bold mb-2">Nama KDKMP</label>
-                            <select name="cooperation_id" id="cooperation_id"
-                                class="block w-full bg-gray-100 text-gray-700 border border-gray-300 rounded-lg py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-green-500">
-                                <option value="">-- Pilih KDKMP--</option>
-                                @foreach ($cooperations as $id => $name)
-                                    <option value="{{ $id }}"
-                                        {{ old('cooperation_id', $data->cooperation_id) == $id ? 'selected' : '' }}>
-                                        {{ $id }} - {{ $name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
 
                         <div class="mb-4">
-                            <label class="block text-gray-700 font-bold mb-2">Judul Artikel</label>
-                            <input type="text" name="title" value="{{ old('title') ?? $data->title }}"
+                            <label class="block text-gray-700 font-bold mb-2">Judul Pengumuman</label>
+                            <input type="text" name="title" value="{{ old('title') }}"
                                 class="block w-full bg-gray-100 text-gray-700 border border-gray-300 rounded-lg py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-green-500">
                         </div>
 
+
                         <div class="mb-4">
-                            <label class="block text-gray-700 font-bold mb-2">Link</label>
-                            <textarea name="link" class="w-full border rounded p-2 mb-4">{{ old('link') ?? $data->link }}</textarea>
+                            <label class="block text-gray-700 font-bold mb-2">Isi Pengumuman</label>
+                            <textarea name="content" class="w-full border rounded p-2 mb-4">{{ old('content') }}</textarea>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-bold mb-2">File Pendukung</label>
+                            <input type="file" name="file" value="{{ old('file') }}"
+                                class="block w-full bg-gray-100 text-gray-700 border border-gray-300 rounded-lg py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-green-500">
                         </div>
 
                         <div class="flex flex-wrap -mx-3 mb-6">
@@ -88,22 +82,21 @@
                                 </label>
                                 <div class="flex items-center gap-8"> <!-- gunakan gap-8 agar jarak lebih lebar -->
                                     <label class="inline-flex items-center">
-                                        <input type="radio" name="status" value="1"
+                                        <input type="radio" name="is_active" value="1"
                                             class="form-radio text-green-600"
-                                            {{ old('status', $data->status ?? 1) == 1 ? 'checked' : '' }}>
+                                            {{ old('is_active', 1) == 1 ? 'checked' : '' }}>
                                         <span class="ml-2 text-gray-700">Aktif</span>
                                     </label>
 
                                     <label class="inline-flex items-center">
-                                        <input type="radio" name="status" value="0"
+                                        <input type="radio" name="is_active" value="0"
                                             class="form-radio text-red-600"
-                                            {{ old('status', $data->status ?? 1) == 0 ? 'checked' : '' }}>
+                                            {{ old('is_active') == 0 ? 'checked' : '' }}>
                                         <span class="ml-2 text-gray-700">Tidak Aktif</span>
                                     </label>
                                 </div>
                             </div>
                         </div>
-
 
                         <div class="flex space-x-2">
                             <button type="submit"

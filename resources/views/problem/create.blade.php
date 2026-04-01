@@ -8,8 +8,25 @@
         <div x-show="open" @click="open=false" class="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"></div>
 
 
-        <x-slot name="script">
+        <x-slot name="style">
+            <!-- CSS Select2 -->
+            <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
+
+        </x-slot>
+
+        <x-slot name="script">
+            <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+            <script>
+                $(document).ready(function() {
+                    $('#cooperation_id').select2({
+                        width: '100%',
+                        height: '40px',
+                        placeholder: "-- Pilih KDKMP --",
+                        allowClear: true
+                    });
+                });
+            </script>
         </x-slot>
 
         <!-- Main Content -->
@@ -67,6 +84,27 @@
                         <div class="mb-4">
                             <label class="block text-gray-700 font-bold mb-2">Permasalahan</label>
                             <textarea name="problem" class="w-full border rounded p-2 mb-4">{{ old('problem') }}</textarea>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-bold mb-2">Sejak Kapan Terjadi</label>
+                            <input type="date" name="date_problem" value="{{ old('date_problem') }}"
+                                class="block w-full bg-gray-100 text-gray-700 border border-gray-300 rounded-lg py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-green-500">
+                        </div>
+
+
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-bold mb-2">Tingkat Permasalahan</label>
+                            <select name="priority" id="priority"
+                                class="block w-full bg-gray-100 text-gray-700 border border-gray-300 rounded-lg py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-green-500">
+                                <option value="">-- Pilih Tinkat Permasalahan --</option>
+                                <option value="Rendah" {{ old('priority') == 'Rendah' ? 'selected' : '' }}>Rendah
+                                </option>
+                                <option value="Sedang" {{ old('priority') == 'Sedang' ? 'selected' : '' }}>Sedang
+                                </option>
+                                <option value="Tinggi" {{ old('priority') == 'Tinggi' ? 'selected' : '' }}>Tinggi
+                                </option>
+                            </select>
                         </div>
 
 

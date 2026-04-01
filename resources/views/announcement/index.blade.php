@@ -27,12 +27,16 @@
                             name: 'title'
                         },
                         {
-                            data: 'link',
-                            name: 'link'
+                            data: 'content',
+                            name: 'content'
                         },
                         {
-                            data: 'status',
-                            name: 'status',
+                            data: 'file',
+                            name: 'file'
+                        },
+                        {
+                            data: 'is_active',
+                            name: 'is_active',
                             width: '10%'
                         },
                         {
@@ -62,6 +66,9 @@
                         <span class="text-gray-500">Pengumuman</span>
                     </nav>
 
+                    @include('components.alert')
+
+
                     {{-- Tombol tambah --}}
                     <div class="mb-10">
                         <a href="{{ route('announcements.create') }}"
@@ -77,7 +84,8 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Judul</th>
-                                    <th>Link</th>
+                                    <th>content</th>
+                                    <th>File</th>
                                     <th>Status</th>
                                     <th>Aksi</th>
                                 </tr>

@@ -11,7 +11,7 @@ class BussinessAssistantUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,10 @@ class BussinessAssistantUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'address' => 'nullable|string',
+            'phone_number' => 'nullable|string',
+            'date_of_birth' => 'nullable|date',
+            'picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
 }

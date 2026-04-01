@@ -6,6 +6,7 @@ use App\Http\Requests\AnnouncementStoreRequest;
 use App\Http\Requests\AnnouncementUpdateRequest;
 use App\Models\Announcement;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 
 class AnnouncementController extends Controller
 {
@@ -19,15 +20,23 @@ class AnnouncementController extends Controller
             // $query = Problem::query(); // ambil data farmer + user
 
             return DataTables::of($query)
-                ->addColumn('link', function ($item) {
-                    return '<a href="' . $item->link . '" 
-                    target="_blank"
-                    class="text-blue-600 hover:underline">
-                    ' . $item->link . '
-                </a>';
+                ->addColumn('file', function ($item) {
+                    if (!$item->file) {
+                        return '<span class="text-gray-400 italic">Tidak ada file</span>';
+                    }
+
+                    return '
+            <a href="' . asset('storage/' . $item->file) . '" 
+               target="_blank"
+               class="text-blue-600 hover:underline">
+               Lihat File
+            </a>
+        ';
+                })->addColumn('content', function ($item) {
+                    return $item->content; // HTML
                 })
-                ->addColumn('status', function ($item) {
-                    if ($item->status == 1) {
+                ->addColumn('is_active', function ($item) {
+                    if ($item->is_active == 1) {
                         return '<span class="bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded">
                         Aktif
                     </span>';
@@ -45,7 +54,7 @@ class AnnouncementController extends Controller
             </a>
         ';
                 })
-                ->rawColumns(['link', 'status', 'action'])
+                ->rawColumns(['content', 'file', 'is_active', 'action'])
                 ->make(true);
         }
 
@@ -67,6 +76,18 @@ class AnnouncementController extends Controller
     public function store(AnnouncementStoreRequest $request)
     {
         $data = $request->validated();
+
+        // 🔹 Cek apakah ada file
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+
+            // Simpan ke storage/app/public/announcements
+            $path = $file->store('announcements', 'public');
+
+            // Simpan path ke database
+            $data['file'] = $path;
+        }
+
         Announcement::create($data);
 
         return redirect()->route('announcements.index')->with('success', 'Pengumuman berhasil ditambahkan.');

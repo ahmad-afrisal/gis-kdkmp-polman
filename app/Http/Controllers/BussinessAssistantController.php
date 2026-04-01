@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\FormTwoExport;
 use App\Http\Requests\BussinessAssistantUpdateRequest;
 use App\Models\BussinessAssistant;
+use App\Models\Commodity;
 use App\Models\Cooperation;
 use App\Models\FormFive;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -12,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BussinessAssistantController extends Controller
 {
@@ -21,6 +24,17 @@ class BussinessAssistantController extends Controller
             $query = BussinessAssistant::query(); // ambil data farmer + user
 
             return DataTables::of($query)
+                ->addColumn('status', function ($item) {
+                    if ($item->is_active) {
+                        return '<span class="bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded">
+                        Aktif
+                        </span>';
+                    } else {
+                        return '<span class="bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded">
+                        Tidak Aktif
+                        </span>';
+                    }
+                })
                 ->addColumn('action', function ($item) {
                     return '
                     <a href="' . route('bussiness-assistants.performance', $item->id) . '" 
@@ -43,7 +57,7 @@ class BussinessAssistantController extends Controller
                     </form>
                 ';
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['status', 'action'])
                 ->make(true);
         }
 
@@ -75,7 +89,7 @@ class BussinessAssistantController extends Controller
     public function show(BussinessAssistant $bussinessAssistant)
     {
         if (request()->ajax()) {
-            $query = Cooperation::where('bussiness_assistant_id', $bussinessAssistant->id);
+            $query = Cooperation::where('bussiness_assistant_id', $bussinessAssistant->id)->orderBy('order', 'asc');
 
             return DataTables::of($query)
                 ->addColumn('action', function ($item) {
@@ -126,7 +140,7 @@ class BussinessAssistantController extends Controller
         $data = $request->validated();
 
         $bussinessAssistant->update($data);
-        return to_route('bussiness-assistants.index')->with('success', 'Kontak Pengurus berhasil diupdate');
+        return to_route('bussiness-assistants.index')->with('success', 'Business Assistant berhasil diupdate');
     }
 
 
@@ -134,7 +148,7 @@ class BussinessAssistantController extends Controller
     public function form1(BussinessAssistant $bussinessAssistant)
     {
         // Ambil semua koperasi yang dimiliki oleh Business Assistant ini
-        $cooperations = $bussinessAssistant->cooperations()->get();
+        $cooperations = $bussinessAssistant->cooperations()->orderBy('order', 'asc')->get();
 
         // Kirim ke view form-1.blade.php
         return view('bussiness-assistants.detail.form-1', compact('bussinessAssistant', 'cooperations'));
@@ -207,7 +221,7 @@ class BussinessAssistantController extends Controller
     public function form2(BussinessAssistant $bussinessAssistant)
     {
         // Ambil semua koperasi yang dimiliki oleh Business Assistant ini
-        $cooperations = $bussinessAssistant->cooperations()->with('formTwo')->get();
+        $cooperations = $bussinessAssistant->cooperations()->with('formTwo')->orderBy('order', 'asc')->get();
 
         // Kirim ke view form-1.blade.php
         return view('bussiness-assistants.detail.form-2', compact('bussinessAssistant', 'cooperations'));
@@ -274,7 +288,7 @@ class BussinessAssistantController extends Controller
 
     public function form3(BussinessAssistant $bussinessAssistant)
     {
-        $cooperations = $bussinessAssistant->cooperations()->with('formThree')->get();
+        $cooperations = $bussinessAssistant->cooperations()->with('formThree')->orderBy('order', 'asc')->get();
 
         return view('bussiness-assistants.detail.form-3', compact(
             'bussinessAssistant',
@@ -338,7 +352,7 @@ class BussinessAssistantController extends Controller
     public function form4(BussinessAssistant $bussinessAssistant)
     {
         // Ambil semua koperasi yang dimiliki oleh Business Assistant ini
-        $cooperations = $bussinessAssistant->cooperations()->with('formFour')->get();
+        $cooperations = $bussinessAssistant->cooperations()->with('formFour')->orderBy('order', 'asc')->get();
 
         // Kirim ke view form-1.blade.php
         return view('bussiness-assistants.detail.form-4', compact('bussinessAssistant', 'cooperations'));
@@ -410,7 +424,7 @@ class BussinessAssistantController extends Controller
     public function form5(BussinessAssistant $bussinessAssistant)
     {
         // Ambil semua koperasi yang dimiliki oleh Business Assistant ini
-        $cooperations = $bussinessAssistant->cooperations()->with('formFives')->get();
+        $cooperations = $bussinessAssistant->cooperations()->with('formFives')->orderBy('order', 'asc')->get();
 
         // Kirim ke view form-1.blade.php
         return view('bussiness-assistants.detail.form-5', compact('bussinessAssistant', 'cooperations'));
@@ -463,7 +477,7 @@ class BussinessAssistantController extends Controller
     public function form6(BussinessAssistant $bussinessAssistant)
     {
         // Ambil semua koperasi yang dimiliki oleh Business Assistant ini
-        $cooperations = $bussinessAssistant->cooperations()->with('formSix')->get();
+        $cooperations = $bussinessAssistant->cooperations()->with('formSix')->orderBy('order', 'asc')->get();
 
         // Kirim ke view form-1.blade.php
         return view('bussiness-assistants.detail.form-6', compact('bussinessAssistant', 'cooperations'));
@@ -535,7 +549,7 @@ class BussinessAssistantController extends Controller
     public function form7(BussinessAssistant $bussinessAssistant)
     {
         // Ambil semua koperasi yang dimiliki oleh Business Assistant ini
-        $cooperations = $bussinessAssistant->cooperations()->with('formSix')->get();
+        $cooperations = $bussinessAssistant->cooperations()->with('formSix')->orderBy('order', 'asc')->get();
 
         // Kirim ke view form-1.blade.php
         return view('bussiness-assistants.detail.form-7', compact('bussinessAssistant', 'cooperations'));
@@ -571,6 +585,295 @@ class BussinessAssistantController extends Controller
 
         return back()->with('success', 'Form 7 berhasil disimpan.');
     }
+
+    public function form8(BussinessAssistant $bussinessAssistant)
+    {
+        // Ambil semua koperasi yang dimiliki oleh Business Assistant ini
+        $cooperations = $bussinessAssistant->cooperations()->with('formEight')->orderBy('order', 'asc')->get();
+
+        // Kirim ke view form-1.blade.php
+        return view('bussiness-assistants.detail.form-8', compact('bussinessAssistant', 'cooperations'));
+    }
+
+    public function storeOrUpdateFormEight(Request $request, BussinessAssistant $bussinessAssistant)
+    {
+        // Validasi Awal Pastikan datanya array
+        $request->validate([
+            'data' => 'required|array',
+        ]);
+
+
+
+        foreach ($request->data as $row) {
+
+            // Validasi Perdata
+            $validated = validator($row, [
+                'cooperation_id' => 'required|exists:cooperations,id',
+                'land_readiness' => 'nullable|boolean',
+                'store_development' => 'nullable|numeric',
+                'vehicle' => 'nullable|boolean',
+                'table_and_chair' => 'nullable|boolean',
+                'display_case' => 'nullable|boolean',
+                'computer' => 'nullable|boolean',
+                'problem' => 'nullable|string',
+                'information' => 'nullable|string',
+            ])->validate();
+
+            
+            $validated['land_readiness'] = isset($row['land_readiness_ada']) ? 1 : 0;
+            
+            // store development → 1 = approved, 0 = rejected, 2 = tidak dibangun
+            if (isset($row['store_development_approved'])) {
+                $validated['store_development'] = 1;
+            } elseif (isset($row['store_development_rejected'])) {
+                $validated['store_development'] = 0;
+            } else {
+                $validated['store_development'] = 2;
+            }
+
+            $validated['vehicle'] = isset($row['vehicle_ada']) ? 1 : 0;
+            $validated['table_and_chair'] = isset($row['table_and_chair_ada']) ? 1 : 0;
+            $validated['display_case'] = isset($row['display_case_ada']) ? 1 : 0;
+            $validated['computer'] = isset($row['computer_ada']) ? 1 : 0;
+
+            
+            
+            $dataFormEight = [
+                'land_readiness' => $validated['land_readiness'] ?? null,
+                'store_development' => $validated['store_development'] ?? null,
+                'vehicle' => $validated['vehicle'] ?? null,
+                'table_and_chair' => $validated['table_and_chair'] ?? null,
+                'display_case' => $validated['display_case'] ?? null,
+                'computer' => $validated['computer'] ?? null,
+                'problem' => $validated['problem'] ?? null,
+                'information' => $validated['information'] ?? null,
+            ];
+            
+            $cooperation = Cooperation::findOrFail($validated['cooperation_id']);
+
+            $formEight = $cooperation->formEight;
+
+            if ($formEight) {
+                $formEight->update($dataFormEight);
+            } else {
+                $cooperation->formEight()->create($dataFormEight);
+            }
+        }
+
+        return back()->with('success', 'Form 1 2026 berhasil disimpan.');
+    }
+
+    public function form9(BussinessAssistant $bussinessAssistant)
+    {
+        // Ambil semua koperasi yang dimiliki oleh Business Assistant ini
+        $cooperations = $bussinessAssistant->cooperations()->with('formNine')->orderBy('order', 'asc')->get();
+
+        // Kirim ke view form-1.blade.php
+        return view('bussiness-assistants.detail.form-9', compact('bussinessAssistant', 'cooperations'));
+    }
+
+    public function storeOrUpdateFormNine(Request $request, BussinessAssistant $bussinessAssistant)
+    {
+        $request->validate([
+            'data' => 'required|array',
+        ]);
+
+        // dd($request->data);
+
+
+        foreach ($request->data as $row) {
+
+            $validated = validator($row, [
+                'cooperation_id' => 'required|exists:cooperations,id',
+                'outlet_status' => 'nullable|boolean',
+                'number_of_employees_2025' => 'nullable|numeric',
+                'number_of_employees_2026' => 'nullable|numeric',
+                'outlet_operations_guide' => 'nullable|boolean',
+                'problem' => 'nullable|string',
+                'information' => 'nullable|string',
+            ])->validate();
+
+            
+            // store development → 1 = approved, 0 = rejected, 2 = tidak dibangun
+            if (isset($row['outlet_status_ada'])) {
+                $validated['outlet_status'] = 1;
+            } elseif (isset($row['outlet_status_belum'])) {
+                $validated['outlet_status'] = 0;
+            } else {
+                $validated['outlet_status'] = 2;
+            }
+
+            $validated['outle_operations_guide'] = isset($row['outle_operations_guide_yes']) ? 1 : 0;
+
+
+            $cooperation = Cooperation::findOrFail($validated['cooperation_id']);
+
+            $dataFormNine = [
+                'outlet_status' => $validated['outlet_status'] ?? null,
+                'number_of_employees_2025' => $validated['number_of_employees_2025'] ?? null,
+                'number_of_employees_2026' => $validated['number_of_employees_2026'] ?? null,
+                'outlet_operations_guide' => $validated['outlet_operations_guide'] ?? null,
+                'problem' => $validated['problem'] ?? null,
+                'information' => $validated['information'] ?? null,
+            ];
+
+            $formNine = $cooperation->formNine;
+
+            if ($formNine) {
+                $formNine->update($dataFormNine);
+            } else {
+                $cooperation->formNine()->create($dataFormNine);
+            }
+        }
+
+        return back()->with('success', 'Form 3 2026 berhasil disimpan.');
+    }
+
+       public function form10(BussinessAssistant $bussinessAssistant)
+    {
+        // Ambil semua koperasi yang dimiliki oleh Business Assistant ini
+        $cooperations = $bussinessAssistant->cooperations()->with('formTen')->orderBy('order', 'asc')->get();
+
+        // Kirim ke view form-1.blade.php
+        return view('bussiness-assistants.detail.form-10', compact('bussinessAssistant', 'cooperations'));
+    }
+
+    public function storeOrUpdateFormTen(Request $request, BussinessAssistant $bussinessAssistant)
+    {
+        $request->validate([
+            'data' => 'required|array',
+        ]);
+
+
+        foreach ($request->data as $row) {
+
+            $validated = validator($row, [
+                'cooperation_id' => 'required|exists:cooperations,id',
+                'profile_update' => 'nullable|boolean',
+                'village_potential' => 'nullable|boolean',
+                'grocery_outlet' => 'nullable|boolean',
+                'pharmacy_outlet' => 'nullable|boolean',
+                'warehousing_outlet' => 'nullable|boolean',
+                'clinic_outlet' => 'nullable|boolean',
+                'logistics_outlet' => 'nullable|boolean',
+                'usp_outlet' => 'nullable|boolean',
+                'other_businesses_outlet' => 'nullable|boolean',
+                'rat' => 'nullable|boolean',
+                'initial_membership' => 'nullable|numeric',
+                'addition_of_members' => 'nullable|numeric',
+                'problem' => 'nullable|string',
+                'information' => 'nullable|string',
+            ])->validate();
+
+            $validated['profile_update'] = isset($row['profile_update_ada']) ? 1 : 0;
+            $validated['village_potential'] = isset($row['village_potential_ada']) ? 1 : 0;
+            $validated['rat'] = isset($row['rat_ada']) ? 1 : 0;
+            
+            $cooperation = Cooperation::findOrFail($validated['cooperation_id']);
+
+            $dataFormTen = [
+                'profile_update' => $validated['profile_update'] ?? null,
+                'village_potential' => $validated['village_potential'] ?? null,
+                'grocery_outlet' => $validated['grocery_outlet'] ?? null,
+                'pharmacy_outlet' => $validated['pharmacy_outlet'] ?? null,
+                'warehousing_outlet' => $validated['warehousing_outlet'] ?? null,
+                'clinic_outlet' => $validated['clinic_outlet'] ?? null,
+                'logistics_outlet' => $validated['logistics_outlet'] ?? null,
+                'usp_outlet' => $validated['usp_outlet'] ?? null,
+                'other_businesses_outlet' => $validated['other_businesses_outlet'] ?? null,
+                'rat' => $validated['rat'] ?? null,
+                'initial_membership' => $validated['initial_membership'] ?? null,
+                'addition_of_members' => $validated['addition_of_members'] ?? null,
+                'problem' => $validated['problem'] ?? null,
+                'information' => $validated['information'] ?? null,
+            ];
+
+            $formTen = $cooperation->formTen;
+
+            if ($formTen) {
+                $formTen->update($dataFormTen);
+            } else {
+                $cooperation->formTen()->create($dataFormTen);
+            }
+        }
+
+        return back()->with('success', 'Form 4 2026 berhasil disimpan.');
+    }
+
+
+    
+       public function form11(BussinessAssistant $bussinessAssistant)
+    {
+        // Ambil semua koperasi yang dimiliki oleh Business Assistant ini
+        $cooperations = $bussinessAssistant->cooperations()->with('formTen')->orderBy('order', 'asc')->get();
+
+        $commodities = Commodity::pluck('name', 'id');
+
+
+        // Kirim ke view form-1.blade.php
+        return view('bussiness-assistants.detail.form-11', compact('bussinessAssistant', 'commodities', 'cooperations'));
+    }
+
+    public function storeOrUpdateFormEleven(Request $request, BussinessAssistant $bussinessAssistant)
+    {
+        $request->validate([
+            'data' => 'required|array',
+        ]);
+
+        // dd($request->data);
+
+        foreach ($request->data as $row) {
+
+            $validated = validator($row, [
+                'cooperation_id' => 'required|exists:cooperations,id',
+                'potential_partners' => 'nullable|boolean',
+                'partnership_pattern' => 'nullable|string',
+                'commodity_id' => 'nullable|numeric',
+                'capacity' => 'nullable|string', 
+                'partnership_status' => 'nullable|numeric',
+                'output' => 'nullable|boolean',
+                'problem' => 'nullable|string',
+                'information' => 'nullable|string',
+            ])->validate();
+
+            $validated['potential_partners'] = isset($row['potential_partners_bumn']) ? 1 : 0;
+
+            // store development → 1 = approved, 0 = rejected, 2 = tidak dibangun
+            if (isset($row['partnership_status_belum_ada'])) {
+                $validated['partnership_status'] = 0;
+            } elseif (isset($row['partnership_status_belum_buka'])) {
+                $validated['partnership_status'] = 1;
+            } else {
+                $validated['partnership_status'] = 2;
+            }
+
+            $validated['output'] = isset($row['output_approved']) ? 1 : 0;
+
+            $cooperation = Cooperation::findOrFail($validated['cooperation_id']);
+
+            $dataFormEleven = [
+                'potential_partners' => $validated['potential_partners'] ?? null,
+                'partnership_pattern' => $validated['partnership_pattern'] ?? null,
+                'commodity_id' => $validated['commodity_id'] ?? null,
+                'capacity' => $validated['capacity'] ?? null, 
+                'partnership_status' => $validated['partnership_status'] ?? null,
+                'output' => $validated['output'] ?? null,
+                'problem' => $validated['problem'] ?? null,
+                'information' => $validated['information'] ?? null,
+            ];
+
+            $formEleven = $cooperation->formEleven;
+
+            if ($formEleven) {
+                $formEleven->update($dataFormEleven);
+            } else {
+                $cooperation->formEleven()->create($dataFormEleven);
+            }
+        }
+
+        return back()->with('success', 'Form 10 2026 berhasil disimpan.');
+    }
+
 
 
     public function simkopdesCompletenes(BussinessAssistant $bussinessAssistant)
@@ -831,5 +1134,13 @@ class BussinessAssistantController extends Controller
             'periods',
             'datasets',
         ));
+    }
+
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    public function formTwoExport()
+    {
+        return Excel::download(new FormTwoExport, 'data-rencana-gerai.xlsx');
     }
 }

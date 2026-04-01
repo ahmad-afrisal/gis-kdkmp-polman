@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Announcement;
+use App\Models\Article;
 use App\Models\BussinessAssistant;
 use App\Models\Cooperation;
 use App\Models\District;
@@ -73,6 +75,25 @@ class HomeController extends Controller
         }
 
         return response()->json($data);
+    }
+
+    public function articles()
+    {
+        // Mengambil data artikel dengan relasi koperasi, diurutkan dari yang terbaru
+        $articles = Article::with('cooperation')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('articles', compact('articles'));
+    }
+
+    public function announcements()
+    {
+        // Mengambil pengumuman terbaru beserta data koperasi
+        $announcements = Announcement::orderBy('created_at', 'desc')
+            ->get();
+
+        return view('announcements', compact('announcements'));
     }
 
     public function gallery()
