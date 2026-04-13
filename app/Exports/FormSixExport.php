@@ -8,7 +8,8 @@ use Maatwebsite\Excel\Concerns\WithDrawings;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 
-class FormSixExport implements FromCollection, WithHeadings, WithDrawings
+// class FormSixExport implements FromCollection, WithHeadings, WithDrawings,
+class FormSixExport implements FromCollection, WithHeadings
 {
     /**
      * @return \Illuminate\Support\Collection
@@ -22,6 +23,7 @@ class FormSixExport implements FromCollection, WithHeadings, WithDrawings
             return [
                 'no' => $no++,
                 'district' => $item->cooperation->village->district->name,
+                'ba' => $item->cooperation->bussinessAssistant->name,
                 'name' => $item->cooperation->name,
                 'picture_land' => $item->picture_land,
                 'latitude' => $item->latitude,
@@ -31,6 +33,9 @@ class FormSixExport implements FromCollection, WithHeadings, WithDrawings
                 'letter_land' => $item->letter_land,
                 'road_condition' => $item->road_condition,
                 'asset' => $item->asset,
+                'is_build' => $item->is_build ? 'Ya' : 'Tidak',
+                'persentase' => $item->persentase,
+                'progress' => $item->progress,
                 'distance' => $item->distance,
                 'internet_access' => $item->internet_access,
                 'water_access' => $item->water_access,
@@ -51,6 +56,7 @@ class FormSixExport implements FromCollection, WithHeadings, WithDrawings
         return [
             "No",
             "Nama Kecamatan",
+            "Nama BA",
             "Nama KDKMP",
             "Foto Lahan",
             "Latitude",
@@ -60,6 +66,9 @@ class FormSixExport implements FromCollection, WithHeadings, WithDrawings
             "Surat Lahan",
             "Kondisi Jalan",
             "Aset",
+            "Status Pembanguna",
+            "Persentase (%)",
+            "Progress",
             "Jarak ke Pemukiman",
             "Akses Internet",
             "Akses Air",
@@ -68,30 +77,30 @@ class FormSixExport implements FromCollection, WithHeadings, WithDrawings
         ];
     }
 
-    public function drawings()
-    {
-        $drawings = [];
+    // public function drawings()
+    // {
+    //     $drawings = [];
 
-        $rows = FormSix::whereNotNull('asset')->get();
-        $rowNumber = 2; // row 1 adalah heading
+    //     $rows = FormSix::whereNotNull('asset')->get();
+    //     $rowNumber = 2; // row 1 adalah heading
 
-        foreach ($rows as $item) {
-            if ($item->picture_land && file_exists(public_path('storage/' . $item->picture_land))) {
-                $drawing = new Drawing();
-                $drawing->setName('Foto');
-                $drawing->setDescription('Foto Lahan');
-                $drawing->setPath(public_path('storage/' . $item->picture_land)); // path gambar
-                $drawing->setHeight(80); // tinggi gambar
+    //     foreach ($rows as $item) {
+    //         if ($item->picture_land && file_exists(public_path('storage/' . $item->picture_land))) {
+    //             $drawing = new Drawing();
+    //             $drawing->setName('Foto');
+    //             $drawing->setDescription('Foto Lahan');
+    //             $drawing->setPath(public_path('storage/' . $item->picture_land)); // path gambar
+    //             $drawing->setHeight(80); // tinggi gambar
 
-                // letakkan di kolom C (kolom gambar)
-                $drawing->setCoordinates('C' . $rowNumber);
+    //             // letakkan di kolom C (kolom gambar)
+    //             $drawing->setCoordinates('C' . $rowNumber);
 
-                $drawings[] = $drawing;
-            }
+    //             $drawings[] = $drawing;
+    //         }
 
-            $rowNumber++;
-        }
+    //         $rowNumber++;
+    //     }
 
-        return $drawings;
-    }
+    //     return $drawings;
+    // }
 }

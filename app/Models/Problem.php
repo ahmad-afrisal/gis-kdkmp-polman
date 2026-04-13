@@ -16,4 +16,8 @@ class Problem extends Model
     {
         return $this->belongsTo(Cooperation::class, 'cooperation_id');
     }
+
+    protected $casts = [
+        'date_problem' => 'date',
+    ];
 }

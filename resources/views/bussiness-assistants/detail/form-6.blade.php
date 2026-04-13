@@ -93,7 +93,7 @@
                                                 class="sticky left-0 z-20 border bg-green-600  border-gray-300 px-3 py-2">
                                                 No</th>
                                             <th
-                                                class="sticky left-[45px] z-20 w-[800px] min-w-[600px] border border-gray-300 px-2 py-1">
+                                                class="sticky left-[45px] z-20 w-[800px] min-w-[600px]  bg-green-600 border border-gray-300 px-2 py-1">
                                                 Nama KDKMP
                                             </th>
                                             <th class=" min-w-[130px] border border-gray-300 px-3 py-2">Foto Tanah</th>
@@ -114,6 +114,10 @@
                                             <th class="min-w-[120px] border border-gray-300 px-3 py-2">Akses Air</th>
                                             <th class="min-w-[120px] border border-gray-300 px-3 py-2">Akses Listrik
                                             </th>
+                                            <th class="min-w-[120px] border border-gray-300 px-3 py-2">Pembangunan</th>
+                                            <th class="min-w-[120px] border border-gray-300 px-3 py-2">Persentase (%)
+                                            </th>
+                                            <th class="min-w-[300px] border border-gray-300 px-3 py-2">Progress</th>
                                             <th class="min-w-[400px] border border-gray-300 px-3 py-2">Keterangan</th>
                                         </tr>
 
@@ -306,6 +310,22 @@
                                                             </option>
                                                         @endforeach
                                                     </select>
+                                                </td>
+                                                <td class="border border-gray-300 px-2 py-1 text-center">
+                                                    <input type="checkbox" name="data[{{ $index }}][is_build]"
+                                                        value="1" {{ $form?->is_build ? 'checked' : '' }}>
+                                                </td>
+                                                <td class="border border-gray-300 px-2 py-1">
+                                                    <input type="number"
+                                                        name="data[{{ $index }}][persentase]"
+                                                        value="{{ $form?->persentase }}" step="0.01"
+                                                        min="0" max="100"
+                                                        class="w-full border-gray-300 rounded-lg text-sm p-2 focus:ring-2 focus:ring-green-400 focus:outline-none">
+                                                </td>
+                                                <td class="border border-gray-300 px-2 py-1">
+                                                    <input type="text" name="data[{{ $index }}][progress]"
+                                                        value="{{ $form?->progress }}"
+                                                        class="w-full border-gray-300 rounded-lg text-sm p-2 focus:ring-2 focus:ring-green-400 focus:outline-none">
                                                 </td>
                                                 <td class="border border-gray-300 px-2 py-1">
                                                     <input type="text"

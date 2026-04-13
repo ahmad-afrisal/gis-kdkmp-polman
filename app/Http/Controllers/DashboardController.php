@@ -7,6 +7,7 @@ use App\Models\Cooperation;
 use App\Models\District;
 use App\Models\FormEight;
 use App\Models\FormSeven;
+use App\Models\FormTen;
 use App\Models\Village;
 use App\Models\WeeklyReport;
 use Carbon\Carbon;
@@ -434,10 +435,10 @@ class DashboardController extends Controller
         $displayCaseNo = $cooperationCount - $displayCaseYes;
 
         $storeDevelopmentYes = Cooperation::whereHas('formEight', function ($q) {
-            $q->where('store_development', 1);
+            $q->where('store_development', 0);
         })->count();
         $storeDevelopmentOn = Cooperation::whereHas('formEight', function ($q) {
-            $q->where('store_development', 0);
+            $q->where('store_development', 1);
         })->count();
         $storeDevelopmentNo = $cooperationCount - ($storeDevelopmentYes+$storeDevelopmentOn);
 
@@ -458,9 +459,10 @@ class DashboardController extends Controller
         $operationalGuideNo = $cooperationCount - $operationalGuideYes;
 
         // Output Kesepakatan PKS
-        $outputYes = Cooperation::whereHas('formEleven', function ($q) {
-            $q->where('output', 1);
-        })->count();
+        // $outputYes = Cooperation::whereHas('formElevens', function ($q) {
+        //     $q->where('output', 1);
+        // })->count();
+        $outputYes = 0;
         $outputNo = $cooperationCount - $outputYes;
 
 
@@ -501,44 +503,43 @@ class DashboardController extends Controller
         })->count();
         $otherBusinessessOutletNo = $cooperationCount - $otherBusinessessOutletYes;
 
-        
         // Data Report
-        $districts = District::with(['villages.cooperation', 'villages.cooperation.formTwo'])->get();
+        $districts = District::with(['villages.cooperation.formEight'])->get(); // Pastikan formEight di-load
+
         $reportOnes = $districts->map(function ($district) {
-
             $villages = $district->villages;
-
-            $coops = $villages->pluck('cooperation')->filter();
+            
+            // Flatten agar mendapatkan semua data cooperation dalam satu list
+            $coops = $villages->pluck('cooperation')->filter(); 
 
             return [
-                'district' => $district->name,
+                'district'       => $district->name,
                 'total_villages' => $villages->count(),
 
-                // Kesiapan Lahan
-                'land_readiness_yes' => $coops->where('formEight.land_readiness', 1)->count(),
-                'land_readiness_no'  => $coops->where('formEight.land_readiness', 0)->count(),
+                // Kesiapan Lahan (Gunakan filter agar lebih presisi menangani relasi null)
+                'land_readiness_yes' => $coops->filter(fn($c) => optional($c->formEight)->land_readiness == 1)->count(),
+                'land_readiness_no'  => $coops->filter(fn($c) => optional($c->formEight)->land_readiness == 0)->count(),
 
-                // Kesiapan Lahan
-                'store_development_yes' => $coops->where('formEight.store_development', 1)->count(), // selesai
-                'store_development_on'  => $coops->where('formEight.store_development', 0)->count(), // belum
-                'store_development_no'  => $coops->where('formEight.store_development', 2)->count(), // tidak terbangun
+                // Pembangunan Toko
+                'store_development_yes' => $coops->filter(fn($c) => optional($c->formEight)->store_development === 0)->count(),
+                'store_development_on'  => $coops->filter(fn($c) => optional($c->formEight)->store_development === 1)->count(),
+                'store_development_no'  => $coops->filter(fn($c) => optional($c->formEight)->store_development === 2)->count(),
 
                 // Vehicle
-                'vehicle_yes' => $coops->where('formEight.vehicle', 1)->count(),
-                'vehicle_no'  => $coops->where('formEight.vehicle', 0)->count(),
+                'vehicle_yes' => $coops->filter(fn($c) => optional($c->formEight)->vehicle == 1)->count(),
+                'vehicle_no'  => $coops->filter(fn($c) => optional($c->formEight)->vehicle == 0)->count(),
 
                 // Kursi dan Meja
-                'table_and_chair_yes' => $coops->where('formEight.table_and_chair', 1)->count(),
-                'table_and_chair_no'  => $coops->where('formEight.table_and_chair', 0)->count(),
+                'table_and_chair_yes' => $coops->filter(fn($c) => optional($c->formEight)->table_and_chair == 1)->count(),
+                'table_and_chair_no'  => $coops->filter(fn($c) => optional($c->formEight)->table_and_chair == 0)->count(),
 
                 // Etalase
-                'display_case_yes' => $coops->where('formEight.display_case', 1)->count(),
-                'display_case_no'  => $coops->where('formEight.display_case', 0)->count(),
+                'display_case_yes' => $coops->filter(fn($c) => optional($c->formEight)->display_case == 1)->count(),
+                'display_case_no'  => $coops->filter(fn($c) => optional($c->formEight)->display_case == 0)->count(),
 
                 // Komputer
-                'computer_yes' => $coops->where('formEight.computer', 1)->count(),
-                'computer_no'  => $coops->where('formEight.computer', 0)->count(),
-
+                'computer_yes' => $coops->filter(fn($c) => optional($c->formEight)->computer == 1)->count(),
+                'computer_no'  => $coops->filter(fn($c) => optional($c->formEight)->computer == 0)->count(),
             ];
         });
 
@@ -700,7 +701,11 @@ class DashboardController extends Controller
 
     public function formEight() {
         if (request()->ajax()) {
-            $query = Cooperation::with('formEight'); // 
+            $query = Cooperation::with([
+                   'formEight',
+                    'bussinessAssistant',
+                    'village.district']);
+
 
             return DataTables::of($query)
                 ->addColumn('land_readiness', function ($item) {
@@ -715,8 +720,425 @@ class DashboardController extends Controller
                         Tidak
                     </span>';
                 })
-                ->rawColumns(['land_readiness'])
+                ->addColumn('store_development', function ($item) {
+                    $value = optional($item->formEight)->store_development;
+
+                    $status = [
+                        0 => ['text' => 'Selesai', 'color' => 'green'],
+                        1 => ['text' => 'Belum', 'color' => 'yellow'],
+                        2 => ['text' => 'Tidak Terbangun', 'color' => 'red'],
+                    ];
+
+                    if (!isset($status[$value])) {
+                        return '-';
+                    }
+
+                    return '<span class="bg-' . $status[$value]['color'] . '-500 text-white px-2 py-1 rounded">
+                        ' . $status[$value]['text'] . '
+                    </span>';
+                })
+                ->addColumn('business_assistant', function ($item) {
+                    return $item->bussinessAssistant->name ?? '-';
+                })
+
+                ->addColumn('district', function ($item) {
+                    return $item->village->district->name ?? '-';
+                })
+                ->addColumn('vehicle', function ($item) {
+                    if (optional($item->formEight)->vehicle) {
+                        return '<span class="bg-green-500 text-white px-2 py-1 rounded">
+                            Ada
+                        </span>';
+                    }
+
+                    return '<span class="bg-red-500 text-white px-2 py-1 rounded">
+                        Tidak
+                    </span>';
+                })
+                ->addColumn('table_and_chair', function ($item) {
+                    if (optional($item->formEight)->table_and_chair) {
+                        return '<span class="bg-green-500 text-white px-2 py-1 rounded">
+                            Ada
+                        </span>';
+                    }
+
+                    return '<span class="bg-red-500 text-white px-2 py-1 rounded">
+                        Tidak
+                    </span>';
+                })
+                ->addColumn('display_case', function ($item) {
+                    if (optional($item->formEight)->display_case) {
+                        return '<span class="bg-green-500 text-white px-2 py-1 rounded">
+                            Ada
+                        </span>';
+                    }
+
+                    return '<span class="bg-red-500 text-white px-2 py-1 rounded">
+                        Tidak
+                    </span>';
+                })
+                ->addColumn('computer', function ($item) {
+                    if (optional($item->formEight)->computer) {
+                        return '<span class="bg-green-500 text-white px-2 py-1 rounded">
+                            Ada
+                        </span>';
+                    }
+                    return '<span class="bg-red-500 text-white px-2 py-1 rounded">
+                        Tidak
+                    </span>';
+                })
+                ->addColumn('problem', function ($item) {
+                    return optional($item->formEight)->problem ?? '-';
+                })
+                ->addColumn('information', function ($item) {
+                    return optional($item->formEight)->information ?? '-';
+                })
+
+                ->rawColumns(['land_readiness', 'store_development', 'business_assistant', 'district', 'vehicle', 'table_and_chair', 'display_case', 'computer', 'problem', 'information'   ])
                 ->make(true);
         }
+    }
+
+    public function formNine() {
+        if (request()->ajax()) {
+            $query = Cooperation::with([
+                    'formNine',
+                    'bussinessAssistant',
+                    'village.district']);
+
+
+            return DataTables::of($query)
+                
+                ->addColumn('business_assistant', function ($item) {
+                    return $item->bussinessAssistant->name ?? '-';
+                })
+
+                ->addColumn('district', function ($item) {
+                    return $item->village->district->name ?? '-';
+                })
+                ->addColumn('outlet_operations_guide', function ($item) {
+
+                    if (optional($item->formNine)->outlet_operations_guide) {
+                        return '<span class="bg-green-500 text-white px-2 py-1 rounded">
+                            Ada
+                        </span>';
+                    }
+
+                    return '<span class="bg-red-500 text-white px-2 py-1 rounded">
+                        Tidak
+                    </span>';
+                })
+                ->addColumn('number_of_employees_2025', function ($item) {
+                    return optional($item->formNine)->number_of_employees_2025 ?? '-';
+                })
+                ->addColumn('number_of_employees_2026', function ($item) {
+                    return optional($item->formNine)->number_of_employees_2026 ?? '-';
+                })
+                ->addColumn('outlet_status', function ($item) {
+
+                    $status = [
+                        0 => ['text' => 'Belum Ada', 'color' => 'yellow'],
+                        1 => ['text' => 'Belum Buka', 'color' => 'blue'],
+                        2 => ['text' => 'Operasional', 'color' => 'green'],
+                    ];
+
+                    if (!isset($status[optional($item->formNine)->outlet_status])) {
+                        return '-';
+                    }
+
+                    return '<span class="bg-' . $status[optional($item->formNine)->outlet_status]['color'] . '-500 text-white px-2 py-1 rounded">
+                        ' . $status[optional($item->formNine)->outlet_status]['text'] . '
+                    </span>';
+                })
+
+                ->addColumn('problem', function ($item) {
+                    return optional($item->formNine)->problem ?? '-';
+                })
+                ->addColumn('information', function ($item) {
+                    return optional($item->formNine)->information ?? '-';
+                })
+
+                ->rawColumns([ 'business_assistant', 'district', 'outlet_operations_guide', 'number_of_employees_2025', 'number_of_employees_2026', 'outlet_status', 'problem', 'information'   ])
+                ->make(true);
+        }
+    }
+
+    public function formTen() {
+        if (request()->ajax()) {
+            $query = Cooperation::with([
+                    'formTen',
+                    'bussinessAssistant',
+                    'village.district']);
+
+
+            return DataTables::of($query)
+                
+                ->addColumn('business_assistant', function ($item) {
+                    return $item->bussinessAssistant->name ?? '-';
+                })
+
+                ->addColumn('district', function ($item) {
+                    return $item->village->district->name ?? '-';
+                })
+
+                ->addColumn('profile_update', function ($item) {
+
+                    if (optional($item->formTen)->profile_update) {
+                        return '<span class="bg-green-500 text-white px-2 py-1 rounded">
+                            Sudah
+                        </span>';
+                    }
+
+                    return '<span class="bg-red-500 text-white px-2 py-1 rounded">
+                        Belum
+                    </span>';
+                })
+                ->addColumn('village_potential', function ($item) {
+
+                    if (optional($item->formTen)->village_potential) {
+                        return '<span class="bg-green-500 text-white px-2 py-1 rounded">
+                            Sudah
+                        </span>';
+                    }
+
+                    return '<span class="bg-red-500 text-white px-2 py-1 rounded">
+                        Belum
+                    </span>';
+                })
+                ->addColumn('grocery_outlet', function ($item) {
+
+                    if (optional($item->formTen)->grocery_outlet) {
+                        return '<span class="bg-green-500 text-white px-2 py-1 rounded">
+                            Sudah
+                        </span>';
+                    }
+
+                    return '<span class="bg-red-500 text-white px-2 py-1 rounded">
+                        Belum
+                    </span>';
+                })
+                ->addColumn('pharmacy_outlet', function ($item) {
+
+                    if (optional($item->formTen)->pharmacy_outlet) {
+                        return '<span class="bg-green-500 text-white px-2 py-1 rounded">
+                            Sudah
+                        </span>';
+                    }
+
+                    return '<span class="bg-red-500 text-white px-2 py-1 rounded">
+                        Belum
+                    </span>';
+                })
+                ->addColumn('warehousing_outlet', function ($item) {
+
+                    if (optional($item->formTen)->warehousing_outlet) {
+                        return '<span class="bg-green-500 text-white px-2 py-1 rounded">
+                            Sudah
+                        </span>';
+                    }
+
+                    return '<span class="bg-red-500 text-white px-2 py-1 rounded">
+                        Belum
+                    </span>';
+                })
+                 ->addColumn('clinic_outlet', function ($item) {
+
+                    if (optional($item->formTen)->clinic_outlet) {
+                        return '<span class="bg-green-500 text-white px-2 py-1 rounded">
+                            Sudah
+                        </span>';
+                    }
+
+                    return '<span class="bg-red-500 text-white px-2 py-1 rounded">
+                        Belum
+                    </span>';
+                })
+                ->addColumn('logistics_outlet', function ($item) {
+
+                    if (optional($item->formTen)->logistics_outlet) {
+                        return '<span class="bg-green-500 text-white px-2 py-1 rounded">
+                            Sudah
+                        </span>';
+                    }
+
+                    return '<span class="bg-red-500 text-white px-2 py-1 rounded">
+                        Belum
+                    </span>';
+                })
+                ->addColumn('usp_outlet', function ($item) {
+                    if (optional($item->formTen)->usp_outlet) {
+                        return '<span class="bg-green-500 text-white px-2 py-1 rounded">
+                            Sudah
+                        </span>';
+                    }
+
+                    return '<span class="bg-red-500 text-white px-2 py-1 rounded">
+                        Belum
+                    </span>';
+                })
+                ->addColumn('other_businesses_outlet', function ($item) {
+                    if (optional($item->formTen)->other_businesses_outlet) {
+                        return '<span class="bg-green-500 text-white px-2 py-1 rounded">
+                            Sudah
+                        </span>';
+                    }
+
+                    return '<span class="bg-red-500 text-white px-2 py-1 rounded">
+                        Belum
+                    </span>';
+                })
+                ->addColumn('rat', function ($item) {
+
+                    if (optional($item->formTen)->rat) {
+                        return '<span class="bg-green-500 text-white px-2 py-1 rounded">
+                            Sudah
+                        </span>';
+                    }
+
+                    return '<span class="bg-red-500 text-white px-2 py-1 rounded">
+                        Belum
+                    </span>';
+                })
+                ->addColumn('initial_membership', function ($item) {
+                    return optional($item->formTen)->initial_membership ?? '-';
+                })
+                ->addColumn('addition_of_members', function ($item) {
+                    return optional($item->formTen)->addition_of_members ?? '-';
+                })
+
+                ->addColumn('problem', function ($item) {
+                    return optional($item->formTen)->problem ?? '-';
+                })
+                ->addColumn('information', function ($item) {
+                    return optional($item->formTen)->information ?? '-';
+                })
+
+                ->rawColumns([ 'business_assistant', 'grocery_outlet', 'pharmacy_outlet', 'warehousing_outlet', 'clinic_outlet', 'logistics_outlet', 'usp_outlet',  'other_businesses_outlet', 'district', 'profile_update', 'village_potential', 'rat', 'problem', 'information'   ])
+                ->make(true);
+        }
+    }
+
+    public function rat2025(){
+
+         if (request()->ajax()) {
+            $query = FormTen::with([
+                'cooperation:id,name,bussiness_assistant_id,village_id',
+                'cooperation.village:id,name,district_id',
+                'cooperation.village.district:id,name',
+                'cooperation.bussinessAssistant:id,name',
+            ]);
+
+            return DataTables::of($query)
+                ->addColumn('cooperation', fn($item) => $item->cooperation->name ?? '-')
+                ->addColumn('ba', fn($item) => $item->cooperation->bussinessAssistant->name ?? '-')
+                ->addColumn('district', fn($item) => $item->cooperation->village->district->name ?? '-')
+
+                  ->addColumn('rat', function ($item) {
+
+                    if ($item->rat) {
+                        return '<span class="bg-green-500 text-white px-2 py-1 rounded">
+                            Sudah
+                        </span>';
+                    }
+
+                    return '<span class="bg-red-500 text-white px-2 py-1 rounded">
+                        Belum
+                    </span>';
+                })
+
+                ->rawColumns(['rat'])
+                ->make(true);
+        }
+
+        // Contoh di Controller
+        $totalCooperation = Cooperation::count(); // Total semua KDKMP
+        $totalRat = FormTen::where('rat', 1)->count(); // Sesuaikan dengan field DB Anda
+        $percentage = $totalCooperation > 0 ? ($totalRat / $totalCooperation) * 100 : 0;
+
+        // 1. Ambil data Statistik Kecamatan
+    // Berdasarkan Kecamatan (Sekarang sudah bisa panggil cooperations)
+        $districtStats = District::withCount(['cooperations as total_rat' => function ($query) {
+            $query->whereHas('formTen', function ($q) {
+                $q->where('rat', true);
+            });
+        }])->get();
+    
+
+        // 2. Ambil data Statistik Business Assistant
+            $assistantData = BussinessAssistant::withCount(['cooperations as total_rat' => function ($query) {
+                $query->whereHas('formTen', fn($q) => $q->where('rat', true));
+            }])->get();
+
+        return view('rat-2025', [
+            // $districtStats => 'districtStats',
+            'totalCooperation' => $totalCooperation, 
+            'totalRat' => $totalRat, 
+            'percentage' => $percentage,
+
+            // Data untuk Chart Kecamatan
+            'districtLabels' => $districtStats->pluck('name'),
+            'districtValues' => $districtStats->pluck('total_rat'),
+
+                // Data untuk Chart Business Assistant
+            'assistantLabels' => $assistantData->pluck('name'),
+            'assistantValues' => $assistantData->pluck('total_rat'),
+
+        ]);
+
+    }
+
+    public function cooperationMember()
+    {
+        if (request()->ajax()) {
+            $query = FormTen::with([
+                'cooperation:id,name,bussiness_assistant_id,village_id',
+                'cooperation.village:id,name,district_id',
+                'cooperation.village.district:id,name',
+                'cooperation.bussinessAssistant:id,name',
+            ]);
+
+            return DataTables::of($query)
+                ->addColumn('cooperation', fn($item) => $item->cooperation->name ?? '-')
+                ->addColumn('ba', fn($item) => $item->cooperation->bussinessAssistant->name ?? '-')
+                ->addColumn('district', fn($item) => $item->cooperation->village->district->name ?? '-')
+                ->rawColumns([])
+                ->make(true);
+        }
+
+        // Data Card
+                $totalStats = FormTen::select(
+            DB::raw('SUM(initial_membership) as total_initial'),
+            DB::raw('SUM(addition_of_members) as total_addition')
+        )->first();
+
+       // 1. Ambil data Statistik Kecamatan & Total Anggota
+        $districtStats = District::withSum(['cooperations as total_members' => function ($query) {
+        $query->join('form_tens', 'cooperations.id', '=', 'form_tens.cooperation_id') // Sesuaikan foreign key-nya
+                ->select(DB::raw('SUM(COALESCE(form_tens.initial_membership, 0) + COALESCE(form_tens.addition_of_members, 0))'));
+        }], 'id') // Parameter kedua diisi 'id' saja sebagai placeholder
+        ->get();
+
+        // 2. Ambil data Statistik Business Assistant & Total Anggota
+        $assistantData = BussinessAssistant::withSum(['cooperations as total_members' => function ($query) {
+        $query->join('form_tens', 'cooperations.id', '=', 'form_tens.cooperation_id')
+                ->select(DB::raw('SUM(COALESCE(form_tens.initial_membership, 0) + COALESCE(form_tens.addition_of_members, 0))'));
+        }], 'id')
+        ->get();
+
+        return view('cooperation-member', [
+
+            // Data untuk Card
+            'cardInitial' => $totalStats->total_initial ?? 0,
+            'cardAddition' => $totalStats->total_addition ?? 0,
+            'totalMember' => $totalStats->total_initial + $totalStats->total_addition,
+
+            // Data untuk Chart Kecamatan
+            'districtLabels' => $districtStats->pluck('name'),
+            'districtValues' => $districtStats->pluck('total_members'),
+
+            // Data untuk Chart Business Assistant
+            'assistantLabels' => $assistantData->pluck('name'),
+            'assistantValues' => $assistantData->pluck('total_members'),
+        ]);
     }
 }

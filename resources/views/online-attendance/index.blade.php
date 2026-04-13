@@ -37,45 +37,37 @@
                     },
                     // Mengatur urutan default: kolom indeks ke-4 (misal updated_at), urutan desc
                     order: [
-                        [6, 'desc']
+                        [5, 'desc']
                     ],
                     columns: [{
-                            data: 'id',
-                            name: 'id',
-                            width: '10%'
-                        },
-                        {
-                            data: 'district',
-                            name: 'district'
-                        },
-                        {
-                            data: 'cooperation_id',
-                            name: 'cooperation_id'
+                            data: null, // Kita gunakan null karena data nomor tidak ada di database
+                            name: 'no',
+                            render: function(data, type, row, meta) {
+                                // meta.row adalah indeks baris (mulai dari 0)
+                                // meta.settings._iDisplayStart adalah indeks awal halaman
+                                return meta.row + meta.settings._iDisplayStart + 1;
+                            },
+                            orderable: true,
+                            searchable: false,
+                            width: '5%' // Opsional: agar kolom nomor tidak terlalu lebar
                         },
                         {
                             data: 'ba',
                             name: 'ba'
                         },
                         {
-                            data: 'problem',
-                            name: 'problem'
+                            data: 'activity',
+                            name: 'activity'
                         },
                         {
-                            data: 'solution',
-                            name: 'solution'
+                            data: 'date',
+                            name: 'date'
                         },
                         {
-                            data: 'status',
-                            name: 'status'
+                            data: 'check_in',
+                            name: 'check_in'
                         },
-                        {
-                            data: 'priority',
-                            name: 'priority'
-                        },
-                        {
-                            data: 'date_problem',
-                            name: 'date_problem'
-                        },
+
                         {
                             data: 'updated_at',
                             name: 'updated_at'
@@ -103,19 +95,19 @@
                             <i data-lucide="home" class="w-4 h-4 mr-1"></i> Home
                         </a>
                         <span>›</span>
-                        <span class="text-gray-500">Permasalahan</span>
+                        <span class="text-gray-500">Absen BA</span>
                     </nav>
 
                     {{-- Tombol tambah --}}
                     <div class="mb-10 flex space-x-2">
-                        <a href="{{ route('problems.create') }}"
+                        <a href="{{ route('online-attendances.create') }}"
                             class="bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-4 rounded shadow-lg">
-                            + Tambah Permasalahan
+                            + Tambah Kehadiran
                         </a>
-                        <a href="{{ route('problems.export') }}"
+                        {{-- <a href="{{ route('problems.export') }}"
                             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded shadow-lg">
                             <i class="fa fa-file-excel mr-2"></i> Export Excel
-                        </a>
+                        </a> --}}
                     </div>
 
                     {{-- DATA TABLE --}}
@@ -123,15 +115,11 @@
                         <table id="crudTable" class="display cell-border">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Kecamatan</th>
-                                    <th>KDKMP</th>
+                                    <th>No</th>
                                     <th>BA</th>
-                                    <th>Permasalahan</th>
-                                    <th>Solusi</th>
-                                    <th>Status</th>
-                                    <th>Tingkat Permasalahan</th>
-                                    <th>Tanggal Permasalahan</th>
+                                    <th>Kegiatan</th>
+                                    <th>Tanggal</th>
+                                    <th>Waktu</th>
                                     <th>Tanggal Update</th>
                                     <th>Aksi</th>
                                 </tr>

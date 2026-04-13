@@ -7,8 +7,11 @@
         <!-- Overlay (mobile only) -->
         <div x-show="open" @click="open=false" class="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"></div>
 
+
         <x-slot name="style">
+            <!-- CSS Select2 -->
             <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 
         </x-slot>
 
@@ -16,16 +19,15 @@
             <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
             <script>
                 $(document).ready(function() {
-                    $('#cooperation_id').select2({
+                    $('#bussiness_assistant_id').select2({
                         width: '100%',
                         height: '40px',
-                        placeholder: "-- Pilih KDKMP --",
+                        placeholder: "-- Pilih BA --",
                         allowClear: true
                     });
                 });
             </script>
         </x-slot>
-
 
         <!-- Main Content -->
         <main class="flex-1 overflow-y-auto">
@@ -41,7 +43,7 @@
                             <i data-lucide="home" class="w-4 h-4 mr-1"></i> Home
                         </a>
                         <span>›</span>
-                        <span class="text-gray-500">Artikel</span>
+                        <span class="text-gray-500">Kehadiran</span>
                         <span>›</span>
                         <span class="text-gray-500">Tambah</span>
                     </nav>
@@ -60,54 +62,42 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('articles.store') }}" method="post" enctype="multipart/form-data"
+                    <form action="{{ route('online-attendances.store') }}" method="post" enctype="multipart/form-data"
                         class="bg-white p-6 rounded-lg shadow-md">
                         @csrf
+
                         <div class="mb-4">
-                            <label class="block text-gray-700 font-bold mb-2">Pilih KDKMP</label>
-                            <select name="cooperation_id" id="cooperation_id"
+                            <label class="block text-gray-700 font-bold mb-2">Pilih BA</label>
+                            <select name="bussiness_assistant_id" id="bussiness_assistant_id"
                                 class="select2 block w-full bg-gray-100 text-gray-700 border border-gray-300 rounded-lg py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-green-500">
-                                <option value="">-- Pilih KDKMP --</option>
-                                @foreach ($cooperations as $id => $name)
+                                <option value="">-- Pilih BA --</option>
+                                @foreach ($businessAssistants as $id => $name)
                                     <option value="{{ $id }}"
-                                        {{ old('cooperation_id') == $id ? 'selected' : '' }}>
+                                        {{ old('bussiness_assistant_id') == $id ? 'selected' : '' }}>
                                         {{ $id }} - {{ $name }}
                                     </option>
                                 @endforeach
                             </select>
                         </div>
 
-                        <div class="mb-4">
-                            <label class="block text-gray-700 font-bold mb-2">Judul Artikel</label>
-                            <input type="text" name="title" value="{{ old('title') }}"
-                                class="block w-full bg-gray-100 text-gray-700 border border-gray-300 rounded-lg py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-green-500">
-                        </div>
 
-                        <div class="mb-4">
-                            <label class="block text-gray-700 font-bold mb-2">Link</label>
-                            <textarea name="link" class="w-full border rounded p-2 mb-4">{{ old('link') }}</textarea>
-                        </div>
-
-                        <div class="flex flex-wrap -mx-3 mb-6">
-                            <div class="w-full px-3">
-                                <label class="block mb-2 font-medium">
-                                    Status
-                                </label>
-                                <div class="flex items-center gap-8"> <!-- gunakan gap-8 agar jarak lebih lebar -->
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="status" value="1"
-                                            class="form-radio text-green-600"
-                                            {{ old('status', 1) == 1 ? 'checked' : '' }}>
-                                        <span class="ml-2 text-gray-700">Aktif</span>
-                                    </label>
-
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="status" value="0"
-                                            class="form-radio text-red-600" {{ old('status') == 0 ? 'checked' : '' }}>
-                                        <span class="ml-2 text-gray-700">Tidak Aktif</span>
-                                    </label>
-                                </div>
+                        <div class="flex flex-col md:flex-row gap-4 mb-4">
+                            <div class="flex-1">
+                                <label class="block text-gray-700 font-bold mb-2">Tanggal</label>
+                                <input type="date" name="date" value="{{ old('date') }}"
+                                    class="block w-full bg-gray-100 text-gray-700 border border-gray-300 rounded-lg py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-green-500">
                             </div>
+
+                            <div class="flex-1">
+                                <label class="block text-gray-700 font-bold mb-2">Waktu</label>
+                                <input type="time" name="check_in" value="{{ old('check_in') }}"
+                                    class="block w-full bg-gray-100 text-gray-700 border border-gray-300 rounded-lg py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-green-500">
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-bold mb-2">Kegiatan</label>
+                            <textarea name="activity" class="w-full border rounded p-2 mb-4">{{ old('activity') }}</textarea>
                         </div>
 
 
@@ -116,7 +106,7 @@
                                 class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow-lg">
                                 Simpan
                             </button>
-                            <a href="{{ route('articles.index') }}"
+                            <a href="{{ route('problems.index') }}"
                                 class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded shadow-lg">
                                 Kembali
                             </a>

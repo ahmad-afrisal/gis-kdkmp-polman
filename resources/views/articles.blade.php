@@ -63,7 +63,7 @@
 
                             <h3
                                 class="text-2xl font-bold text-gray-900 group-hover:text-green-600 transition-colors duration-300 leading-tight">
-                                <a href="#">
+                                <a href="{{ $article->link }}">
                                     {{ Str::limit($article->title, 70) }}
                                 </a>
                             </h3>
@@ -80,16 +80,17 @@
                                     {{ $article->created_at->format('d M, Y') }}
                                 </span>
                             </div>
-
-                            <div
-                                class="h-11 w-11 rounded-full bg-green-50 flex items-center justify-center text-green-600 group-hover:bg-green-600 group-hover:text-white transform transition-all duration-300 shadow-sm group-hover:shadow-green-200 shadow-md">
-                                <svg xmlns="http://www.w3.org/2000/svg"
-                                    class="h-5 w-5 transform group-hover:translate-x-1 transition-transform"
-                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                                </svg>
-                            </div>
+                            <a href="{{ $article->link }}">
+                                <div
+                                    class="h-11 w-11 rounded-full bg-green-50 flex items-center justify-center text-green-600 group-hover:bg-green-600 group-hover:text-white transform transition-all duration-300 shadow-sm group-hover:shadow-green-200 shadow-md">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="h-5 w-5 transform group-hover:translate-x-1 transition-transform"
+                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                    </svg>
+                                </div>
+                            </a>
                         </div>
 
                         <div

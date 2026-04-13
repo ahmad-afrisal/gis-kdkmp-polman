@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProblemStoreRequest extends FormRequest
+class OnlineAttendanceStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,12 +22,11 @@ class ProblemStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'cooperation_id' => 'required|exists:cooperations,id',
-            'problem' => 'required|string',
-            'solution' => 'nullable|string',
-            'priority' => 'nullable|string',
-            'date_problem' => 'nullable|date',
-            'status' => 'nullable|string',
+            'bussiness_assistant_id' => 'required|exists:bussiness_assistants,id',
+            'date' => 'required|date',
+            'check_in' => 'required|date_format:H:i',
+            'activity' => 'required|string',
+        
         ];
     }
 }

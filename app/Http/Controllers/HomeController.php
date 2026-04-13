@@ -31,7 +31,7 @@ class HomeController extends Controller
         }
 
         $districts = District::select('id', 'name')->get();
-        $assistants = BussinessAssistant::select('id', 'name')->get();
+        $assistants = BussinessAssistant::select('id', 'name', 'picture')->get();
 
         // Ambil data titik untuk peta
         $locations = Cooperation::select('name', 'latitude', 'longtitude', 'full_address',  'subdomain')->whereNotNull('latitude')->get();

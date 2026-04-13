@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\FormTenExport;
 use App\Exports\FormTwoExport;
 use App\Http\Requests\BussinessAssistantUpdateRequest;
 use App\Models\BussinessAssistant;
@@ -35,6 +36,9 @@ class BussinessAssistantController extends Controller
                         </span>';
                     }
                 })
+                ->addColumn('picture', function ($item) {
+                    return '<img src="' . asset('storage/' . $item->picture) . '" alt="Picture" class="w-10 h-10 rounded-full">';
+                })
                 ->addColumn('action', function ($item) {
                     return '
                     <a href="' . route('bussiness-assistants.performance', $item->id) . '" 
@@ -49,15 +53,10 @@ class BussinessAssistantController extends Controller
                         class="inline-block bg-gray-500 hover:bg-gray-700 text-white font-bold py-1 px-2 rounded shadow-lg">
                         Edit
                     </a>
-                    <form class="inline-block" action="' . route('bussiness-assistants.destroy', $item->id) . '" method="POST" onsubmit="return confirm(\'Yakin hapus data ini?\')">
-                        ' . csrf_field() . method_field('delete') . '
-                        <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 mx-3 rounded shadow-lg">
-                            Hapus
-                        </button>
-                    </form>
+
                 ';
                 })
-                ->rawColumns(['status', 'action'])
+                ->rawColumns(['status', 'picture', 'action'])
                 ->make(true);
         }
 
@@ -102,12 +101,7 @@ class BussinessAssistantController extends Controller
                         class="inline-block bg-gray-500 hover:bg-gray-700 text-white font-bold py-1 px-2 rounded shadow-lg">
                         Edit
                     </a>
-                    <form class="inline-block" action="' . route('cooperations.destroy', $item->id) . '" method="POST" onsubmit="return confirm(\'Yakin hapus data ini?\')">
-                        ' . csrf_field() . method_field('delete') . '
-                        <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 mx-3 rounded shadow-lg">
-                            Hapus
-                        </button>
-                    </form>
+
                 ';
                 })
                 ->rawColumns(['action'])
@@ -138,6 +132,19 @@ class BussinessAssistantController extends Controller
     public function update(BussinessAssistantUpdateRequest $request, BussinessAssistant $bussinessAssistant)
     {
         $data = $request->validated();
+
+         // Upload image baru
+        // =========================
+        if ($request->hasFile('picture')) {
+
+            // hapus gambar lama jika ada
+            if ($bussinessAssistant->picture && Storage::disk('public')->exists($bussinessAssistant->picture)) {
+                Storage::disk('public')->delete($bussinessAssistant->picture);
+            }
+
+            // simpan gambar baru
+            $data['picture'] = $request->file('picture')->store('bussiness-assistants', 'public');
+        }
 
         $bussinessAssistant->update($data);
         return to_route('bussiness-assistants.index')->with('success', 'Business Assistant berhasil diupdate');
@@ -492,6 +499,9 @@ class BussinessAssistantController extends Controller
             // Ambil file gambar jika ada
             $file = $request->file("data.$index.picture_land");
 
+            // Pastikan is_build menjadi boolean yang benar
+         $isBuild = filter_var($row['is_build'] ?? false, FILTER_VALIDATE_BOOLEAN);
+
             $validated = validator($row, [
                 'cooperation_id' => 'required|exists:cooperations,id',
                 // 'picture_land' => 'nullable|string',
@@ -506,8 +516,14 @@ class BussinessAssistantController extends Controller
                 'internet_access' => 'nullable|string',
                 'water_access' => 'nullable|string',
                 'electricity_access' => 'nullable|string',
+                'is_build' => 'nullable|boolean',
+                'persentase' => 'nullable|numeric',
+                'progress' => 'nullable|string',
                 'description' => 'nullable|string',
             ])->validate();
+
+            // Timpa nilai hasil validasi dengan boolean asli
+            $validated['is_build'] = $isBuild;
 
             // Jika ada file upload → simpan file
             if ($file) {
@@ -1142,5 +1158,10 @@ class BussinessAssistantController extends Controller
     public function formTwoExport()
     {
         return Excel::download(new FormTwoExport, 'data-rencana-gerai.xlsx');
+    }
+
+    public function formRatExport() 
+    {
+        return Excel::download(new FormTenExport, 'laporan-form-rat.xlsx');
     }
 }

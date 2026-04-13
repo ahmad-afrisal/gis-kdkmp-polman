@@ -39,13 +39,36 @@
                             <i data-lucide="calendar" class="w-3 h-3 mr-2"></i> Tahun 2026
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ route('rat.2025') }}"
+                            class="flex items-center pl-14 py-2.5 text-sm transition hover:text-white
+                {{ request()->routeIs('rat.2025') ? 'text-white font-bold bg-green-900/30' : 'text-green-200' }}">
+                            <i data-lucide="calendar" class="w-3 h-3 mr-2"></i> RAT 2026
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ route('cooperation-members') }}"
+                            class="flex items-center pl-14 py-2.5 text-sm transition hover:text-white
+                {{ request()->routeIs('cooperation-members') ? 'text-white font-bold bg-green-900/30' : 'text-green-200' }}">
+                            <i data-lucide="calendar" class="w-3 h-3 mr-2"></i> Anggota Koperasi
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ route('land-statistics.index') }}"
+                            class="flex items-center pl-14 py-2.5 text-sm transition hover:text-white
+                {{ request()->routeIs('land-statistics.index') ? 'text-white font-bold bg-green-900/30' : 'text-green-200' }}">
+                            <i data-lucide="calendar" class="w-3 h-3 mr-2"></i> Statistik Pembangunan
+                        </a>
+                    </li>
                 </ul>
             </li>
             <li>
-                <a href="{{ route('land-statistics.index') }}"
+                <a href="{{ route('online-attendances.index') }}"
                     class="flex items-center px-6 py-3 transition 
-                        {{ request()->routeIs('land-statistics.*') ? 'bg-green-700' : 'hover:bg-green-700' }}">
-                    <i data-lucide="earth" class="w-4 h-4 mr-1"></i> Statistik Lahan
+                        {{ request()->routeIs('online-attendances.*') ? 'bg-green-700' : 'hover:bg-green-700' }}">
+                    <i data-lucide="earth" class="w-4 h-4 mr-1"></i> Absen BA
                 </a>
             </li>
             <li>

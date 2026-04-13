@@ -69,7 +69,7 @@
                     rounded p-2 mb-4">
 
                         <label class="block mb-2 font-medium">Foto : </label>
-                        <input type="file" name="name_of_deputy_business" value="{{ $data->picture }}"
+                        <input type="file" name="picture" value="{{ $data->picture }}"
                             class="w-full border
                     rounded p-2 mb-4">
 

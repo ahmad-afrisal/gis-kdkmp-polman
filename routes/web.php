@@ -12,6 +12,7 @@ use App\Http\Controllers\DocumentationPmoController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LandStatisticController;
 use App\Http\Controllers\LinkDriveController;
+use App\Http\Controllers\OnlineAttendanceController;
 use App\Http\Controllers\PolygonController;
 use App\Http\Controllers\ProblemController;
 use App\Http\Controllers\ProfileController;
@@ -42,6 +43,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/2026/form-nine', [DashboardController::class, 'formNine'])->name('dashboard.form-nine');
     Route::get('/dashboard/2026/form-ten', [DashboardController::class, 'formTen'])->name('dashboard.form-ten');
     Route::get('/dashboard/2026/form-eleven', [DashboardController::class, 'formEleven'])->name('dashboard.form-eleven');
+    Route::get('/rat/2025', [DashboardController::class, 'rat2025'])->name('rat.2025');
+    Route::get('/cooperation-members', [DashboardController::class, 'cooperationMember'])->name('cooperation-members');
+
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -146,6 +150,8 @@ Route::middleware('auth')->group(function () {
 
 
     Route::get('form-two/export', [BussinessAssistantController::class, 'formTwoExport'])->name('bussiness-assistants.form-two.export');
+    Route::get('form-rat/export', [BussinessAssistantController::class, 'formRatExport'])->name('bussiness-assistants.form-rat.export');
+    
 
     Route::get('land-statistics/export', [LandStatisticController::class, 'export'])->name('land-statistic.export');
     Route::resource('land-statistics', LandStatisticController::class);
@@ -155,6 +161,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('cooperations', CooperationController::class);
     Route::resource('villages', VillageController::class);
     Route::resource('pmo-documentations', DocumentationPmoController::class);
+    Route::get('/problems/export', [ProblemController::class, 'exportExcel'])->name('problems.export');
     Route::resource('problems', ProblemController::class);
     Route::resource('contact-managements', ContactManagementController::class);
     Route::resource('weekly-reports', WeeklyReportController::class);
@@ -162,6 +169,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('articles', ArticleController::class);
     Route::resource('announcements', AnnouncementController::class);
     Route::resource('commodities', CommodityController::class);
+    Route::resource('online-attendances', OnlineAttendanceController::class);
     Route::post(
         '/form-seven/record-all',
         [RecordFormSevenController::class, 'storeAllRecord']

@@ -67,9 +67,10 @@ class Cooperation extends Model
         return $this->hasOne(FormTen::class, 'cooperation_id');
     }
 
-    public function formEleven()
+    
+    public function formElevens()
     {
-        return $this->hasOne(FormEleven::class, 'cooperation_id');
+        return $this->hasMany(FormFive::class);
     }
     
 

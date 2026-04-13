@@ -24,7 +24,7 @@ return new class extends Migration
             $table->boolean('usp_outlet')->nullable();
             $table->boolean('other_businesses_outlet')->nullable();
             $table->boolean('rat')->nullable();
-            $table->integer('initial_membership')->nullable(); // 0 : Belum, 1 : Selesai, 2, Tidak Terbangun
+            $table->integer('initial_membership')->nullable(); 
             $table->integer('addition_of_members')->nullable();
             $table->text('problem')->nullable();
             $table->text('information')->nullable();

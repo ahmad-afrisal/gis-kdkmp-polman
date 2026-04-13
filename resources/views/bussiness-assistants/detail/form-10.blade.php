@@ -11,6 +11,8 @@
         <x-slot name="script">
             <script>
                 document.addEventListener('DOMContentLoaded', function() {
+                
+
                     // Script checkbox logic (akun & bank)
                     document.querySelectorAll('.checkbox-status').forEach(function(checkbox) {
                         checkbox.addEventListener('change', function() {
@@ -34,6 +36,8 @@
                         });
                     });
                 });
+
+
             </script>
         </x-slot>
 
@@ -92,6 +96,7 @@
 
                                     <thead>
                                         <tr class="bg-green-600 ">
+                                        
                                             <th rowspan="2"
                                                 class="sticky left-0 z-20 border bg-green-600 border border-gray-300 px-3 py-2">
                                                 No</th>
@@ -154,7 +159,10 @@
                                             @php
                                                 $form = $coop->formTen; // Bisa null, aman
                                             @endphp
-                                            <tr class="odd:bg-gray-50 even:bg-white hover:bg-green-50 transition">
+                                            <tr 
+                                                class="odd:bg-gray-50 even:bg-white hover:bg-green-50 transition">
+                                                
+
                                                 <td
                                                     class="sticky left-0 z-10 bg-inherit border border-gray-300 px-2 py-1 font-medium text-center">
                                                     {{ $index + 1 }}

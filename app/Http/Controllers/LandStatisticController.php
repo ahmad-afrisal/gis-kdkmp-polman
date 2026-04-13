@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Exports\FormSixExport;
+use App\Models\BussinessAssistant;
+use App\Models\Cooperation;
 use App\Models\District;
 use App\Models\FormSix;
 use App\Models\Polygon;
@@ -49,6 +51,18 @@ class LandStatisticController extends Controller
                     }
                     return "<span class='text-gray-400'>-</span>";
                 })
+                    ->addColumn('is_build', function ($item) {
+
+                    if ($item->is_build) {
+                        return '<span class="bg-green-500 text-white px-2 py-1 rounded">
+                            YA
+                        </span>';
+                    }
+
+                    return '<span class="bg-red-500 text-white px-2 py-1 rounded">
+                        Tidak
+                    </span>';
+                })
                 ->addColumn('action', function ($item) {
                     return '
                 <a href="' . route('land-statistics.edit', $item->id) . '" 
@@ -57,7 +71,7 @@ class LandStatisticController extends Controller
                 </a>
             ';
                 })
-                ->rawColumns(['action', 'picture_land', 'letter_land', 'coordinate'])
+                ->rawColumns(['action', 'is_build', 'picture_land', 'letter_land', 'coordinate'])
                 ->make(true);
         }
 
@@ -84,14 +98,14 @@ class LandStatisticController extends Controller
                 ->map->count(),
         ];
 
-        // $districtStats = District::with([
-        //     'villages',
-        //     'villages.cooperation' => function ($q) {
-        //         $q->whereNotNull('asset');
-        //     }
-        // ])->whereHas('villages.cooperation', function ($q) {
-        //     $q->whereNotNull('asset');
-        // })->get();
+         // Contoh di Controller
+        $totalCooperation = Cooperation::count(); // Total semua KDKMP
+        $totalBuild = FormSix::where('is_build', 1)->count(); // Sesuaikan dengan field DB Anda
+        $percentage = $totalCooperation > 0 ? ($totalBuild / $totalCooperation) * 100 : 0;
+
+        
+        $totalLand = FormSix::whereNotNull('asset')->count(); // Sesuaikan dengan field DB Anda
+        $percentageLand = $totalCooperation > 0 ? ($totalLand / $totalCooperation) * 100 : 0;
 
         $districtStats = District::with(['villages.cooperation.formSix'])
             ->get()
@@ -111,8 +125,36 @@ class LandStatisticController extends Controller
 
         $lands = Polygon::with('cooperation')->get();
 
+        $districtBuildStats = District::withCount(['cooperations as district_total_build' => function ($query) {
+            $query->whereHas('formSix', function ($q) {
+                $q->where('is_build', true);
+            });
+        }])->get();
 
-        return view('land-statistic.index', compact('data', 'districtStats', 'lands'));
+        // 2. Ambil data Statistik Business Assistant
+        $assistantData = BussinessAssistant::withCount(['cooperations as total_build' => function ($query) {
+            $query->whereHas('formSix', fn($q) => $q->where('is_build', 1));
+        }])->get();
+
+
+        // dd($assistantData);
+
+
+        return view('land-statistic.index', [      
+        // Data untuk Chart Business Assistant
+            'assistantLabels' => $assistantData->pluck('name'),
+            'assistantValues' => $assistantData->pluck('total_build'),
+            'districtBuildLabels' => $districtBuildStats->pluck('name'),
+            'districtBuildValues' => $districtBuildStats->pluck('district_total_build'),
+            'totalCooperation' => $totalCooperation, 
+            'totalBuild' => $totalBuild, 
+            'totalLand' => $totalLand, 
+            'percentage' => $percentage, 
+            'percentageLand' => $percentageLand, 
+            'data' => $data, 
+            'districtStats' => $districtStats, 
+            'lands' => $lands
+        ]);
     }
 
     /**

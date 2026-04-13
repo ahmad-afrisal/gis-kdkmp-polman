@@ -33,7 +33,7 @@
                 // AJAX DataTable
 
                 var datatable = $('#crudTable').DataTable({
-                    responsive: true, // <--- aktifkan fitur ini
+                    // responsive: true, // <--- aktifkan fitur ini
                     ajax: {
                         url: '{!! url()->current() !!}'
                     },
@@ -62,49 +62,65 @@
                         //     data: 'coordinate',
                         //     name: 'coordinate',
                         // },
+                        // {
+                        //     data: 'width_land',
+                        //     name: 'width_land',
+                        // },
+                        // {
+                        //     data: 'long_land',
+                        //     name: 'long_land',
+                        // },
+                        // {
+                        //     data: 'letter_land',
+                        //     name: 'letter_land',
+                        // },
+                        // {
+                        //     data: 'road_condition',
+                        //     name: 'road_condition',
+                        // },
+                        // {
+                        //     data: 'asset',
+                        //     name: 'asset',
+                        // },
                         {
-                            data: 'width_land',
-                            name: 'width_land',
+                            data: 'is_build',
+                            name: 'is_build',
                         },
                         {
-                            data: 'long_land',
-                            name: 'long_land',
+                            data: 'persentase',
+                            name: 'persentase',
                         },
                         {
-                            data: 'letter_land',
-                            name: 'letter_land',
+                            data: 'progress',
+                            name: 'progress',
                         },
                         {
-                            data: 'road_condition',
-                            name: 'road_condition',
+                            data: 'description',
+                            name: 'description',
                         },
-                        {
-                            data: 'asset',
-                            name: 'asset',
-                        },
-                        {
-                            data: 'distance',
-                            name: 'distance',
-                        },
-                        {
-                            data: 'internet_access',
-                            name: 'internet_access',
-                        },
-                        {
-                            data: 'water_access',
-                            name: 'water_access',
-                        },
-                        {
-                            data: 'electricity_access',
-                            name: 'electricity_access',
-                        },
-                        {
-                            data: 'action',
-                            name: 'action',
-                            orderable: false,
-                            searchable: false,
-                            width: '15%',
-                        }
+                        // {
+                        //     data: 'distance',
+                        //     name: 'distance',
+                        // },
+                        // {
+                        //     data: 'internet_access',
+                        //     name: 'internet_access',
+                        // },
+                        // {
+                        //     data: 'water_access',
+                        //     name: 'water_access',
+                        // },
+                        // {
+                        //     data: 'electricity_access',
+                        //     name: 'electricity_access',
+                        // },
+                        // {
+                        //     data: 'action',
+                        //     name: 'action',
+                        //     orderable: false,
+                        //     searchable: false,
+                        //     width: '15%',
+                        // }
                     ]
                 })
 
@@ -117,6 +133,61 @@
                         datasets: [{
                             label: 'Jumlah Lahan (asset terisi)',
                             data: Object.values(districtStats),
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false, // <- penting di mobile
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    precision: 0
+                                }
+                            }
+                        }
+                    }
+                });
+
+
+                const ctxDistrict = document.getElementById('districtBuildChart');
+                new Chart(ctxDistrict, {
+                    type: 'bar',
+                    data: {
+                        labels: {!! json_encode($districtBuildLabels) !!}, // Mengubah array PHP ke JSON
+                        datasets: [{
+                            label: 'Jumlah Pembangunan',
+                            data: {!! json_encode($districtBuildValues) !!},
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false, // <- penting di mobile
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    precision: 0
+                                }
+                            }
+                        }
+                    }
+                });
+
+                const ctxBa = document.getElementById('assistantChart');
+                new Chart(ctxBa, {
+                    type: 'bar',
+                    data: {
+                        labels: {!! json_encode($assistantLabels) !!}, // Mengubah array PHP ke JSON
+                        datasets: [{
+                            label: 'Jumlah Pembangunan',
+                            data: {!! json_encode($assistantValues) !!},
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
                             borderWidth: 1
                         }]
                     },
@@ -227,8 +298,58 @@
                             <i data-lucide="home" class="w-4 h-4 mr-1"></i> Home
                         </a>
                         <span>›</span>
-                        <span class="text-gray-500">Statistik Lahan</span>
+                        <span class="text-gray-500">Statistik Pembangunan</span>
                     </nav>
+                    {{-- Pembangunan --}}
+                    <div class="bg-white shadow-lg rounded-2xl mb-6 p-6">
+                        <div class="flex justify-between items-center mb-2">
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-700">Progress Pembangunan Gerai KDKMP</h3>
+                                <p class="text-sm text-gray-500">Total KDKMP yang sudah melakukan Pembangunan</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-2xl font-bold text-green-600">{{ $totalBuild }}</span>
+                                <span class="text-gray-400">/ {{ $totalCooperation }}</span>
+                            </div>
+                        </div>
+
+                        <div class="w-full bg-gray-200 rounded-full h-4">
+                            <div class="bg-green-500 h-4 rounded-full transition-all duration-500 shadow-sm"
+                                style="width: {{ $percentage }}%">
+                            </div>
+                        </div>
+
+                        <div class="mt-2 text-right">
+                            <span class="text-sm font-medium text-green-700">{{ number_format($percentage, 1) }}%
+                                Tercapai</span>
+                        </div>
+                    </div>
+
+
+                    {{-- Lahan --}}
+                    <div class="bg-white shadow-lg rounded-2xl mb-6 p-6">
+                        <div class="flex justify-between items-center mb-2">
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-700">Progress Kesediaan Lahan</h3>
+                                <p class="text-sm text-gray-500">Total KDKMP yang telah memiliki lahan</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-2xl font-bold text-cyan-600">{{ $totalLand }}</span>
+                                <span class="text-gray-400">/ {{ $totalCooperation }}</span>
+                            </div>
+                        </div>
+
+                        <div class="w-full bg-gray-200 rounded-full h-4">
+                            <div class="bg-cyan-500 h-4 rounded-full transition-all duration-500 shadow-sm"
+                                style="width: {{ $percentageLand }}%">
+                            </div>
+                        </div>
+
+                        <div class="mt-2 text-right">
+                            <span class="text-sm font-medium text-cyan-700">{{ number_format($percentage, 1) }}%
+                                Tercapai</span>
+                        </div>
+                    </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pb-6">
 
                         {{-- ASSET --}}
@@ -256,6 +377,22 @@
                         </div>
                     </div>
 
+                    <div class="bg-white shadow-lg rounded-2xl mb-5 p-5 min-h-[280px]">
+                        <h2 class="text-center font-semibold mb-2">Jumlah Pembangunan per Kecamatan</h2>
+
+                        <div class="h-[220px]">
+                            <canvas id="districtBuildChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="bg-white shadow-lg rounded-2xl mb-5 p-5 min-h-[280px]">
+                        <h2 class="text-center font-semibold mb-2">Jumlah Pembanguna per BA</h2>
+
+                        <div class="h-[220px]">
+                            <canvas id="assistantChart"></canvas>
+                        </div>
+                    </div>
+
 
                     <div class="bg-white shadow-lg rounded-2xl mb-5 p-5 min-h-[280px]">
                         <h2 class="text-center font-semibold mb-2">Jumlah Lahan per Kecamatan</h2>
@@ -267,28 +404,7 @@
 
 
 
-                    @if (session('error'))
-                        <div class="mb-5" role="alert">
-                            <div class="bg-red-500 text-white font-bold rounded-t px-4 py-2">
-                                Error
-                            </div>
-                            <div class="border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700">
-                                {{ session('error') }}
-                            </div>
-                        </div>
-                    @endif
 
-                    @if (session('success'))
-                        <div class="mb-5" role="alert">
-                            <div class="bg-green-500 text-white font-bold rounded-t px-4 py-2">
-                                Berhasil
-                            </div>
-                            <div
-                                class="border border-t-0 border-green-400 rounded-b bg-green-100 px-4 py-3 text-green-700">
-                                {{ session('success') }}
-                            </div>
-                        </div>
-                    @endif
 
 
 
@@ -307,16 +423,20 @@
                                         <th>Nama KDKMP</th>
                                         <th>Foto Lahan</th>
                                         {{-- <th>Titik Kordinat</th> --}}
-                                        <th>Lebar</th>
+                                        {{-- <th>Lebar</th>
                                         <th>Panjang</th>
                                         <th>Surat Lahan</th>
                                         <th>Kondisi Jalan</th>
-                                        <th>Tipe Aset</th>
-                                        <th>Jarak dari permukiman (m)</th>
+                                        <th>Tipe Aset</th> --}}
+                                        <th>Pembangunan</th>
+                                        <th>Persentase</th>
+                                        <th>Keterangan Progress</th>
+                                        {{-- <th>Jarak dari permukiman (m)</th>
                                         <th>Akses Internet</th>
-                                        <th>Akses Air</th>
-                                        <th>Akses Listrik</th>
-                                        <th>Aksi</th>
+                                        <th>Akses Air</th> --}}
+                                        {{-- <th>Akses Listrik</th> --}}
+                                        <th>Keterangan</th>
+                                        {{-- <th>Aksi</th> --}}
                                     </tr>
                                 </thead>
                                 <tbody>

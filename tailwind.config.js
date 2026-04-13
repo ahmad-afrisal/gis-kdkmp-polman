@@ -18,7 +18,8 @@ export default {
         'bg-cyan-500',
         'bg-cyan-700',
         'bg-yellow-500',
-        'bg-yellow-600'
+        'bg-yellow-600',
+        'bg-green-900',
     ],
 
 

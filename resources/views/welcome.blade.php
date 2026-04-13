@@ -627,113 +627,18 @@
             <div
                 class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-4 gap-y-8 max-w-7xl mx-auto">
 
+                @foreach ($assistants as $assistant)
+                    <a href="{{ route('performance', $assistant->id) }}" target="_blank">
+                        <div class="flex flex-col items-center text-center p-2">
+                            <img src="{{ asset('storage/' . $assistant->picture) }}" alt=""
+                                class="w-24 h-24 rounded-full object-cover mb-2 ring-1 ring-gray-200" />
+                            <p class="text-sm font-semibold text-gray-800 leading-tight">{{ $assistant->name }}</p>
+                            <p class="text-xs text-gray-500">Business Assistant</p>
+                        </div>
+                    </a>
+                @endforeach
 
 
-                <a href="{{ route('performance', 14) }}" target="_blank">
-                    <div class="flex flex-col items-center text-center p-2">
-                        <img src="{{ asset('images/foto-ba/rahmadani.jpg') }}" alt=""
-                            class="w-24 h-24 rounded-full object-cover mb-2 ring-1 ring-gray-200" />
-                        <p class="text-sm font-semibold text-gray-800 leading-tight">Rahmadani</p>
-                        <p class="text-xs text-gray-500">Business Assistant</p>
-                    </div>
-                </a>
-                <div class="flex flex-col items-center text-center p-2">
-                    <img src="{{ asset('images/foto-ba/husnawati.jpg') }}" alt=""
-                        class="w-24 h-24 rounded-full object-cover mb-2 ring-1 ring-gray-200" />
-                    <p class="text-sm font-semibold text-gray-800 leading-tight">Husnawati</p>
-                    <p class="text-xs text-gray-500">Business Assistant</p>
-                </div>
-                <div class="flex flex-col items-center text-center p-2">
-                    <img src="{{ asset('images/foto-ba/mardiana.jpg') }}" alt=""
-                        class="w-24 h-24 rounded-full object-cover mb-2 ring-1 ring-gray-200" />
-                    <p class="text-sm font-semibold text-gray-800 leading-tight">Mardiana H</p>
-                    <p class="text-xs text-gray-500">Business Assistant</p>
-                </div>
-                <div class="flex flex-col items-center text-center p-2">
-                    <img src="{{ asset('images/foto-ba/asthy.jpg') }}" alt=""
-                        class="w-24 h-24 rounded-full object-cover mb-2 ring-1 ring-gray-200" />
-                    <p class="text-sm font-semibold text-gray-800 leading-tight">Asty Esha Nadia</p>
-                    <p class="text-xs text-gray-500">Business Assistant</p>
-                </div>
-                <div class="flex flex-col items-center text-center p-2">
-                    <img src="{{ asset('images/foto-ba/arasy.jpg') }}" alt=""
-                        class="w-24 h-24 rounded-full object-cover mb-2 ring-1 ring-gray-200" />
-                    <p class="text-sm font-semibold text-gray-800 leading-tight">Muh Arasy</p>
-                    <p class="text-xs text-gray-500">Business Assistant</p>
-                </div>
-                <div class="flex flex-col items-center text-center p-2">
-                    <img src="{{ asset('images/foto-ba/hasana2.jpg') }}" alt=""
-                        class="w-24 h-24 rounded-full object-cover mb-2 ring-1 ring-gray-200" />
-                    <p class="text-sm font-semibold text-gray-800 leading-tight">Hasana</p>
-                    <p class="text-xs text-gray-500">Business Assistant</p>
-                </div>
-                <div class="flex flex-col items-center text-center p-2">
-                    <img src="{{ asset('images/foto-ba/hernida.jpg') }}" alt=""
-                        class="w-24 h-24 rounded-full object-cover mb-2 ring-1 ring-gray-200" />
-                    <p class="text-sm font-semibold text-gray-800 leading-tight">Hernida</p>
-                    <p class="text-xs text-gray-500">Business Assistant</p>
-                </div>
-                <div class="flex flex-col items-center text-center p-2">
-                    <img src="{{ asset('images/foto-ba/asyam.jpg') }}" alt=""
-                        class="w-24 h-24 rounded-full object-cover mb-2 ring-1 ring-gray-200" />
-                    <p class="text-sm font-semibold text-gray-800 leading-tight">Alwi Syam</p>
-                    <p class="text-xs text-gray-500">Business Assistant</p>
-                </div>
-                <div class="flex flex-col items-center text-center p-2">
-                    <img src="{{ asset('images/foto-ba/irdah.jpg') }}" alt=""
-                        class="w-24 h-24 rounded-full object-cover mb-2 ring-1 ring-gray-200" />
-                    <p class="text-sm font-semibold text-gray-800 leading-tight">Irdah</p>
-                    <p class="text-xs text-gray-500">Business Assistant</p>
-                </div>
-                <div class="flex flex-col items-center text-center p-2">
-                    <img src="{{ asset('images/foto-ba/ulya.jpg') }}" alt=""
-                        class="w-24 h-24 rounded-full object-cover mb-2 ring-1 ring-gray-200" />
-                    <p class="text-sm font-semibold text-gray-800 leading-tight">Nurul Ulya</p>
-                    <p class="text-xs text-gray-500">Business Assistant</p>
-                </div>
-                <div class="flex flex-col items-center text-center p-2">
-                    <img src="{{ asset('images/foto-ba/aslam.jpg') }}" alt=""
-                        class="w-24 h-24 rounded-full object-cover mb-2 ring-1 ring-gray-200" />
-                    <p class="text-sm font-semibold text-gray-800 leading-tight">Muhammad Aslam</p>
-                    <p class="text-xs text-gray-500">Business Assistant</p>
-                </div>
-                <div class="flex flex-col items-center text-center p-2">
-                    <img src="{{ asset('images/foto-ba/rezky.png') }}" alt=""
-                        class="w-24 h-24 rounded-full object-cover mb-2 ring-1 ring-gray-200" />
-                    <p class="text-sm font-semibold text-gray-800 leading-tight">Rezky Amalia Sari</p>
-                    <p class="text-xs text-gray-500">Business Assistant</p>
-                </div>
-                <div class="flex flex-col items-center text-center p-2">
-                    <img src="{{ asset('images/foto-ba/pratiwi.jpg') }}" alt=""
-                        class="w-24 h-24 rounded-full object-cover mb-2 ring-1 ring-gray-200" />
-                    <p class="text-sm font-semibold text-gray-800 leading-tight">Nurul Pratiwi</p>
-                    <p class="text-xs text-gray-500">Business Assistant</p>
-                </div>
-                <div class="flex flex-col items-center text-center p-2">
-                    <img src="{{ asset('images/foto-ba/adham.png') }}" alt=""
-                        class="w-24 h-24 rounded-full object-cover mb-2 ring-1 ring-gray-200" />
-                    <p class="text-sm font-semibold text-gray-800 leading-tight">Adam</p>
-                    <p class="text-xs text-gray-500">Business Assistant</p>
-                </div>
-                <div class="flex flex-col items-center text-center p-2">
-                    <img src="{{ asset('images/foto-ba/amalia.jpg') }}" alt=""
-                        class="w-24 h-24 rounded-full object-cover mb-2 ring-1 ring-gray-200" />
-                    <p class="text-sm font-semibold text-gray-800 leading-tight">Amalia Fadini</p>
-                    <p class="text-xs text-gray-500">Business Assistant</p>
-                </div>
-                <div class="flex flex-col items-center text-center p-2">
-                    <img src="{{ asset('images/foto-ba/hendra.jpg') }}" alt=""
-                        class="w-24 h-24 rounded-full object-cover mb-2 ring-1 ring-gray-200" />
-                    <p class="text-sm font-semibold text-gray-800 leading-tight">Hendra Wahid</p>
-                    <p class="text-xs text-gray-500">Business Assistant</p>
-                </div>
-
-                <div class="flex flex-col items-center text-center p-2">
-                    <img src="{{ asset('images/foto-ba/yusuf.png') }}" alt=""
-                        class="w-24 h-24 rounded-full object-cover mb-2 ring-1 ring-gray-200" />
-                    <p class="text-sm font-semibold text-gray-800 leading-tight">Muhammad Yusuf</p>
-                    <p class="text-xs text-gray-500">Business Assistant</p>
-                </div>
 
 
             </div>
