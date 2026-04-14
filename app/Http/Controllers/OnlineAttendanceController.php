@@ -7,7 +7,9 @@ use App\Http\Requests\OnlineAttendanceUpdateRequest;
 use App\Models\BussinessAssistant;
 use App\Models\OnlineAttendance;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 
 class OnlineAttendanceController extends Controller
@@ -15,8 +17,30 @@ class OnlineAttendanceController extends Controller
         /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $startInput = $request->get('start_date');
+        $endInput = $request->get('end_date');
+
+        // Query untuk Chart: Hitung kehadiran per Nama BA
+        $chartQuery = OnlineAttendance::join('bussiness_assistants', 'online_attendances.bussiness_assistant_id', '=', 'bussiness_assistants.id')
+            ->select(
+                'bussiness_assistants.name',
+                DB::raw('count(*) as total')
+            );
+
+        if ($startInput && $endInput) {
+            $chartQuery->whereBetween('online_attendances.date', [$startInput, $endInput]);
+        }
+
+        $attendanceData = $chartQuery->groupBy('bussiness_assistants.name')
+                                    ->orderBy('total', 'DESC')
+                                    ->get();
+
+        // Data untuk Chart.js
+        $labels = $attendanceData->pluck('name'); // Nama-nama BA
+        $values = $attendanceData->pluck('total'); // Jumlah kehadirannya
+
         if (request()->ajax()) {
             $query = OnlineAttendance::orderBy('updated_at', 'desc');
             // $query = Problem::query(); // ambil data farmer + user
@@ -56,7 +80,7 @@ class OnlineAttendanceController extends Controller
         }
 
 
-        return view('online-attendance.index');
+        return view('online-attendance.index', compact('labels', 'values', 'startInput', 'endInput'));
     }
 
     /**

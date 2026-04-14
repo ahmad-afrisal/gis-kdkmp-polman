@@ -1141,4 +1141,8 @@ class DashboardController extends Controller
             'assistantValues' => $assistantData->pluck('total_members'),
         ]);
     }
+
+    public function forms2026(){
+        return view('forms-2026');
+    }
 }

@@ -36,6 +36,7 @@
                     // responsive: true, // <--- aktifkan fitur ini
                     ajax: {
                         url: '{!! url()->current() !!}'
+                        
                     },
                     columns: [{
                             data: 'id',

@@ -8,6 +8,8 @@
         <div x-show="open" @click="open=false" class="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"></div>
 
         <x-slot name="style">
+            {{-- <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" /> --}}
+
             <style>
                 #crudTable {
                     width: 100% !important;
@@ -27,13 +29,21 @@
 
 
         <x-slot name="script">
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
             {{-- DataTable JS --}}
             <script>
+                Chart.register(ChartDataLabels);
+
                 var datatable = $('#crudTable').DataTable({
                     responsive: true,
                     // autoWidth: false, // MATIKAN autoWidth agar pengaturan kita jalan
                     ajax: {
-                        url: '{!! url()->current() !!}'
+                        url: '{!! url()->current() !!}',
+                        data: function(d) {
+                            d.start_date = $('input[name="start_date"]').val();
+                            d.end_date = $('input[name="end_date"]').val();
+                        }
                     },
                     // Mengatur urutan default: kolom indeks ke-4 (misal updated_at), urutan desc
                     order: [
@@ -80,6 +90,50 @@
                         }
                     ]
                 })
+
+
+                // Chart Initialization (Bar Chart berdasarkan Nama BA)
+                const ctx = document.getElementById('attendanceChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar', // Diubah menjadi bar
+                    data: {
+                        labels: {!! json_encode($labels) !!},
+                        datasets: [{
+                            label: 'Total Kehadiran',
+                            data: {!! json_encode($values) !!},
+                            backgroundColor: 'rgba(16, 185, 129, 0.6)', // Hijau transparan
+                            borderColor: '#10b981', // Hijau solid
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1 // Karena jumlah orang/kehadiran pasti bulat
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Jumlah Kehadiran'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Nama Business Assistant'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false // Sembunyikan label dataset karena sudah jelas
+                            }
+                        }
+                    }
+                });
             </script>
 
         </x-slot>
@@ -97,6 +151,35 @@
                         <span>›</span>
                         <span class="text-gray-500">Absen BA</span>
                     </nav>
+
+                    <div class="bg-white p-6 rounded-lg shadow-sm mb-6">
+                        <form method="GET" action="{{ url()->current() }}" class="flex flex-wrap items-end gap-4">
+                            <div class="flex-1 min-w-[200px]">
+                                <label class="block text-sm font-medium text-gray-700">Mulai Tanggal</label>
+                                <input type="date" name="start_date" value="{{ $startInput }}"
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">
+                            </div>
+                            <div class="flex-1 min-w-[200px]">
+                                <label class="block text-sm font-medium text-gray-700">Sampai Tanggal</label>
+                                <input type="date" name="end_date" value="{{ $endInput }}"
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">
+                            </div>
+                            <div class="flex gap-2">
+                                <button type="submit"
+                                    class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition">Filter</button>
+                                <a href="{{ route('online-attendances.index') }}"
+                                    class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition">Reset</a>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg shadow-sm mb-6">
+                        <h3 class="text-lg font-semibold mb-4 text-gray-700">Grafik Kehadiran</h3>
+                        <div class="h-64">
+                            <canvas id="attendanceChart"></canvas>
+                        </div>
+                    </div>
+
 
                     {{-- Tombol tambah --}}
                     <div class="mb-10 flex space-x-2">

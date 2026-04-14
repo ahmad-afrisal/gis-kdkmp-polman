@@ -44,7 +44,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/2026/form-ten', [DashboardController::class, 'formTen'])->name('dashboard.form-ten');
     Route::get('/dashboard/2026/form-eleven', [DashboardController::class, 'formEleven'])->name('dashboard.form-eleven');
     Route::get('/rat/2025', [DashboardController::class, 'rat2025'])->name('rat.2025');
+    Route::get('/forms/2026', [DashboardController::class, 'forms2026'])->name('forms.2026');
     Route::get('/cooperation-members', [DashboardController::class, 'cooperationMember'])->name('cooperation-members');
+    // Route::get('/online-attendance-analysis', [DashboardController::class, 'onlineAttendanceAnalysis'])->name('online-attendance-analysis');
 
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -169,6 +171,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('articles', ArticleController::class);
     Route::resource('announcements', AnnouncementController::class);
     Route::resource('commodities', CommodityController::class);
+    // Route::get('/online-attendances/exp', [ProblemController::class, 'exportExcel'])->name('problems.export');
     Route::resource('online-attendances', OnlineAttendanceController::class);
     Route::post(
         '/form-seven/record-all',

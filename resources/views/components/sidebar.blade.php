@@ -72,6 +72,13 @@
                 </a>
             </li>
             <li>
+                <a href="{{ route('forms.2026') }}"
+                    class="flex items-center px-6 py-3 transition 
+                        {{ request()->routeIs('forms.   2026') ? 'bg-green-700' : 'hover:bg-green-700' }}">
+                    <i data-lucide="earth" class="w-4 h-4 mr-1"></i> Form 2026
+                </a>
+            </li>
+            <li>
                 <a href="{{ route('districts.index') }}"
                     class="flex items-center px-6 py-3 transition 
                         {{ request()->routeIs('districts.*') ? 'bg-green-700' : 'hover:bg-green-700' }}">
