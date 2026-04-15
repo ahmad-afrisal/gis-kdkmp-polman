@@ -701,10 +701,12 @@ class DashboardController extends Controller
 
     public function formEight() {
         if (request()->ajax()) {
-            $query = Cooperation::with([
-                   'formEight',
-                    'bussinessAssistant',
-                    'village.district']);
+           $query = Cooperation::with([
+                'formEight:id,cooperation_id,land_readiness,store_development,vehicle,table_and_chair,display_case,computer,problem,information',
+                'bussinessAssistant:id,name',
+                'village:id,district_id',
+                'village.district:id,name'
+            ])->select('id', 'name', 'bussiness_assistant_id', 'village_id');
 
 
             return DataTables::of($query)
@@ -802,9 +804,11 @@ class DashboardController extends Controller
     public function formNine() {
         if (request()->ajax()) {
             $query = Cooperation::with([
-                    'formNine',
-                    'bussinessAssistant',
-                    'village.district']);
+            'formNine:id,cooperation_id,outlet_status,number_of_employees_2025,number_of_employees_2026,outlet_operations_guide,problem,information',
+            'bussinessAssistant:id,name',
+            'village:id,district_id',
+            'village.district:id,name'
+        ])->select('id', 'name', 'bussiness_assistant_id', 'village_id');
 
 
             return DataTables::of($query)
@@ -857,167 +861,78 @@ class DashboardController extends Controller
                 ->addColumn('information', function ($item) {
                     return optional($item->formNine)->information ?? '-';
                 })
+                // 2. Gunakan rawColumns hanya untuk yang mengandung HTML
+            ->rawColumns(['outlet_operations_guide', 'outlet_status'])
 
-                ->rawColumns([ 'business_assistant', 'district', 'outlet_operations_guide', 'number_of_employees_2025', 'number_of_employees_2026', 'outlet_status', 'problem', 'information'   ])
+                // 3. Batasi output JSON agar memori hemat (PENTING)
+            ->only([
+                'name',
+                'business_assistant',
+                'district',
+                'outlet_status',
+                'number_of_employees_2025',
+                'number_of_employees_2026',
+                'outlet_operations_guide',
+                'problem',
+                'information'
+            ])
                 ->make(true);
         }
     }
 
-    public function formTen() {
-        if (request()->ajax()) {
-            $query = Cooperation::with([
-                    'formTen',
-                    'bussinessAssistant',
-                    'village.district']);
+   public function formTen() {
+    if (request()->ajax()) {
+        $query = Cooperation::with([
+            'formTen:id,cooperation_id,profile_update,village_potential,grocery_outlet,pharmacy_outlet,warehousing_outlet,clinic_outlet,logistics_outlet,usp_outlet,other_businesses_outlet,rat,initial_membership,addition_of_members,problem,information',
+            'bussinessAssistant:id,name',
+            'village:id,district_id',
+            'village.district:id,name'
+        ])->select('id', 'name', 'bussiness_assistant_id', 'village_id');
 
+        return DataTables::of($query)
+            ->addColumn('business_assistant', fn($item) => $item->bussinessAssistant->name ?? '-')
+            ->addColumn('district', fn($item) => $item->village->district->name ?? '-')
+            
+            // Optimasi: Gunakan loop untuk kolom status yang logikanya sama
+            ->editColumn('profile_update', fn($item) => $this->formatStatus($item->formTen->profile_update ?? false))
+            ->editColumn('village_potential', fn($item) => $this->formatStatus($item->formTen->village_potential ?? false))
+            ->editColumn('grocery_outlet', fn($item) => $this->formatStatus($item->formTen->grocery_outlet ?? false))
+            ->editColumn('pharmacy_outlet', fn($item) => $this->formatStatus($item->formTen->pharmacy_outlet ?? false))
+            ->editColumn('warehousing_outlet', fn($item) => $this->formatStatus($item->formTen->warehousing_outlet ?? false))
+            ->editColumn('clinic_outlet', fn($item) => $this->formatStatus($item->formTen->clinic_outlet ?? false))
+            ->editColumn('logistics_outlet', fn($item) => $this->formatStatus($item->formTen->logistics_outlet ?? false))
+            ->editColumn('usp_outlet', fn($item) => $this->formatStatus($item->formTen->usp_outlet ?? false))
+            ->editColumn('other_businesses_outlet', fn($item) => $this->formatStatus($item->formTen->other_businesses_outlet ?? false))
+            ->editColumn('rat', fn($item) => $this->formatStatus($item->formTen->rat ?? false))
+            
+            ->addColumn('initial_membership', fn($item) => $item->formTen->initial_membership ?? '-')
+            ->addColumn('addition_of_members', fn($item) => $item->formTen->addition_of_members ?? '-')
+            ->addColumn('problem', fn($item) => $item->formTen->problem ?? '-')
+            ->addColumn('information', fn($item) => $item->formTen->information ?? '-')
 
-            return DataTables::of($query)
-                
-                ->addColumn('business_assistant', function ($item) {
-                    return $item->bussinessAssistant->name ?? '-';
-                })
-
-                ->addColumn('district', function ($item) {
-                    return $item->village->district->name ?? '-';
-                })
-
-                ->addColumn('profile_update', function ($item) {
-
-                    if (optional($item->formTen)->profile_update) {
-                        return '<span class="bg-green-500 text-white px-2 py-1 rounded">
-                            Sudah
-                        </span>';
-                    }
-
-                    return '<span class="bg-red-500 text-white px-2 py-1 rounded">
-                        Belum
-                    </span>';
-                })
-                ->addColumn('village_potential', function ($item) {
-
-                    if (optional($item->formTen)->village_potential) {
-                        return '<span class="bg-green-500 text-white px-2 py-1 rounded">
-                            Sudah
-                        </span>';
-                    }
-
-                    return '<span class="bg-red-500 text-white px-2 py-1 rounded">
-                        Belum
-                    </span>';
-                })
-                ->addColumn('grocery_outlet', function ($item) {
-
-                    if (optional($item->formTen)->grocery_outlet) {
-                        return '<span class="bg-green-500 text-white px-2 py-1 rounded">
-                            Sudah
-                        </span>';
-                    }
-
-                    return '<span class="bg-red-500 text-white px-2 py-1 rounded">
-                        Belum
-                    </span>';
-                })
-                ->addColumn('pharmacy_outlet', function ($item) {
-
-                    if (optional($item->formTen)->pharmacy_outlet) {
-                        return '<span class="bg-green-500 text-white px-2 py-1 rounded">
-                            Sudah
-                        </span>';
-                    }
-
-                    return '<span class="bg-red-500 text-white px-2 py-1 rounded">
-                        Belum
-                    </span>';
-                })
-                ->addColumn('warehousing_outlet', function ($item) {
-
-                    if (optional($item->formTen)->warehousing_outlet) {
-                        return '<span class="bg-green-500 text-white px-2 py-1 rounded">
-                            Sudah
-                        </span>';
-                    }
-
-                    return '<span class="bg-red-500 text-white px-2 py-1 rounded">
-                        Belum
-                    </span>';
-                })
-                 ->addColumn('clinic_outlet', function ($item) {
-
-                    if (optional($item->formTen)->clinic_outlet) {
-                        return '<span class="bg-green-500 text-white px-2 py-1 rounded">
-                            Sudah
-                        </span>';
-                    }
-
-                    return '<span class="bg-red-500 text-white px-2 py-1 rounded">
-                        Belum
-                    </span>';
-                })
-                ->addColumn('logistics_outlet', function ($item) {
-
-                    if (optional($item->formTen)->logistics_outlet) {
-                        return '<span class="bg-green-500 text-white px-2 py-1 rounded">
-                            Sudah
-                        </span>';
-                    }
-
-                    return '<span class="bg-red-500 text-white px-2 py-1 rounded">
-                        Belum
-                    </span>';
-                })
-                ->addColumn('usp_outlet', function ($item) {
-                    if (optional($item->formTen)->usp_outlet) {
-                        return '<span class="bg-green-500 text-white px-2 py-1 rounded">
-                            Sudah
-                        </span>';
-                    }
-
-                    return '<span class="bg-red-500 text-white px-2 py-1 rounded">
-                        Belum
-                    </span>';
-                })
-                ->addColumn('other_businesses_outlet', function ($item) {
-                    if (optional($item->formTen)->other_businesses_outlet) {
-                        return '<span class="bg-green-500 text-white px-2 py-1 rounded">
-                            Sudah
-                        </span>';
-                    }
-
-                    return '<span class="bg-red-500 text-white px-2 py-1 rounded">
-                        Belum
-                    </span>';
-                })
-                ->addColumn('rat', function ($item) {
-
-                    if (optional($item->formTen)->rat) {
-                        return '<span class="bg-green-500 text-white px-2 py-1 rounded">
-                            Sudah
-                        </span>';
-                    }
-
-                    return '<span class="bg-red-500 text-white px-2 py-1 rounded">
-                        Belum
-                    </span>';
-                })
-                ->addColumn('initial_membership', function ($item) {
-                    return optional($item->formTen)->initial_membership ?? '-';
-                })
-                ->addColumn('addition_of_members', function ($item) {
-                    return optional($item->formTen)->addition_of_members ?? '-';
-                })
-
-                ->addColumn('problem', function ($item) {
-                    return optional($item->formTen)->problem ?? '-';
-                })
-                ->addColumn('information', function ($item) {
-                    return optional($item->formTen)->information ?? '-';
-                })
-
-                ->rawColumns([ 'business_assistant', 'grocery_outlet', 'pharmacy_outlet', 'warehousing_outlet', 'clinic_outlet', 'logistics_outlet', 'usp_outlet',  'other_businesses_outlet', 'district', 'profile_update', 'village_potential', 'rat', 'problem', 'information'   ])
-                ->make(true);
-        }
+            ->rawColumns([
+                'profile_update', 'village_potential', 'grocery_outlet', 'pharmacy_outlet', 
+                'warehousing_outlet', 'clinic_outlet', 'logistics_outlet', 'usp_outlet', 
+                'other_businesses_outlet', 'rat'
+            ])
+            ->only([
+                'name', 'business_assistant', 'district', 'profile_update', 'village_potential',
+                'grocery_outlet', 'pharmacy_outlet', 'warehousing_outlet', 'clinic_outlet',
+                'logistics_outlet', 'usp_outlet', 'other_businesses_outlet', 'rat',
+                'initial_membership', 'addition_of_members', 'problem', 'information'
+            ])
+            ->make(true);
     }
+}
 
+/**
+ * Helper Privat untuk menyeragamkan badge status
+ */
+private function formatStatus($status) {
+    $color = $status ? 'green' : 'red';
+    $label = $status ? 'Sudah' : 'Belum';
+    return '<span class="bg-'.$color.'-500 text-white px-2 py-1 rounded text-xs">'.$label.'</span>';
+}
     public function rat2025(){
 
          if (request()->ajax()) {
@@ -1140,5 +1055,9 @@ class DashboardController extends Controller
             'assistantLabels' => $assistantData->pluck('name'),
             'assistantValues' => $assistantData->pluck('total_members'),
         ]);
+    }
+
+    public function forms2026(){
+        return view('forms-2026');
     }
 }

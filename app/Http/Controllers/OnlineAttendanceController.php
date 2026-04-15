@@ -8,6 +8,7 @@ use App\Models\BussinessAssistant;
 use App\Models\OnlineAttendance;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 
 class OnlineAttendanceController extends Controller
@@ -15,7 +16,7 @@ class OnlineAttendanceController extends Controller
         /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         if (request()->ajax()) {
             $query = OnlineAttendance::orderBy('updated_at', 'desc');
@@ -55,8 +56,48 @@ class OnlineAttendanceController extends Controller
                 ->make(true);
         }
 
+          $startInput = $request->get('start_date');
+        $endInput = $request->get('end_date');
 
-        return view('online-attendance.index');
+        // Query untuk Chart: Hitung kehadiran per Nama BA
+        $chartQuery = OnlineAttendance::join('bussiness_assistants', 'online_attendances.bussiness_assistant_id', '=', 'bussiness_assistants.id')
+            ->select(
+                'bussiness_assistants.name',
+                DB::raw('count(*) as total')
+            );
+
+        if ($startInput && $endInput) {
+            $chartQuery->whereBetween('online_attendances.date', [$startInput, $endInput]);
+        }
+
+        $attendanceData = $chartQuery->groupBy('bussiness_assistants.name')
+                                    ->orderBy('total', 'DESC')
+                                    ->get();
+
+        // Data untuk Chart.js
+        $labels = $attendanceData->pluck('name'); // Nama-nama BA
+        $values = $attendanceData->pluck('total'); // Jumlah kehadirannya
+
+        $businessAssistants = BussinessAssistant::all();
+        $selectedBaId = $request->query('ba_id');
+        
+        $contributions = [];
+        if ($selectedBaId) {
+            $contributions = OnlineAttendance::where('bussiness_assistant_id', $selectedBaId)
+                ->where('date', '>=', now()->subYear())
+                ->select('date', DB::raw('count(*) as total'))
+                ->groupBy('date')
+                ->get()
+                ->mapWithKeys(function ($item) {
+                    // Paksa key menjadi string format 'YYYY-MM-DD'
+                    // Meskipun sudah di-cast ke date, kita ambil string-nya saja
+                    $dateKey = is_string($item->date) ? $item->date : $item->date->format('Y-m-d');
+                    return [$dateKey => $item->total];
+                });
+        }
+
+
+        return view('online-attendance.index', compact('businessAssistants', 'contributions', 'selectedBaId', 'labels', 'values', 'startInput', 'endInput'));
     }
 
     /**

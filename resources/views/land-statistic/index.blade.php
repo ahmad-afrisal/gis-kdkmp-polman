@@ -346,7 +346,7 @@
                         </div>
 
                         <div class="mt-2 text-right">
-                            <span class="text-sm font-medium text-cyan-700">{{ number_format($percentage, 1) }}%
+                            <span class="text-sm font-medium text-cyan-700">{{ number_format($percentageLand, 1) }}%
                                 Tercapai</span>
                         </div>
                     </div>

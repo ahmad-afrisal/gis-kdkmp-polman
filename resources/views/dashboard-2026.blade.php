@@ -1128,7 +1128,7 @@
                     </div>
 
                     {{-- Form Delapan --}}
-                    <div class="shadow overflow-hidden sm-rounded-md mt-5">
+                    <div class="shadow overflow-hidden sm-rounded-md mt-4">
                         <div class="px-4 py-5 bg-white sm:p-6">
                             <table id="formEight" class="display cell-border">
                                 <thead>
@@ -1154,7 +1154,7 @@
                     </div>
 
                     {{-- Form Sembilan --}}
-                    <div class="shadow overflow-hidden sm-rounded-md mt-5">
+                    <div class="shadow overflow-hidden sm-rounded-md mt-4">
                         <div class="px-4 py-5 bg-white sm:p-6">
                             <table id="formNine" class="display cell-border">
                                 <thead>
@@ -1179,7 +1179,7 @@
                     </div>
 
                     {{-- Form sepuluh --}}
-                    <div class="shadow overflow-hidden sm-rounded-md mt-5">
+                    <div class="shadow overflow-hidden sm-rounded-md mt-4">
                         <div class="px-4 py-5 bg-white sm:p-6">
                             <table id="formTen" class="display cell-border">
                                 <thead>
