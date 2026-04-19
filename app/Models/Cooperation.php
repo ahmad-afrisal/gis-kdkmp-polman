@@ -84,4 +84,9 @@ class Cooperation extends Model
     {
         return $this->hasMany(RecordFormSeven::class);
     }
+
+    public function equityFunds()
+    {
+        return $this->hasOne(MemberEquityFund::class, 'unit_id');
+    }
 }
