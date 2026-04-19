@@ -218,6 +218,20 @@
                 });
             </script>
 
+            <script>
+                function updateFileName(input) {
+                    const preview = document.getElementById('file-preview');
+                    const fileName = document.getElementById('file-name');
+
+                    if (input.files && input.files[0]) {
+                        fileName.textContent = input.files[0].name;
+                        preview.classList.remove('hidden');
+                    } else {
+                        preview.classList.add('hidden');
+                    }
+                }
+            </script>
+
         </x-slot>
 
         <main class="flex-1 overflow-y-auto">
@@ -269,6 +283,8 @@
                             class="bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-4 rounded shadow-lg">
                             + Tambah Kehadiran
                         </a>
+
+
                         {{-- <a href="{{ route('problems.export') }}"
                             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded shadow-lg">
                             <i class="fa fa-file-excel mr-2"></i> Export Excel
@@ -399,6 +415,93 @@
                                     kehadiran</p>
                             </div>
                         @endif
+                    </div>
+
+                    <form action="{{ route('attendances.import') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-center w-full">
+                                <label for="file_excel"
+                                    class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition duration-300">
+                                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                        <svg class="w-12 h-12 mb-4 text-gray-400" aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                            <path stroke="currentColor" stroke-linecap="round"
+                                                stroke-linejoin="round" stroke-width="2"
+                                                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                                        </svg>
+                                        <p class="mb-2 text-sm text-gray-500 font-semibold">Klik untuk upload atau
+                                            drag and drop</p>
+                                        <p class="text-xs text-gray-400 text-center px-4">XLSX, XLS, atau CSV (Maks.
+                                            10MB)<br>Pastikan format kolom sesuai dengan template laporan.</p>
+                                    </div>
+                                    <input id="file_excel" name="file_excel" type="file" class="hidden"
+                                        accept=".xlsx, .xls, .csv" onchange="updateFileName(this)" />
+                                </label>
+                            </div>
+
+                            <div id="file-preview"
+                                class="hidden flex items-center p-3 bg-blue-50 rounded-lg border border-blue-200">
+                                <svg class="w-5 h-5 text-blue-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z">
+                                    </path>
+                                </svg>
+                                <span id="file-name" class="text-sm text-blue-700 truncate"></span>
+                            </div>
+
+                            <button type="submit"
+                                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg shadow-md transition duration-200 ease-in-out transform hover:-translate-y-0.5 flex items-center justify-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                                </svg>
+                                Proses Impor Data
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="max-w-xl mx-auto mt-6 p-6 bg-white rounded-xl shadow-md border border-red-100">
+                        <div class="flex items-center mb-4 text-red-600">
+                            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                            <h3 class="text-lg font-bold">Hapus Data Per Bulan</h3>
+                        </div>
+
+                        <form action="{{ route('attendances.deleteByMonth') }}" method="POST"
+                            onsubmit="return confirm('Apakah Anda yakin ingin menghapus SEMUA data BA ini pada bulan terpilih? Tindakan ini tidak dapat dibatalkan.')">
+                            @csrf
+                            @method('DELETE')
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Business
+                                        Assistant</label>
+                                    <select name="bussiness_assistant_id" required
+                                        class="w-full rounded-lg border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
+                                        <option value="">-- Pilih BA --</option>
+                                        @foreach ($businessAssistants as $ba)
+                                            <option value="{{ $ba->id }}">{{ $ba->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Bulan &
+                                        Tahun</label>
+                                    <input type="month" name="month" required
+                                        class="w-full rounded-lg border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
+                                </div>
+                            </div>
+
+                            <button type="submit"
+                                class="mt-4 w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition">
+                                Hapus Data Permanen
+                            </button>
+                        </form>
                     </div>
                 </div>
 

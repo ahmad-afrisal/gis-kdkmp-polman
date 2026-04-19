@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\OnlineAttendanceStoreRequest;
 use App\Http\Requests\OnlineAttendanceUpdateRequest;
+use App\Imports\OnlineAttendanceImport;
 use App\Models\BussinessAssistant;
 use App\Models\OnlineAttendance;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\DataTables;
 
 class OnlineAttendanceController extends Controller
@@ -177,4 +179,40 @@ class OnlineAttendanceController extends Controller
     //     $fileName = 'Laporan_Permasalahan_' . date('Y-m-d_H-i') . '.xlsx';
     //     return Excel::download(new ProblemsExport, $fileName);
     // }
+
+    public function import(Request $request) 
+    {
+        $request->validate([
+            'file_excel' => 'required|mimes:xlsx,xls,csv'
+        ]);
+
+        try {
+            Excel::import(new OnlineAttendanceImport, $request->file('file_excel'));
+            return back()->with('success', 'Data Absensi Berhasil Diimpor!');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+    public function deleteByMonth(Request $request)
+    {
+        $request->validate([
+            'bussiness_assistant_id' => 'required|exists:bussiness_assistants,id',
+            'month' => 'required' // Format: YYYY-MM
+        ]);
+
+        // Pecah format YYYY-MM
+        [$year, $month] = explode('-', $request->month);
+
+        $deletedCount = \App\Models\OnlineAttendance::where('bussiness_assistant_id', $request->bussiness_assistant_id)
+            ->whereYear('date', $year)
+            ->whereMonth('date', $month)
+            ->delete();
+
+        if ($deletedCount > 0) {
+            return back()->with('success', "$deletedCount data absensi berhasil dihapus.");
+        }
+
+        return back()->with('error', "Tidak ada data yang ditemukan untuk periode tersebut.");
+    }
 }

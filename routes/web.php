@@ -169,6 +169,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('articles', ArticleController::class);
     Route::resource('announcements', AnnouncementController::class);
     Route::resource('commodities', CommodityController::class);
+    Route::delete('/online-attendances/delete-by-month', [OnlineAttendanceController::class, 'deleteByMonth'])->name('attendances.deleteByMonth');
+    Route::post('/online-attendances/import', [OnlineAttendanceController::class, 'import'])->name('attendances.import');
     Route::resource('online-attendances', OnlineAttendanceController::class);
     Route::post(
         '/form-seven/record-all',
