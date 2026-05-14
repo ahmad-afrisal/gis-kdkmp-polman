@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdministrationCompletenesController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\BussinessAssistantController;
@@ -45,6 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/2026/form-eleven', [DashboardController::class, 'formEleven'])->name('dashboard.form-eleven');
     Route::get('/rat/2025', [DashboardController::class, 'rat2025'])->name('rat.2025');
     Route::get('/cooperation-members', [DashboardController::class, 'cooperationMember'])->name('cooperation-members');
+    Route::get('/administrations', [AdministrationCompletenesController::class, 'index'])->name('administrations');
 
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

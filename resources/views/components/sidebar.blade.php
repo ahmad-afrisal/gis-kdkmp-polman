@@ -62,6 +62,14 @@
                             <i data-lucide="calendar" class="w-3 h-3 mr-2"></i> Statistik Pembangunan
                         </a>
                     </li>
+
+                    <li>
+                        <a href="{{ route('administrations') }}"
+                            class="flex items-center pl-14 py-2.5 text-sm transition hover:text-white
+                {{ request()->routeIs('administrations') ? 'text-white font-bold bg-green-900/30' : 'text-green-200' }}">
+                            <i data-lucide="calendar" class="w-3 h-3 mr-2"></i> Kelengkapan Administrasi
+                        </a>
+                    </li>
                 </ul>
             </li>
             <li>
