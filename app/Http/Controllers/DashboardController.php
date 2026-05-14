@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\FormEightExport;
+use App\Exports\FormNineExport;
 use App\Models\BussinessAssistant;
 use App\Models\Cooperation;
 use App\Models\District;
@@ -14,6 +16,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
 
 class DashboardController extends Controller
@@ -80,7 +83,7 @@ class DashboardController extends Controller
 
         $landNo = $cooperationCount - $landYes;
 
-        // NPWP
+
         $bankYa = Village::whereHas('cooperation.formThree', function ($q) {
             $q->whereNotNull('cooperative_bank_account')->where('cooperative_bank_account', '!=', '');
         })->count();
@@ -384,9 +387,10 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function dashboard2026() {
+    public function dashboard2026()
+    {
 
-        
+
         // Data Untuk Donut Chart
         $cooperationCount = Cooperation::count();
 
@@ -407,7 +411,7 @@ class DashboardController extends Controller
             $q->where('rat', 1);
         })->count();
         $ratNo = $cooperationCount - $ratYes;
-        
+
 
         $landReadinessYes = Cooperation::whereHas('formEight', function ($q) {
             $q->where('land_readiness', 1);
@@ -440,7 +444,7 @@ class DashboardController extends Controller
         $storeDevelopmentOn = Cooperation::whereHas('formEight', function ($q) {
             $q->where('store_development', 1);
         })->count();
-        $storeDevelopmentNo = $cooperationCount - ($storeDevelopmentYes+$storeDevelopmentOn);
+        $storeDevelopmentNo = $cooperationCount - ($storeDevelopmentYes + $storeDevelopmentOn);
 
 
         // Status Gerai
@@ -450,7 +454,7 @@ class DashboardController extends Controller
         $outletStatusOn = Cooperation::whereHas('formNine', function ($q) {
             $q->where('outlet_status', 1);
         })->count();
-        $outletStatusNo = $cooperationCount - ($outletStatusYes+$outletStatusOn);
+        $outletStatusNo = $cooperationCount - ($outletStatusYes + $outletStatusOn);
 
         // Panduan Operational
         $operationalGuideYes = Cooperation::whereHas('formNine', function ($q) {
@@ -508,9 +512,9 @@ class DashboardController extends Controller
 
         $reportOnes = $districts->map(function ($district) {
             $villages = $district->villages;
-            
+
             // Flatten agar mendapatkan semua data cooperation dalam satu list
-            $coops = $villages->pluck('cooperation')->filter(); 
+            $coops = $villages->pluck('cooperation')->filter();
 
             return [
                 'district'       => $district->name,
@@ -589,12 +593,12 @@ class DashboardController extends Controller
 
 
                 // Profile Update
-                'profile_update_yes'  => $coops->where('formTen.profile_update', 1)->count(), 
-                'profile_update_no' => $coops->where('formTen.profile_update', 0)->count(), 
+                'profile_update_yes'  => $coops->where('formTen.profile_update', 1)->count(),
+                'profile_update_no' => $coops->where('formTen.profile_update', 0)->count(),
 
                 // Status Gerai
-                'village_potential_yes'  => $coops->where('formTen.village_potential', 1)->count(), 
-                'village_potential_no' => $coops->where('formTen.village_potential', 0)->count(), 
+                'village_potential_yes'  => $coops->where('formTen.village_potential', 1)->count(),
+                'village_potential_no' => $coops->where('formTen.village_potential', 0)->count(),
 
                 // Gerai yang ada
                 'grocery_outlet' => $coops->where('formTen.grocery_outlet', 1)->count(),
@@ -606,8 +610,8 @@ class DashboardController extends Controller
                 'other_businesses_outlet' => $coops->where('formTen.other_businesses_outlet', 1)->count(),
 
                 // RAT
-                'rat_yes'  => $coops->where('formTen.rat', 1)->count(), 
-                'rat_no' => $coops->where('formTen.rat', 0)->count(), 
+                'rat_yes'  => $coops->where('formTen.rat', 1)->count(),
+                'rat_no' => $coops->where('formTen.rat', 0)->count(),
 
 
                 //  jumlah karyawan 2025
@@ -635,19 +639,19 @@ class DashboardController extends Controller
 
 
                 // Profile Update
-                'potential_partners_bumn'  => $coops->where('formEleven.potential_partners', 1)->count(), 
-                'potential_partners_non_bumn' => $coops->where('formEleven.potential_partners', 0)->count(), 
+                'potential_partners_bumn'  => $coops->where('formEleven.potential_partners', 1)->count(),
+                'potential_partners_non_bumn' => $coops->where('formEleven.potential_partners', 0)->count(),
 
                 // Kesiapan Lahan
                 'partnership_status_no'  => $coops->where('formEleven.partnership_status', 0)->count(), // belum
                 'partnership_status_on' => $coops->where('formEleven.partnership_status', 1)->count(), // selesai
                 'partnership_status_yes'  => $coops->where('formEleven.partnership_status', 2)->count(), // tidak terbangun
 
-                'output_yes'  => $coops->where('formEleven.output', 1)->count(), 
-                'output_no' => $coops->where('formEleven.output', 0)->count(), 
+                'output_yes'  => $coops->where('formEleven.output', 1)->count(),
+                'output_no' => $coops->where('formEleven.output', 0)->count(),
 
 
-                
+
 
             ];
         });
@@ -656,52 +660,57 @@ class DashboardController extends Controller
         // Form Delapan
 
         return view('dashboard-2026', compact(
-            'ratYes', 
-            'ratNo', 
-            'profileUpdateYes', 
-            'profileUpdateNo', 
-            'villagePotentialYes', 
-            'villagePotentialNo', 
-            'landReadinessYes', 
-            'landReadinessNo', 
-            'operationalGuideYes', 
-            'operationalGuideNo', 
-            'displayCaseYes', 
+            'ratYes',
+            'ratNo',
+            'profileUpdateYes',
+            'profileUpdateNo',
+            'villagePotentialYes',
+            'villagePotentialNo',
+            'landReadinessYes',
+            'landReadinessNo',
+            'operationalGuideYes',
+            'operationalGuideNo',
+            'displayCaseYes',
             'displayCaseNo',
-            'vehicleYes', 
+            'vehicleYes',
             'vehicleNo',
-            'tableAndChairYes', 
+            'tableAndChairYes',
             'tableAndChairNo',
-            'computerYes', 
+            'computerYes',
             'computerNo',
-            'outputYes', 
+            'outputYes',
             'outputNo',
-            'storeDevelopmentYes', 
+            'storeDevelopmentYes',
             'storeDevelopmentOn',
             'storeDevelopmentNo',
-            'outletStatusYes', 
+            'outletStatusYes',
             'outletStatusOn',
             'outletStatusNo',
-            'groceryOutletYes', 
+            'groceryOutletYes',
             'groceryOutletNo',
-            'pharmacyOutletYes', 
+            'pharmacyOutletYes',
             'pharmacyOutletNo',
-            'warehousingOutletYes', 
+            'warehousingOutletYes',
             'warehousingOutletNo',
-            'clinicOutletYes', 
+            'clinicOutletYes',
             'clinicOutletNo',
-            'logisticsOutletYes', 
+            'logisticsOutletYes',
             'logisticsOutletNo',
-            'uspOutletYes', 
+            'uspOutletYes',
             'uspOutletNo',
-            'otherBusinessessOutletYes', 
+            'otherBusinessessOutletYes',
             'otherBusinessessOutletNo',
-            'reportOnes', 'reportTwos', 'reportThrees', 'reportFours'));
+            'reportOnes',
+            'reportTwos',
+            'reportThrees',
+            'reportFours'
+        ));
     }
 
-    public function formEight() {
+    public function formEight()
+    {
         if (request()->ajax()) {
-           $query = Cooperation::with([
+            $query = Cooperation::with([
                 'formEight:id,cooperation_id,land_readiness,store_development,vehicle,table_and_chair,display_case,computer,problem,information',
                 'bussinessAssistant:id,name',
                 'village:id,district_id',
@@ -796,23 +805,24 @@ class DashboardController extends Controller
                     return optional($item->formEight)->information ?? '-';
                 })
 
-                ->rawColumns(['land_readiness', 'store_development', 'business_assistant', 'district', 'vehicle', 'table_and_chair', 'display_case', 'computer', 'problem', 'information'   ])
+                ->rawColumns(['land_readiness', 'store_development', 'business_assistant', 'district', 'vehicle', 'table_and_chair', 'display_case', 'computer', 'problem', 'information'])
                 ->make(true);
         }
     }
 
-    public function formNine() {
+    public function formNine()
+    {
         if (request()->ajax()) {
             $query = Cooperation::with([
-            'formNine:id,cooperation_id,outlet_status,number_of_employees_2025,number_of_employees_2026,outlet_operations_guide,problem,information',
-            'bussinessAssistant:id,name',
-            'village:id,district_id',
-            'village.district:id,name'
-        ])->select('id', 'name', 'bussiness_assistant_id', 'village_id');
+                'formNine:id,cooperation_id,outlet_status,number_of_employees_2025,number_of_employees_2026,outlet_operations_guide,problem,information',
+                'bussinessAssistant:id,name',
+                'village:id,district_id',
+                'village.district:id,name'
+            ])->select('id', 'name', 'bussiness_assistant_id', 'village_id');
 
 
             return DataTables::of($query)
-                
+
                 ->addColumn('business_assistant', function ($item) {
                     return $item->bussinessAssistant->name ?? '-';
                 })
@@ -862,80 +872,103 @@ class DashboardController extends Controller
                     return optional($item->formNine)->information ?? '-';
                 })
                 // 2. Gunakan rawColumns hanya untuk yang mengandung HTML
-            ->rawColumns(['outlet_operations_guide', 'outlet_status'])
+                ->rawColumns(['outlet_operations_guide', 'outlet_status'])
 
                 // 3. Batasi output JSON agar memori hemat (PENTING)
-            ->only([
-                'name',
-                'business_assistant',
-                'district',
-                'outlet_status',
-                'number_of_employees_2025',
-                'number_of_employees_2026',
-                'outlet_operations_guide',
-                'problem',
-                'information'
-            ])
+                ->only([
+                    'name',
+                    'business_assistant',
+                    'district',
+                    'outlet_status',
+                    'number_of_employees_2025',
+                    'number_of_employees_2026',
+                    'outlet_operations_guide',
+                    'problem',
+                    'information'
+                ])
                 ->make(true);
         }
     }
 
-   public function formTen() {
-    if (request()->ajax()) {
-        $query = Cooperation::with([
-            'formTen:id,cooperation_id,profile_update,village_potential,grocery_outlet,pharmacy_outlet,warehousing_outlet,clinic_outlet,logistics_outlet,usp_outlet,other_businesses_outlet,rat,initial_membership,addition_of_members,problem,information',
-            'bussinessAssistant:id,name',
-            'village:id,district_id',
-            'village.district:id,name'
-        ])->select('id', 'name', 'bussiness_assistant_id', 'village_id');
+    public function formTen()
+    {
+        if (request()->ajax()) {
+            $query = Cooperation::with([
+                'formTen:id,cooperation_id,profile_update,village_potential,grocery_outlet,pharmacy_outlet,warehousing_outlet,clinic_outlet,logistics_outlet,usp_outlet,other_businesses_outlet,rat,initial_membership,addition_of_members,problem,information',
+                'bussinessAssistant:id,name',
+                'village:id,district_id',
+                'village.district:id,name'
+            ])->select('id', 'name', 'bussiness_assistant_id', 'village_id');
 
-        return DataTables::of($query)
-            ->addColumn('business_assistant', fn($item) => $item->bussinessAssistant->name ?? '-')
-            ->addColumn('district', fn($item) => $item->village->district->name ?? '-')
-            
-            // Optimasi: Gunakan loop untuk kolom status yang logikanya sama
-            ->editColumn('profile_update', fn($item) => $this->formatStatus($item->formTen->profile_update ?? false))
-            ->editColumn('village_potential', fn($item) => $this->formatStatus($item->formTen->village_potential ?? false))
-            ->editColumn('grocery_outlet', fn($item) => $this->formatStatus($item->formTen->grocery_outlet ?? false))
-            ->editColumn('pharmacy_outlet', fn($item) => $this->formatStatus($item->formTen->pharmacy_outlet ?? false))
-            ->editColumn('warehousing_outlet', fn($item) => $this->formatStatus($item->formTen->warehousing_outlet ?? false))
-            ->editColumn('clinic_outlet', fn($item) => $this->formatStatus($item->formTen->clinic_outlet ?? false))
-            ->editColumn('logistics_outlet', fn($item) => $this->formatStatus($item->formTen->logistics_outlet ?? false))
-            ->editColumn('usp_outlet', fn($item) => $this->formatStatus($item->formTen->usp_outlet ?? false))
-            ->editColumn('other_businesses_outlet', fn($item) => $this->formatStatus($item->formTen->other_businesses_outlet ?? false))
-            ->editColumn('rat', fn($item) => $this->formatStatus($item->formTen->rat ?? false))
-            
-            ->addColumn('initial_membership', fn($item) => $item->formTen->initial_membership ?? '-')
-            ->addColumn('addition_of_members', fn($item) => $item->formTen->addition_of_members ?? '-')
-            ->addColumn('problem', fn($item) => $item->formTen->problem ?? '-')
-            ->addColumn('information', fn($item) => $item->formTen->information ?? '-')
+            return DataTables::of($query)
+                ->addColumn('business_assistant', fn($item) => $item->bussinessAssistant->name ?? '-')
+                ->addColumn('district', fn($item) => $item->village->district->name ?? '-')
 
-            ->rawColumns([
-                'profile_update', 'village_potential', 'grocery_outlet', 'pharmacy_outlet', 
-                'warehousing_outlet', 'clinic_outlet', 'logistics_outlet', 'usp_outlet', 
-                'other_businesses_outlet', 'rat'
-            ])
-            ->only([
-                'name', 'business_assistant', 'district', 'profile_update', 'village_potential',
-                'grocery_outlet', 'pharmacy_outlet', 'warehousing_outlet', 'clinic_outlet',
-                'logistics_outlet', 'usp_outlet', 'other_businesses_outlet', 'rat',
-                'initial_membership', 'addition_of_members', 'problem', 'information'
-            ])
-            ->make(true);
+                // Optimasi: Gunakan loop untuk kolom status yang logikanya sama
+                ->editColumn('profile_update', fn($item) => $this->formatStatus($item->formTen->profile_update ?? false))
+                ->editColumn('village_potential', fn($item) => $this->formatStatus($item->formTen->village_potential ?? false))
+                ->editColumn('grocery_outlet', fn($item) => $this->formatStatus($item->formTen->grocery_outlet ?? false))
+                ->editColumn('pharmacy_outlet', fn($item) => $this->formatStatus($item->formTen->pharmacy_outlet ?? false))
+                ->editColumn('warehousing_outlet', fn($item) => $this->formatStatus($item->formTen->warehousing_outlet ?? false))
+                ->editColumn('clinic_outlet', fn($item) => $this->formatStatus($item->formTen->clinic_outlet ?? false))
+                ->editColumn('logistics_outlet', fn($item) => $this->formatStatus($item->formTen->logistics_outlet ?? false))
+                ->editColumn('usp_outlet', fn($item) => $this->formatStatus($item->formTen->usp_outlet ?? false))
+                ->editColumn('other_businesses_outlet', fn($item) => $this->formatStatus($item->formTen->other_businesses_outlet ?? false))
+                ->editColumn('rat', fn($item) => $this->formatStatus($item->formTen->rat ?? false))
+
+                ->addColumn('initial_membership', fn($item) => $item->formTen->initial_membership ?? '-')
+                ->addColumn('addition_of_members', fn($item) => $item->formTen->addition_of_members ?? '-')
+                ->addColumn('problem', fn($item) => $item->formTen->problem ?? '-')
+                ->addColumn('information', fn($item) => $item->formTen->information ?? '-')
+
+                ->rawColumns([
+                    'profile_update',
+                    'village_potential',
+                    'grocery_outlet',
+                    'pharmacy_outlet',
+                    'warehousing_outlet',
+                    'clinic_outlet',
+                    'logistics_outlet',
+                    'usp_outlet',
+                    'other_businesses_outlet',
+                    'rat'
+                ])
+                ->only([
+                    'name',
+                    'business_assistant',
+                    'district',
+                    'profile_update',
+                    'village_potential',
+                    'grocery_outlet',
+                    'pharmacy_outlet',
+                    'warehousing_outlet',
+                    'clinic_outlet',
+                    'logistics_outlet',
+                    'usp_outlet',
+                    'other_businesses_outlet',
+                    'rat',
+                    'initial_membership',
+                    'addition_of_members',
+                    'problem',
+                    'information'
+                ])
+                ->make(true);
+        }
     }
-}
 
-/**
- * Helper Privat untuk menyeragamkan badge status
- */
-private function formatStatus($status) {
-    $color = $status ? 'green' : 'red';
-    $label = $status ? 'Sudah' : 'Belum';
-    return '<span class="bg-'.$color.'-500 text-white px-2 py-1 rounded text-xs">'.$label.'</span>';
-}
-    public function rat2025(){
+    /**
+     * Helper Privat untuk menyeragamkan badge status
+     */
+    private function formatStatus($status)
+    {
+        $color = $status ? 'green' : 'red';
+        $label = $status ? 'Sudah' : 'Belum';
+        return '<span class="bg-' . $color . '-500 text-white px-2 py-1 rounded text-xs">' . $label . '</span>';
+    }
+    public function rat2025()
+    {
 
-         if (request()->ajax()) {
+        if (request()->ajax()) {
             $query = FormTen::with([
                 'cooperation:id,name,bussiness_assistant_id,village_id',
                 'cooperation.village:id,name,district_id',
@@ -948,7 +981,7 @@ private function formatStatus($status) {
                 ->addColumn('ba', fn($item) => $item->cooperation->bussinessAssistant->name ?? '-')
                 ->addColumn('district', fn($item) => $item->cooperation->village->district->name ?? '-')
 
-                  ->addColumn('rat', function ($item) {
+                ->addColumn('rat', function ($item) {
 
                     if ($item->rat) {
                         return '<span class="bg-green-500 text-white px-2 py-1 rounded">
@@ -971,35 +1004,34 @@ private function formatStatus($status) {
         $percentage = $totalCooperation > 0 ? ($totalRat / $totalCooperation) * 100 : 0;
 
         // 1. Ambil data Statistik Kecamatan
-    // Berdasarkan Kecamatan (Sekarang sudah bisa panggil cooperations)
+        // Berdasarkan Kecamatan (Sekarang sudah bisa panggil cooperations)
         $districtStats = District::withCount(['cooperations as total_rat' => function ($query) {
             $query->whereHas('formTen', function ($q) {
                 $q->where('rat', true);
             });
         }])->get();
-    
+
 
         // 2. Ambil data Statistik Business Assistant
-            $assistantData = BussinessAssistant::withCount(['cooperations as total_rat' => function ($query) {
-                $query->whereHas('formTen', fn($q) => $q->where('rat', true));
-            }])->get();
+        $assistantData = BussinessAssistant::withCount(['cooperations as total_rat' => function ($query) {
+            $query->whereHas('formTen', fn($q) => $q->where('rat', true));
+        }])->get();
 
         return view('rat-2025', [
             // $districtStats => 'districtStats',
-            'totalCooperation' => $totalCooperation, 
-            'totalRat' => $totalRat, 
+            'totalCooperation' => $totalCooperation,
+            'totalRat' => $totalRat,
             'percentage' => $percentage,
 
             // Data untuk Chart Kecamatan
             'districtLabels' => $districtStats->pluck('name'),
             'districtValues' => $districtStats->pluck('total_rat'),
 
-                // Data untuk Chart Business Assistant
+            // Data untuk Chart Business Assistant
             'assistantLabels' => $assistantData->pluck('name'),
             'assistantValues' => $assistantData->pluck('total_rat'),
 
         ]);
-
     }
 
     public function cooperationMember()
@@ -1021,24 +1053,24 @@ private function formatStatus($status) {
         }
 
         // Data Card
-                $totalStats = FormTen::select(
+        $totalStats = FormTen::select(
             DB::raw('SUM(initial_membership) as total_initial'),
             DB::raw('SUM(addition_of_members) as total_addition')
         )->first();
 
-       // 1. Ambil data Statistik Kecamatan & Total Anggota
+        // 1. Ambil data Statistik Kecamatan & Total Anggota
         $districtStats = District::withSum(['cooperations as total_members' => function ($query) {
-        $query->join('form_tens', 'cooperations.id', '=', 'form_tens.cooperation_id') // Sesuaikan foreign key-nya
+            $query->join('form_tens', 'cooperations.id', '=', 'form_tens.cooperation_id') // Sesuaikan foreign key-nya
                 ->select(DB::raw('SUM(COALESCE(form_tens.initial_membership, 0) + COALESCE(form_tens.addition_of_members, 0))'));
         }], 'id') // Parameter kedua diisi 'id' saja sebagai placeholder
-        ->get();
+            ->get();
 
         // 2. Ambil data Statistik Business Assistant & Total Anggota
         $assistantData = BussinessAssistant::withSum(['cooperations as total_members' => function ($query) {
-        $query->join('form_tens', 'cooperations.id', '=', 'form_tens.cooperation_id')
+            $query->join('form_tens', 'cooperations.id', '=', 'form_tens.cooperation_id')
                 ->select(DB::raw('SUM(COALESCE(form_tens.initial_membership, 0) + COALESCE(form_tens.addition_of_members, 0))'));
         }], 'id')
-        ->get();
+            ->get();
 
         return view('cooperation-member', [
 
@@ -1057,7 +1089,19 @@ private function formatStatus($status) {
         ]);
     }
 
-    public function forms2026(){
+    public function forms2026()
+    {
         return view('forms-2026');
+    }
+
+
+    public function formNineExport()
+    {
+        return Excel::download(new FormNineExport, 'form-tiga-2026.xlsx');
+    }
+
+    public function formEightExport()
+    {
+        return Excel::download(new FormEightExport, 'form-satu-2026.xlsx');
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Exports;
 
 use App\Models\FormTen;
@@ -24,7 +25,20 @@ class FormTenExport implements FromCollection, WithMapping, WithHeadings
             'Nama KDKMP',
             'Kecamatan',
             'Nama BA',
-            'Status RAT',
+            'Update Profil KDKMP',
+            'Potensi Desa',
+            'Gerai Sembako',
+            'Gerai Apotek',
+            'Gerai Pergudangan',
+            'Gerai Klinik',
+            'Gerai Logistik',
+            'Gerai USP',
+            'Gerai Usaha Lain',
+            'RAT',
+            'Jumlah Anggota Awal',
+            'Penambahan Anggota',
+            'Kendala',
+            'Keterangan'
         ];
     }
 
@@ -33,10 +47,23 @@ class FormTenExport implements FromCollection, WithMapping, WithHeadings
     {
         return [
             ++$this->rowNumber, // No Urut
-            $row->cooperation->name ?? '-', 
+            $row->cooperation->name ?? '-',
             $row->cooperation->village->district->name,
             $row->cooperation->bussinessAssistant->name,
+            $row->profile_update ? 'Sudah' : 'Belum', // Mengubah Boolean ke Iya/Tidak
+            $row->village_potential ? 'Sudah' : 'Belum', // Mengubah Boolean ke Iya/Tidak
+            $row->grocery_outlet  ? 'Iya' : 'Tidak', // Mengubah Boolean ke Iya/Tidak
+            $row->pharmacy_outlet  ? 'Iya' : 'Tidak', // Mengubah Boolean ke Iya/Tidak
+            $row->warehousing_outlet  ? 'Iya' : 'Tidak', // Mengubah Boolean ke Iya/Tidak
+            $row->clinic_outlet  ? 'Iya' : 'Tidak', // Mengubah Boolean ke Iya/Tidak
+            $row->logistics_outlet  ? 'Iya' : 'Tidak', // Mengubah Boolean ke Iya/Tidak
+            $row->usp_outlet  ? 'Iya' : 'Tidak', // Mengubah Boolean ke Iya/Tidak
+            $row->other_businesses_outlet  ? 'Iya' : 'Tidak', // Mengubah Boolean ke Iya/Tidak
             $row->rat ? 'Sudah' : 'Belum', // Mengubah Boolean ke Iya/Tidak
+            $row->initial_membership, // Mengubah Boolean ke Iya/Tidak
+            $row->addition_of_members, // Mengubah Boolean ke Iya/Tidak
+            $row->problem, // Mengubah Boolean ke Iya/Tidak
+            $row->information, // Mengubah Boolean ke Iya/Tidak
         ];
     }
 }

@@ -151,7 +151,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('form-two/export', [BussinessAssistantController::class, 'formTwoExport'])->name('bussiness-assistants.form-two.export');
     Route::get('form-rat/export', [BussinessAssistantController::class, 'formRatExport'])->name('bussiness-assistants.form-rat.export');
-    
+    Route::get('form-nine/export', [DashboardController::class, 'formNineExport'])->name('dashboard.form-nine.export');
+    Route::get('form-eight/export', [DashboardController::class, 'formEightExport'])->name('dashboard.form-eight.export');
 
     Route::get('land-statistics/export', [LandStatisticController::class, 'export'])->name('land-statistic.export');
     Route::resource('land-statistics', LandStatisticController::class);

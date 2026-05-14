@@ -907,6 +907,7 @@
                     </div>
 
                     {{-- Form 3  --}}
+
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6 mt-6">
 
                         <div class="bg-white shadow-lg rounded-xl overflow-hidden border border-gray-200">
@@ -1128,6 +1129,8 @@
                     </div>
 
                     {{-- Form Delapan --}}
+                    <a href="{{ route('dashboard.form-eight.export') }}"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded shadow-lg">Export</a>
                     <div class="shadow overflow-hidden sm-rounded-md mt-4">
                         <div class="px-4 py-5 bg-white sm:p-6">
                             <table id="formEight" class="display cell-border">
@@ -1154,6 +1157,8 @@
                     </div>
 
                     {{-- Form Sembilan --}}
+                    <a href="{{ route('dashboard.form-nine.export') }}"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded shadow-lg">Export</a>
                     <div class="shadow overflow-hidden sm-rounded-md mt-4">
                         <div class="px-4 py-5 bg-white sm:p-6">
                             <table id="formNine" class="display cell-border">
@@ -1179,6 +1184,9 @@
                     </div>
 
                     {{-- Form sepuluh --}}
+
+                    <a href="{{ route('bussiness-assistants.form-rat.export') }}"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded shadow-lg">Export</a>
                     <div class="shadow overflow-hidden sm-rounded-md mt-4">
                         <div class="px-4 py-5 bg-white sm:p-6">
                             <table id="formTen" class="display cell-border">
