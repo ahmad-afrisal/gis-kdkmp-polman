@@ -16,8 +16,7 @@ class FormSixExport implements FromCollection, WithHeadings
      */
     public function collection()
     {
-        $data = FormSix::with('cooperation')
-            ->whereNotNull('asset')->get();
+        $data = FormSix::with('cooperation')->get();
         $no = 1;
         return $data->map(function ($item) use (&$no) {
             return [

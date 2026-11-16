@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\FormEightExport;
 use App\Exports\FormNineExport;
+use App\Exports\FormThreeExport;
 use App\Models\BussinessAssistant;
 use App\Models\Cooperation;
 use App\Models\District;
@@ -1098,6 +1099,11 @@ class DashboardController extends Controller
     public function formNineExport()
     {
         return Excel::download(new FormNineExport, 'form-tiga-2026.xlsx');
+    }
+
+    public function formThreeExport()
+    {
+        return Excel::download(new FormThreeExport, 'form-tiga-2025.xlsx');
     }
 
     public function formEightExport()

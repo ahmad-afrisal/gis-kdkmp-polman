@@ -246,7 +246,10 @@
                     </div>
 
 
-
+                    <a href="{{ route('dashboard.form-three.export') }}"
+                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+                        Export Excel
+                    </a>
 
                     <div class="shadow overflow-hidden sm-rounded-md">
 

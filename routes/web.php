@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdministrationCompletenesController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\BusinessActivityController;
 use App\Http\Controllers\BussinessAssistantController;
 use App\Http\Controllers\CommodityController;
 use App\Http\Controllers\ContactManagementController;
@@ -153,6 +154,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('form-two/export', [BussinessAssistantController::class, 'formTwoExport'])->name('bussiness-assistants.form-two.export');
     Route::get('form-rat/export', [BussinessAssistantController::class, 'formRatExport'])->name('bussiness-assistants.form-rat.export');
+    Route::get('form-three/export', [DashboardController::class, 'formThreeExport'])->name('dashboard.form-three.export');
     Route::get('form-nine/export', [DashboardController::class, 'formNineExport'])->name('dashboard.form-nine.export');
     Route::get('form-eight/export', [DashboardController::class, 'formEightExport'])->name('dashboard.form-eight.export');
 
@@ -179,6 +181,9 @@ Route::middleware('auth')->group(function () {
         '/form-seven/record-all',
         [RecordFormSevenController::class, 'storeAllRecord']
     )->name('form-seven.record.all');
+
+
+    Route::resource('business-activities', BusinessActivityController::class);
 });
 
 require __DIR__ . '/auth.php';
