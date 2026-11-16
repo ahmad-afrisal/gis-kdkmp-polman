@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CooperativeStatusStoreRequest;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
+use App\Models\CooperativeStatus;
+
 
 class CooperativeStatusController extends Controller
 {
@@ -12,7 +16,7 @@ class CooperativeStatusController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-            $query = Category::query(); // ambil data farmer + user
+            $query = CooperativeStatus::query();
 
             return DataTables::of($query)
                 ->addColumn('is_active', function ($item) {
@@ -46,19 +50,19 @@ class CooperativeStatusController extends Controller
      */
     public function create()
     {
-        return view('category.create');
+        return view('cooperative-status.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CategoryStoreRequest $request)
+    public function store(CooperativeStatusStoreRequest $request)
     {
         $data = $request->validated();
 
-        Category::create($data);
+        CooperativeStatus::create($data);
 
-        return redirect()->route('categories.index')->with('success', 'Kategori berhasil dibuat.');
+        return redirect()->route('cooperative-statuses.index')->with('success', 'Status Koperasi berhasil dibuat.');
     }
 
     /**

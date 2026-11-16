@@ -47,11 +47,11 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('business-activities.store') }}" method="post" enctype="multipart/form-data"
+                    <form action="{{ route('coperative-statuses.store') }}" method="post" enctype="multipart/form-data"
                         class="bg-white p-6 rounded-lg shadow-md">
                         @csrf
                         <div class="mb-4">
-                            <label class="block text-gray-700 font-bold mb-2">Nama Kegiatan</label>
+                            <label class="block text-gray-700 font-bold mb-2">Status Koperasi</label>
                             <input type="text" name="name" value="{{ old('name') }}"
                                 class="block w-full bg-gray-100 text-gray-700 border border-gray-300 rounded-lg py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-green-500">
                         </div>

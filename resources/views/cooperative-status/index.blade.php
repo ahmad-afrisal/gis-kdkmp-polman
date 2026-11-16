@@ -7,21 +7,6 @@
         <!-- Overlay (mobile only) -->
         <div x-show="open" @click="open=false" class="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"></div>
 
-        {{-- LEAFLET CSS --}}
-        <x-slot name="style">
-            <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-            <style>
-                #map {
-                    width: 100%;
-                    height: 500px;
-                    margin-top: 20px;
-                    border-radius: 8px;
-                    overflow: hidden;
-                }
-            </style>
-        </x-slot>
-
-
         <x-slot name="script">
             {{-- DataTable JS --}}
             <script>
@@ -72,15 +57,15 @@
                         <span>›</span>
                         <span class="text-gray-500">Master Data</span>
                         <span>›</span>
-                        <span class="text-gray-500">Kegiatan Usaha</span>
+                        <span class="text-gray-500">Status Koperasi</span>
 
                     </nav>
 
                     {{-- Tombol tambah --}}
                     <div class="mb-10">
-                        <a href="{{ route('business-activities.create') }}"
+                        <a href="{{ route('cooperative-statuses.create') }}"
                             class="bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-4 rounded shadow-lg">
-                            + Tambah Kegiatan Usaha
+                            + Tambah Status Koperasi
                         </a>
                     </div>
 
