@@ -89,9 +89,9 @@
                     x-transition:enter-end="opacity-100 translate-y-0" class="bg-green-800/50">
 
                     <li>
-                        <a href="{{ route('dashboard') }}" {{-- Pastikan route ini benar --}}
+                        <a href="{{ route('cooperative-statuses.index') }}"
                             class="flex items-center pl-14 py-2.5 text-sm transition hover:text-white
-                {{ request()->routeIs('dashboard') ? 'text-white font-bold bg-green-900/30' : 'text-green-200' }}">
+                {{ request()->routeIs('cooperative-statuses.index') ? 'text-white font-bold bg-green-900/30' : 'text-green-200' }}">
                             <i data-lucide="calendar" class="w-3 h-3 mr-2"></i> Status Koperasi
                         </a>
                     </li>

@@ -8,6 +8,7 @@ use App\Http\Controllers\BussinessAssistantController;
 use App\Http\Controllers\CommodityController;
 use App\Http\Controllers\ContactManagementController;
 use App\Http\Controllers\CooperationController;
+use App\Http\Controllers\CooperativeStatusController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\DocumentationPmoController;
@@ -187,6 +188,7 @@ Route::middleware('auth')->group(function () {
 
 
     Route::resource('business-activities', BusinessActivityController::class);
+    Route::resource('cooperative-statuses', CooperativeStatusController::class);
 });
 
 require __DIR__ . '/auth.php';
