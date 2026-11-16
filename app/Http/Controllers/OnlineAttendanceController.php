@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\OnlineAttendanceStoreRequest;
 use App\Http\Requests\OnlineAttendanceUpdateRequest;
+use App\Imports\OnlineAttendanceImport;
 use App\Models\BussinessAssistant;
 use App\Models\OnlineAttendance;
 use Carbon\Carbon;
@@ -79,6 +80,8 @@ class OnlineAttendanceController extends Controller
                 ->make(true);
         }
 
+          $startInput = $request->get('start_date');
+        $endInput = $request->get('end_date');
 
         return view('online-attendance.index', compact('labels', 'values', 'startInput', 'endInput'));
     }
@@ -160,4 +163,40 @@ class OnlineAttendanceController extends Controller
     //     $fileName = 'Laporan_Permasalahan_' . date('Y-m-d_H-i') . '.xlsx';
     //     return Excel::download(new ProblemsExport, $fileName);
     // }
+
+    public function import(Request $request) 
+    {
+        $request->validate([
+            'file_excel' => 'required|mimes:xlsx,xls,csv'
+        ]);
+
+        try {
+            Excel::import(new OnlineAttendanceImport, $request->file('file_excel'));
+            return back()->with('success', 'Data Absensi Berhasil Diimpor!');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+    public function deleteByMonth(Request $request)
+    {
+        $request->validate([
+            'bussiness_assistant_id' => 'required|exists:bussiness_assistants,id',
+            'month' => 'required' // Format: YYYY-MM
+        ]);
+
+        // Pecah format YYYY-MM
+        [$year, $month] = explode('-', $request->month);
+
+        $deletedCount = \App\Models\OnlineAttendance::where('bussiness_assistant_id', $request->bussiness_assistant_id)
+            ->whereYear('date', $year)
+            ->whereMonth('date', $month)
+            ->delete();
+
+        if ($deletedCount > 0) {
+            return back()->with('success', "$deletedCount data absensi berhasil dihapus.");
+        }
+
+        return back()->with('error', "Tidak ada data yang ditemukan untuk periode tersebut.");
+    }
 }

@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\AdministrationCompletenesController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\BusinessActivityController;
 use App\Http\Controllers\BussinessAssistantController;
 use App\Http\Controllers\CommodityController;
 use App\Http\Controllers\ContactManagementController;
@@ -47,6 +49,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/forms/2026', [DashboardController::class, 'forms2026'])->name('forms.2026');
     Route::get('/cooperation-members', [DashboardController::class, 'cooperationMember'])->name('cooperation-members');
     // Route::get('/online-attendance-analysis', [DashboardController::class, 'onlineAttendanceAnalysis'])->name('online-attendance-analysis');
+    Route::get('/administrations', [AdministrationCompletenesController::class, 'index'])->name('administrations');
 
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -153,7 +156,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('form-two/export', [BussinessAssistantController::class, 'formTwoExport'])->name('bussiness-assistants.form-two.export');
     Route::get('form-rat/export', [BussinessAssistantController::class, 'formRatExport'])->name('bussiness-assistants.form-rat.export');
-    
+    Route::get('form-three/export', [DashboardController::class, 'formThreeExport'])->name('dashboard.form-three.export');
+    Route::get('form-nine/export', [DashboardController::class, 'formNineExport'])->name('dashboard.form-nine.export');
+    Route::get('form-eight/export', [DashboardController::class, 'formEightExport'])->name('dashboard.form-eight.export');
 
     Route::get('land-statistics/export', [LandStatisticController::class, 'export'])->name('land-statistic.export');
     Route::resource('land-statistics', LandStatisticController::class);
@@ -172,11 +177,16 @@ Route::middleware('auth')->group(function () {
     Route::resource('announcements', AnnouncementController::class);
     Route::resource('commodities', CommodityController::class);
     // Route::get('/online-attendances/exp', [ProblemController::class, 'exportExcel'])->name('problems.export');
+    Route::delete('/online-attendances/delete-by-month', [OnlineAttendanceController::class, 'deleteByMonth'])->name('attendances.deleteByMonth');
+    Route::post('/online-attendances/import', [OnlineAttendanceController::class, 'import'])->name('attendances.import');
     Route::resource('online-attendances', OnlineAttendanceController::class);
     Route::post(
         '/form-seven/record-all',
         [RecordFormSevenController::class, 'storeAllRecord']
     )->name('form-seven.record.all');
+
+
+    Route::resource('business-activities', BusinessActivityController::class);
 });
 
 require __DIR__ . '/auth.php';
