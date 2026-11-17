@@ -107,12 +107,20 @@
                 </ul>
             </li>
             <li>
+                <a href="{{ route('existing-cooperatives.index') }}"
+                    class="flex items-center px-6 py-3 transition 
+                        {{ request()->routeIs('existing-cooperatives.*') ? 'bg-green-700' : 'hover:bg-green-700' }}">
+                    <i data-lucide="earth" class="w-4 h-4 mr-1"></i> Koperasi Existing
+                </a>
+            </li>
+            <li>
                 <a href="{{ route('online-attendances.index') }}"
                     class="flex items-center px-6 py-3 transition 
                         {{ request()->routeIs('online-attendances.*') ? 'bg-green-700' : 'hover:bg-green-700' }}">
                     <i data-lucide="earth" class="w-4 h-4 mr-1"></i> Absen BA
                 </a>
             </li>
+
             <li>
                 <a href="{{ route('forms.2026') }}"
                     class="flex items-center px-6 py-3 transition 

@@ -189,6 +189,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('business-activities', BusinessActivityController::class);
     Route::resource('cooperative-statuses', CooperativeStatusController::class);
+    Route::resource('existing-cooperatives', CooperativeStatusController::class);
 });
 
 require __DIR__ . '/auth.php';
