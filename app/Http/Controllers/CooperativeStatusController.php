@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CooperativeStatusStoreRequest;
+use App\Http\Requests\CooperativeStatusUpdateRequest;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Models\CooperativeStatus;
@@ -32,7 +33,7 @@ class CooperativeStatusController extends Controller
                 })
                 ->addColumn('action', function ($item) {
                     return '
-                    <a href="' . route('categories.edit', $item->id) . '" 
+                    <a href="' . route('cooperative-statuses.edit', $item->id) . '" 
                         class="inline-block bg-gray-500 hover:bg-gray-700 text-white font-bold py-1 px-2 rounded shadow-lg">
                         Edit
                     </a>
@@ -76,12 +77,12 @@ class CooperativeStatusController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Category $category)
+    public function edit(CooperativeStatus $cooperativeStatus)
     {
         return view(
-            'category.edit',
+            'cooperative-status.edit',
             [
-                'data' => $category,
+                'data' => $cooperativeStatus,
             ]
         );
     }
@@ -89,14 +90,14 @@ class CooperativeStatusController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(CategoryUpdateRequest $request, Category $category)
+    public function update(CooperativeStatusUpdateRequest $request, CooperativeStatus $cooperativeStatus)
     {
         $data = $request->validated();
 
         // return $data;
-        $category->update($data);
+        $cooperativeStatus->update($data);
 
-        return redirect()->route('categories.index')->with('success', 'Kategori berhasil diubah.');
+        return redirect()->route('cooperative-statuses.index')->with('success', 'Kategori berhasil diubah.');
     }
 
     /**

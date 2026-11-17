@@ -7,22 +7,6 @@
         <!-- Overlay (mobile only) -->
         <div x-show="open" @click="open=false" class="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"></div>
 
-        <x-slot name="style">
-            <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-            <style>
-                .cke_notifications_area {
-                    display: none !important;
-                }
-            </style>
-        </x-slot>
-
-        <x-slot name="script">
-            <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-            <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
-            <script>
-                CKEDITOR.replace('content');
-            </script>
-        </x-slot>
 
 
         <!-- Main Content -->
@@ -60,7 +44,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('business-activities.update', $data->id) }}" method="post"
+                    <form action="{{ route('cooperative-statuses.update', $data->id) }}" method="post"
                         enctype="multipart/form-data" class="bg-white p-6 rounded-lg shadow-md">
                         @csrf
                         @method('PUT')
@@ -101,7 +85,7 @@
                                 class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow-lg">
                                 Simpan
                             </button>
-                            <a href="{{ route('business-activities.index') }}"
+                            <a href="{{ route('cooperative-statuses.index') }}"
                                 class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded shadow-lg">
                                 Kembali
                             </a>

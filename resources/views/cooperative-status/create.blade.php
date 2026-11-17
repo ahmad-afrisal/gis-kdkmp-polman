@@ -28,7 +28,7 @@
                         <span>›</span>
                         <span class="text-gray-500">Master Data</span>
                         <span>›</span>
-                        <span class="text-gray-500">Kegiatan Usaha</span>
+                        <span class="text-gray-500">Status Koperasi</span>
                         <span>›</span>
                         <span class="text-gray-500">Tambah</span>
                     </nav>
@@ -47,8 +47,8 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('coperative-statuses.store') }}" method="post" enctype="multipart/form-data"
-                        class="bg-white p-6 rounded-lg shadow-md">
+                    <form action="{{ route('cooperative-statuses.store') }}" method="post"
+                        enctype="multipart/form-data" class="bg-white p-6 rounded-lg shadow-md">
                         @csrf
                         <div class="mb-4">
                             <label class="block text-gray-700 font-bold mb-2">Status Koperasi</label>
@@ -85,7 +85,7 @@
                                 class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow-lg">
                                 Simpan
                             </button>
-                            <a href="{{ route('problems.index') }}"
+                            <a href="{{ route('cooperative-statuses.index') }}"
                                 class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded shadow-lg">
                                 Kembali
                             </a>
