@@ -13,6 +13,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\DocumentationPmoController;
 use App\Http\Controllers\ExistingCooperativeController;
+use App\Http\Controllers\ExistingCooperativeImageController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LandStatisticController;
 use App\Http\Controllers\LinkDriveController;
@@ -190,7 +191,17 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('business-activities', BusinessActivityController::class);
     Route::resource('cooperative-statuses', CooperativeStatusController::class);
+    Route::get('/existing-cooperatives/template', [ExistingCooperativeController::class, 'downloadTemplate'])
+        ->name('existing-cooperatives.template');
+    Route::post('/existing-cooperatives/import', [ExistingCooperativeController::class, 'importExcel'])
+        ->name('existing-cooperatives.import');
     Route::resource('existing-cooperatives', ExistingCooperativeController::class);
+    Route::get('/existing-cooperatives/{existing_cooperative}/images', [ExistingCooperativeImageController::class, 'index'])
+        ->name('existing-cooperatives.images.index');
+    Route::post('/existing-cooperatives/{existing_cooperative}/images', [ExistingCooperativeImageController::class, 'store'])
+        ->name('existing-cooperatives.images.store');
+    Route::delete('/existing-cooperatives/{existing_cooperative}/images/{image}', [ExistingCooperativeImageController::class, 'destroy'])
+        ->name('existing-cooperatives.images.destroy');
     
     Route::get('/districts/{district}/villages', [
         ExistingCooperativeController::class,

@@ -80,11 +80,14 @@
 
                     </nav>
 
-                    {{-- Tombol tambah --}}
-                    <div class="mb-10">
+                    <div class="mb-8 flex flex-wrap items-center gap-3">
                         <a href="{{ route('existing-cooperatives.create') }}"
                             class="bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-4 rounded shadow-lg">
                             + Tambah Koperasi Existing
+                        </a>
+                        <a href="{{ route('existing-cooperatives.template') }}"
+                            class="rounded bg-blue-600 px-4 py-3 font-bold text-white shadow-lg hover:bg-blue-700">
+                            Download Template Excel
                         </a>
                     </div>
 
@@ -93,6 +96,50 @@
                             {{ session('success') }}
                         </div>
                     @endif
+
+                    @if (session('error'))
+                        <div class="mb-5 rounded-lg bg-red-100 p-4 text-red-800" role="alert">
+                            <p>{{ session('error') }}</p>
+                            @if (session('importErrors'))
+                                <ul class="mt-2 list-disc pl-5">
+                                    @foreach (session('importErrors') as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            @endif
+                        </div>
+                    @endif
+
+                    @if ($errors->any())
+                        <div class="mb-5 rounded-lg bg-red-100 p-4 text-red-800" role="alert">
+                            <ul class="list-disc pl-5">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    <form action="{{ route('existing-cooperatives.import') }}" method="POST"
+                        enctype="multipart/form-data"
+                        class="mb-8 flex flex-wrap items-end gap-3 rounded-lg bg-white p-4 shadow">
+                        @csrf
+                        <div class="min-w-[16rem] flex-1">
+                            <label for="file_excel" class="mb-2 block font-semibold text-gray-700">
+                                Upload data dari Excel
+                            </label>
+                            <input id="file_excel" type="file" name="file_excel" accept=".xlsx,.xls,.csv" required
+                                class="block w-full rounded border border-gray-300 p-2 text-sm">
+                            <p class="mt-1 text-xs text-gray-500">
+                                Gunakan template dan isi ID sesuai sheet Referensi. Bentuk: Primer/Sekunder;
+                                model: Konvensional/Syariah. Maksimal file 20 MB.
+                            </p>
+                        </div>
+                        <button type="submit"
+                            class="rounded bg-indigo-600 px-4 py-2.5 font-bold text-white hover:bg-indigo-700">
+                            Upload Excel
+                        </button>
+                    </form>
 
                     {{-- DATA TABLE --}}
                     <div class="shadow overflow-hidden sm-rounded-md bg-white p-4">
