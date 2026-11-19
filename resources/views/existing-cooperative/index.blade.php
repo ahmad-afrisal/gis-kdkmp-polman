@@ -36,12 +36,16 @@
                             width: '10%'
                         },
                         {
+                            data: 'nik',
+                            name: 'nik'
+                        },
+                        {
                             data: 'name',
                             name: 'name'
                         },
                         {
-                            data: 'is_active',
-                            name: 'is_active',
+                            data: 'village',
+                            name: 'village.name'
                         },
                         {
                             data: 'action',
@@ -72,7 +76,7 @@
                         <span>›</span>
                         <span class="text-gray-500">Master Data</span>
                         <span>›</span>
-                        <span class="text-gray-500">Kegiatan Usaha</span>
+                        <span class="text-gray-500">Koperasi Existing</span>
 
                     </nav>
 
@@ -80,9 +84,15 @@
                     <div class="mb-10">
                         <a href="{{ route('existing-cooperatives.create') }}"
                             class="bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-4 rounded shadow-lg">
-                            + Tambah Kegiatan Usaha
+                            + Tambah Koperasi Existing
                         </a>
                     </div>
+
+                    @if (session('success'))
+                        <div class="mb-5 rounded-lg bg-green-100 p-4 text-green-800" role="status">
+                            {{ session('success') }}
+                        </div>
+                    @endif
 
                     {{-- DATA TABLE --}}
                     <div class="shadow overflow-hidden sm-rounded-md bg-white p-4">
@@ -90,8 +100,9 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Nama</th>
-                                    <th>Status</th>
+                                    <th>NIK</th>
+                                    <th>Nama Koperasi</th>
+                                    <th>Desa/Kelurahan</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>

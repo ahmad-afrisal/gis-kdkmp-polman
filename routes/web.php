@@ -12,6 +12,7 @@ use App\Http\Controllers\CooperativeStatusController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\DocumentationPmoController;
+use App\Http\Controllers\ExistingCooperativeController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LandStatisticController;
 use App\Http\Controllers\LinkDriveController;
@@ -189,7 +190,12 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('business-activities', BusinessActivityController::class);
     Route::resource('cooperative-statuses', CooperativeStatusController::class);
-    Route::resource('existing-cooperatives', CooperativeStatusController::class);
+    Route::resource('existing-cooperatives', ExistingCooperativeController::class);
+    
+    Route::get('/districts/{district}/villages', [
+        ExistingCooperativeController::class,
+        'getVillages'
+    ])->name('districts.villages');
 });
 
 require __DIR__ . '/auth.php';
