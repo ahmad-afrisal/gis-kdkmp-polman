@@ -8,6 +8,7 @@ use App\Http\Controllers\BussinessAssistantController;
 use App\Http\Controllers\CommodityController;
 use App\Http\Controllers\ContactManagementController;
 use App\Http\Controllers\CooperationController;
+use App\Http\Controllers\CooperationImageController;
 use App\Http\Controllers\CooperativeStatusController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DistrictController;
@@ -169,6 +170,12 @@ Route::middleware('auth')->group(function () {
     Route::get('bussiness-assistants/performance/{id}', [BussinessAssistantController::class, 'performance'])->name('bussiness-assistants.performance');
     Route::resource('bussiness-assistants', BussinessAssistantController::class);
     Route::resource('cooperations', CooperationController::class);
+    Route::get('/cooperations/{cooperation}/images', [CooperationImageController::class, 'index'])
+        ->name('cooperations.images.index');
+    Route::post('/cooperations/{cooperation}/images', [CooperationImageController::class, 'store'])
+        ->name('cooperations.images.store');
+    Route::delete('/cooperations/{cooperation}/images/{image}', [CooperationImageController::class, 'destroy'])
+        ->name('cooperations.images.destroy');
     Route::resource('villages', VillageController::class);
     Route::resource('pmo-documentations', DocumentationPmoController::class);
     Route::get('/problems/export', [ProblemController::class, 'exportExcel'])->name('problems.export');

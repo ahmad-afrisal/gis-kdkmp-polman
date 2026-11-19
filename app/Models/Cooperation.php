@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Cooperation extends Model
@@ -20,6 +21,11 @@ class Cooperation extends Model
     public function village()
     {
         return $this->belongsTo(Village::class, 'village_id');
+    }
+
+    public function images(): HasMany
+    {
+        return $this->hasMany(CooperationImage::class);
     }
 
     public function formTwo()

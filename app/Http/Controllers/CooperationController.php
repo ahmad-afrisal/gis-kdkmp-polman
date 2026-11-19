@@ -23,6 +23,10 @@ class CooperationController extends Controller
             return DataTables::of($query)
                 ->addColumn('action', function ($item) {
                     return '
+                    <a href="' . route('cooperations.images.index', $item->id) . '"
+                        class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded shadow-lg">
+                        Kelola Gambar
+                    </a>
                     <a href="' . route('cooperations.edit', $item->id) . '" 
                         class="inline-block bg-gray-500 hover:bg-gray-700 text-white font-bold py-1 px-2 rounded shadow-lg">
                         Edit
