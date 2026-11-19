@@ -132,7 +132,8 @@
                                 class="block w-full rounded border border-gray-300 p-2 text-sm">
                             <p class="mt-1 text-xs text-gray-500">
                                 Gunakan template dan isi ID sesuai sheet Referensi. Bentuk: Primer/Sekunder;
-                                model: Konvensional/Syariah. Maksimal file 20 MB.
+                                model: Konvensional/Syariah. Latitude (-90 sampai 90) dan longitude (-180 sampai 180)
+                                bersifat opsional, tetapi isi keduanya jika digunakan. Maksimal file 20 MB.
                             </p>
                         </div>
                         <button type="submit"

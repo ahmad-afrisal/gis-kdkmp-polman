@@ -30,6 +30,8 @@ class ExistingCooperativeTemplateSheet implements FromArray, WithColumnFormattin
             'kecamatan_id',
             'desa_kelurahan_id',
             'alamat',
+            'latitude',
+            'longitude',
             'kode_pos',
             'nomor_telepon',
             'email',
@@ -47,7 +49,7 @@ class ExistingCooperativeTemplateSheet implements FromArray, WithColumnFormattin
 
     public function columnFormats(): array
     {
-        return array_fill_keys(range('A', 'X'), NumberFormat::FORMAT_TEXT);
+        return array_fill_keys(range('A', 'Z'), NumberFormat::FORMAT_TEXT);
     }
 
     public function title(): string

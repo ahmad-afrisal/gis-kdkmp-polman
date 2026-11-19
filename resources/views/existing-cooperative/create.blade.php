@@ -5,9 +5,18 @@
 
         <div x-show="open" @click="open=false" class="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"></div>
 
-
+        <x-slot name="style">
+            <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+            <style>
+                #coordinate-map {
+                    height: 60vh;
+                    min-height: 320px;
+                }
+            </style>
+        </x-slot>
 
         <x-slot name="script">
+            <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
             <script>
                 (() => {
                     const districtSelect = document.getElementById('district_id');
@@ -77,6 +86,99 @@
                             villageSelect.dataset.oldVillage
                         );
                     }
+                })();
+
+                (() => {
+                    const latitudeInput = document.getElementById('latitude');
+                    const longitudeInput = document.getElementById('longitude');
+                    const modal = document.getElementById('coordinate-map-modal');
+                    const mapElement = document.getElementById('coordinate-map');
+                    const openButton = document.getElementById('choose-coordinate-button');
+                    const closeButtons = document.querySelectorAll('[data-close-coordinate-map]');
+                    const center = [-3.4126, 119.3435];
+                    let map;
+                    let marker;
+
+                    function getCoordinates() {
+                        const latitude = Number(latitudeInput.value);
+                        const longitude = Number(longitudeInput.value);
+
+                        if (
+                            latitudeInput.value === '' ||
+                            longitudeInput.value === '' ||
+                            !Number.isFinite(latitude) ||
+                            !Number.isFinite(longitude) ||
+                            latitude < -90 ||
+                            latitude > 90 ||
+                            longitude < -180 ||
+                            longitude > 180
+                        ) {
+                            return null;
+                        }
+
+                        return [latitude, longitude];
+                    }
+
+                    function updateMarker(coordinates, zoom = false) {
+                        if (!map) return;
+
+                        if (!coordinates) {
+                            if (marker) {
+                                map.removeLayer(marker);
+                                marker = null;
+                            }
+                            return;
+                        }
+
+                        if (marker) {
+                            marker.setLatLng(coordinates);
+                        } else {
+                            marker = L.marker(coordinates).addTo(map);
+                        }
+
+                        if (zoom) map.setView(coordinates, 15);
+                    }
+
+                    function openMap() {
+                        modal.classList.remove('hidden');
+
+                        if (!map) {
+                            map = L.map(mapElement).setView(center, 10);
+                            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                maxZoom: 19,
+                                attribution: '&copy; OpenStreetMap contributors'
+                            }).addTo(map);
+
+                            map.on('click', event => {
+                                const latitude = event.latlng.lat.toFixed(7);
+                                const longitude = event.latlng.lng.toFixed(7);
+                                latitudeInput.value = latitude;
+                                longitudeInput.value = longitude;
+                                updateMarker([Number(latitude), Number(longitude)]);
+                            });
+                        }
+
+                        window.setTimeout(() => {
+                            map.invalidateSize();
+                            const coordinates = getCoordinates();
+                            if (coordinates) {
+                                map.setView(coordinates, 15);
+                                updateMarker(coordinates);
+                            }
+                        }, 0);
+                    }
+
+                    openButton.addEventListener('click', openMap);
+                    closeButtons.forEach(button => {
+                        button.addEventListener('click', () => modal.classList.add('hidden'));
+                    });
+
+                    [latitudeInput, longitudeInput].forEach(input => {
+                        input.addEventListener('change', () => {
+                            const coordinates = getCoordinates();
+                            if (coordinates) updateMarker(coordinates, true);
+                        });
+                    });
                 })();
             </script>
         </x-slot>
@@ -261,6 +363,27 @@
                                     <textarea name="address" rows="3" class="form-input" required>{{ old('address', $data->address ?? '') }}</textarea>
                                 </div>
 
+                                <div class="md:col-span-2 rounded-lg border border-gray-200 bg-gray-50 p-4">
+                                    <h4 class="font-semibold text-gray-800">Titik Koordinat (Opsional)</h4>
+                                    <p class="mb-4 text-sm text-gray-500">Pilih titik pada peta atau masukkan latitude dan longitude. Isi keduanya jika koordinat tersedia.</p>
+                                    <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+                                        <div>
+                                            <label for="latitude" class="form-label">Latitude</label>
+                                            <input type="number" id="latitude" name="latitude" min="-90" max="90" step="any"
+                                                value="{{ old('latitude', $data->latitude ?? '') }}" class="form-input">
+                                        </div>
+                                        <div>
+                                            <label for="longitude" class="form-label">Longitude</label>
+                                            <input type="number" id="longitude" name="longitude" min="-180" max="180" step="any"
+                                                value="{{ old('longitude', $data->longitude ?? '') }}" class="form-input">
+                                        </div>
+                                    </div>
+                                    <button type="button" id="choose-coordinate-button"
+                                        class="mt-4 rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700">
+                                        Pilih Titik di Peta
+                                    </button>
+                                </div>
+
                                 <div>
                                     <label class="form-label">Kode Pos *</label>
                                     <input type="text" name="postal_code" value="{{ old('postal_code', $data->postal_code ?? '') }}"
@@ -394,6 +517,26 @@
                         </div>
 
                     </form>
+
+                    <div id="coordinate-map-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 p-4">
+                        <div class="w-full max-w-4xl rounded-xl bg-white p-5 shadow-xl">
+                            <div class="mb-4 flex items-center justify-between">
+                                <div>
+                                    <h3 class="text-lg font-bold text-gray-800">Pilih Titik Koordinat</h3>
+                                    <p class="text-sm text-gray-500">Klik lokasi koperasi pada peta, lalu tutup jendela ini.</p>
+                                </div>
+                                <button type="button" data-close-coordinate-map aria-label="Tutup peta"
+                                    class="rounded px-3 py-1 text-2xl text-gray-500 hover:bg-gray-100">&times;</button>
+                            </div>
+                            <div id="coordinate-map" class="rounded-lg"></div>
+                            <div class="mt-4 flex justify-end">
+                                <button type="button" data-close-coordinate-map
+                                    class="rounded-lg bg-green-600 px-5 py-2 font-semibold text-white hover:bg-green-700">
+                                    Gunakan Titik Ini
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>

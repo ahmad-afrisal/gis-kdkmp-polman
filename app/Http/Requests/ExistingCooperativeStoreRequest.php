@@ -38,6 +38,8 @@ class ExistingCooperativeStoreRequest extends FormRequest
                 Rule::exists('villages', 'id')->where('district_id', $this->input('district_id')),
             ],
             'address' => ['required', 'string'],
+            'latitude' => ['nullable', 'required_with:longitude', 'numeric', 'between:-90,90'],
+            'longitude' => ['nullable', 'required_with:latitude', 'numeric', 'between:-180,180'],
             'postal_code' => ['required', 'string', 'max:255'],
             'phone_number' => ['nullable', 'string', 'max:255'],
             'email' => ['nullable', 'email', 'max:255'],
