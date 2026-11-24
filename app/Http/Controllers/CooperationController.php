@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CooperationStoreRequest;
+use App\Http\Requests\CooperationUpdateRequest;
 use App\Models\BussinessAssistant;
 use App\Models\Cooperation;
 use App\Models\District;
 use App\Models\Village;
-use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
 class CooperationController extends Controller
@@ -44,7 +44,17 @@ class CooperationController extends Controller
         }
 
         // Ambil data titik untuk peta
-        $locations = Cooperation::select('name', 'latitude', 'longtitude', 'full_address',  'subdomain')->whereNotNull('latitude')->get();
+        $locations = Cooperation::select(
+            'name',
+            'latitude',
+            'longtitude',
+            'full_address',
+            'subdomain',
+            'leader_name',
+            'phone',
+            'email',
+            'nib'
+        )->whereNotNull('latitude')->get();
 
         $villages = Village::select('id', 'type', 'name', 'geojson')->get();
 
@@ -89,15 +99,21 @@ class CooperationController extends Controller
      */
     public function edit(Cooperation $cooperation)
     {
-        return view('cooperation.edit', compact('cooperation'));
+        $villages = Village::pluck('name', 'id');
+        $bussinessAssistants = BussinessAssistant::pluck('name', 'id');
+
+        return view('cooperation.edit', compact('cooperation', 'villages', 'bussinessAssistants'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(CooperationUpdateRequest $request, Cooperation $cooperation)
     {
-        //
+        $cooperation->update($request->validated());
+
+        return redirect()->route('cooperations.index')
+            ->with('success', 'Data koperasi berhasil diperbarui.');
     }
 
     /**

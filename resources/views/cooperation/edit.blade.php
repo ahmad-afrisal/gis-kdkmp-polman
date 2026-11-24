@@ -76,24 +76,26 @@
                     }
                 }
 
+                updateMarkerFromInput();
+
                 // Klik pada peta
                 map.on('click', function(e) {
                     var lat = e.latlng.lat.toFixed(7);
                     var lng = e.latlng.lng.toFixed(7);
 
                     document.getElementById('latitude').value = lat;
-                    document.getElementById('longitude').value = lng;
+                    document.getElementById('longtitude').value = lng;
 
                     setMarker(lat, lng);
                 });
 
                 // Jika user isi manual lat/lng, update marker
                 document.getElementById('latitude').addEventListener('change', updateMarkerFromInput);
-                document.getElementById('longitude').addEventListener('change', updateMarkerFromInput);
+                document.getElementById('longtitude').addEventListener('change', updateMarkerFromInput);
 
                 function updateMarkerFromInput() {
                     var lat = parseFloat(document.getElementById('latitude').value);
-                    var lng = parseFloat(document.getElementById('longitude').value);
+                    var lng = parseFloat(document.getElementById('longtitude').value);
                     if (!isNaN(lat) && !isNaN(lng)) {
                         setMarker(lat, lng);
                         map.setView([lat, lng], 15);
@@ -157,9 +159,32 @@
                         <label class="block mb-2 font-medium">Alamat Lengkap</label>
                         <textarea name="full_address" class="w-full border rounded p-2 mb-4">{{ old('full_address', $cooperation->full_address) }}</textarea>
 
+                        <label for="village_id" class="mb-2 block font-medium">Desa:</label>
+                        <select id="village_id" name="village_id" class="mb-4 w-full rounded border p-2">
+                            <option value="">-- Pilih Desa --</option>
+                            @foreach ($villages as $id => $name)
+                                <option value="{{ $id }}"
+                                    {{ old('village_id', $cooperation->village_id) == $id ? 'selected' : '' }}>
+                                    {{ $id }} - {{ $name }}
+                                </option>
+                            @endforeach
+                        </select>
+
+                        <label for="bussiness_assistant_id" class="mb-2 block font-medium">Business Assistant:</label>
+                        <select id="bussiness_assistant_id" name="bussiness_assistant_id"
+                            class="mb-4 w-full rounded border p-2">
+                            <option value="">-- Pilih Business Assistant --</option>
+                            @foreach ($bussinessAssistants as $id => $name)
+                                <option value="{{ $id }}"
+                                    {{ old('bussiness_assistant_id', $cooperation->bussiness_assistant_id) == $id ? 'selected' : '' }}>
+                                    {{ $id }} - {{ $name }}
+                                </option>
+                            @endforeach
+                        </select>
+
                         <label class="block mb-2 font-medium">Nomor Telepon : </label>
-                        <input type="text" name="phone_number"
-                            value="{{ old('phone_number', $cooperation->phone_number) }}"
+                        <input type="text" name="phone"
+                            value="{{ old('phone', $cooperation->phone) }}"
                             class="w-full border rounded p-2 mb-4">
 
                         <label class="block mb-2 font-medium">Email : </label>
@@ -177,7 +202,7 @@
                             class="w-full border rounded p-2 mb-4">
 
                         <label class="block mb-2 font-medium">Sub Domain : </label>
-                        <input type="url" name="subdomain" value="{{ old('subdomain', $cooperation->subdomain) }}"
+                        <input type="text" name="subdomain" value="{{ old('subdomain', $cooperation->subdomain) }}"
                             class="w-full border rounded p-2 mb-4">
 
                         <label class="block mb-2 font-medium">Nama Ketua : </label>
@@ -245,7 +270,7 @@
                                     $outlets = [
                                         ['name' => 'grocery_outlet', 'label' => 'Gerai Sembako'],
                                         ['name' => 'village_pharmacy_outlet', 'label' => 'Gerai Apotek'],
-                                        ['name' => 'cooperative_office_outlet', 'label' => 'Kantor Koperasi'],
+                                        ['name' => 'coopeative_office_outlet', 'label' => 'Kantor Koperasi'],
                                         ['name' => 'savings_and_loan_outlet', 'label' => 'Simpan Pinjam'],
                                         ['name' => 'village_clinic_outlet', 'label' => 'Gerai Klinik'],
                                         ['name' => 'cold_storage_outlet', 'label' => 'Cold Storage'],
@@ -310,7 +335,7 @@
                             </div>
                             <div>
                                 <label class="block mb-2 font-medium">Longitude:</label>
-                                <input type="text" id="longitude" name="longitude"
+                                <input type="text" id="longtitude" name="longtitude"
                                     value="{{ old('longtitude', $cooperation->longtitude) }}"
                                     class="w-full border rounded p-2">
                             </div>

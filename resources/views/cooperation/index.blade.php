@@ -104,7 +104,7 @@
                         <h3 class="text-lg font-semibold mb-1">${coop.name}</h3>
                         <p class="text-sm text-gray-600 mb-1"><b>Ketua:</b> ${coop.leader_name ?? '-'}</p>
                         <p class="text-sm text-gray-600 mb-1"><b>Alamat:</b> ${coop.full_address}</p>
-                        <p class="text-sm text-gray-600 mb-1"><b>Telepon:</b> ${coop.legal_entity_number ?? '-'}</p>
+                        <p class="text-sm text-gray-600 mb-1"><b>Telepon:</b> ${coop.phone ?? '-'}</p>
                         <p class="text-sm text-gray-600 mb-1"><b>Email:</b> ${coop.email ?? '-'}</p>
                         <p class="text-sm text-gray-600 mb-1"><b>NIB:</b> ${coop.nib ? 'Ada' : 'Tidak Ada'}</p>
                         <div class="mt-2 flex justify-between">
@@ -208,6 +208,12 @@
                         <span>›</span>
                         <span class="text-gray-500">Koperasi</span>
                     </nav>
+
+                    @if (session('success'))
+                        <div class="mb-6 rounded-lg bg-green-100 p-4 text-green-800" role="status">
+                            {{ session('success') }}
+                        </div>
+                    @endif
 
                     {{-- Tombol tambah --}}
                     <div class="mb-10">

@@ -39,9 +39,7 @@
                 <a href="{{ route('welcome') }}" class="hover:text-green-600 transition">Home</a>
                 <a href="{{ route('home-articles') }}" class="hover:text-green-600 transition">Artikel</a>
                 <a href="{{ route('home-announcements') }}" class="hover:text-green-600 transition">Pengumuman</a>
-                <a href="#" class="hover:text-green-600 transition">Galeri</a>
-                <a href="#" class="hover:text-green-600 transition">Whistleblowing System</a>
-                <a href="{{ route('contacts') }}" class="hover:text-green-600 transition">Kontak</a>
+
             </nav>
 
             <!-- CTA Desktop -->

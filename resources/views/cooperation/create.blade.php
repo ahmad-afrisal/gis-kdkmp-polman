@@ -216,11 +216,11 @@
                         </div>
 
                         <label class="block mb-2 font-medium">Nomor Telepon : </label>
-                        <input type="text" name="phone_number" value="{{ old('phone_number') }}"
+                        <input type="text" name="phone" value="{{ old('phone') }}"
                             class="w-full border rounded p-2 mb-4">
 
                         <label class="block mb-2 font-medium">Email : </label>
-                        <input type="email" name="email" alue="{{ old('email') }}"
+                        <input type="email" name="email" value="{{ old('email') }}"
                             class="w-full border rounded p-2 mb-4">
 
                         <label class="block mb-2 font-medium">Tabungan Pokok : </label>

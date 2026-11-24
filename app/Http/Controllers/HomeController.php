@@ -7,40 +7,131 @@ use App\Models\Article;
 use App\Models\BussinessAssistant;
 use App\Models\Cooperation;
 use App\Models\District;
+use App\Models\ExistingCooperative;
 use App\Models\Village;
 use Illuminate\Http\Request;
-use Yajra\DataTables\DataTables;
 
 class HomeController extends Controller
 {
     public function index()
     {
+        $cooperations = Cooperation::with([
+            'images',
+            'village:id,name,district_id',
+            'village.district:id,name',
+        ])->get();
 
-        if (request()->ajax()) {
-            $query = Cooperation::with([
-                'village:id,name,district_id',
-                'village.district:id,name',
-                'bussinessAssistant:id,name',
-            ]);
+        $existingCooperatives = ExistingCooperative::with([
+            'images',
+            'village:id,name,district_id',
+            'district:id,name',
+            'cooperativeStatus:id,name',
+            'businessActivity:id,name',
+        ])->get();
 
-            return DataTables::of($query)
-                ->addColumn('ba', fn($item) => $item->bussinessAssistant->name ?? '-')
-                ->addColumn('district', fn($item) => $item->village->district->name ?? '-')
+        $cooperationPoints = $cooperations->map(fn ($cooperation) => [
+            'name' => $cooperation->name,
+            'latitude' => $cooperation->latitude,
+            'longitude' => $cooperation->longtitude,
+            'address' => $cooperation->full_address,
+            'village' => $cooperation->village->name ?? null,
+            'district' => $cooperation->village->district->name ?? null,
+            'leader' => $cooperation->leader_name,
+            'photos' => $cooperation->images
+                ->map(fn ($image) => asset('storage/' . $image->path))
+                ->values(),
+        ])->values();
 
-                ->make(true);
-        }
+        $existingCooperativePoints = $existingCooperatives->map(fn ($cooperative) => [
+            'name' => $cooperative->name,
+            'latitude' => $cooperative->latitude,
+            'longitude' => $cooperative->longitude,
+            'photos' => $cooperative->images
+                ->map(fn ($image) => asset('storage/' . $image->path))
+                ->values(),
+            'chairperson' => $cooperative->chairperson_name,
+            'status' => $cooperative->cooperativeStatus->name ?? 'Belum diisi',
+            'type' => $cooperative->type_of_cooperative,
+            'members' => $cooperative->number_of_members,
+            'businessActivity' => $cooperative->businessActivity->name ?? 'Belum diisi',
+            'address' => $cooperative->address,
+            'village' => $cooperative->village->name ?? null,
+            'district' => $cooperative->district->name ?? null,
+        ])->values();
 
-        $districts = District::select('id', 'name')->get();
-        $assistants = BussinessAssistant::select('id', 'name', 'picture')->get();
+        $hasCoordinates = static function ($latitude, $longitude): bool {
+            return is_numeric($latitude)
+                && is_numeric($longitude)
+                && $latitude >= -90
+                && $latitude <= 90
+                && $longitude >= -180
+                && $longitude <= 180;
+        };
 
-        // Ambil data titik untuk peta
-        $locations = Cooperation::select('name', 'latitude', 'longtitude', 'full_address',  'subdomain')->whereNotNull('latitude')->get();
+        $cooperationStats = [
+            'total' => $cooperations->count(),
+            'mapped' => $cooperations->filter(
+                fn ($item) => $hasCoordinates($item->latitude, $item->longtitude)
+            )->count(),
+            'districts' => $cooperations->pluck('village.district_id')->filter()->unique()->count(),
+            'villages' => $cooperations->pluck('village_id')->filter()->unique()->count(),
+        ];
+
+        $statusCategory = static function (?string $status): string {
+            $status = mb_strtolower($status ?? '');
+
+            if (
+                str_contains($status, 'tidak aktif')
+                || str_contains($status, 'tidak aktfi')
+                || str_contains($status, 'nonaktif')
+            ) {
+                return 'inactive';
+            }
+
+            if (str_contains($status, 'sehat')) {
+                return 'healthy';
+            }
+
+            return str_contains($status, 'aktif') ? 'active' : 'other';
+        };
+
+        $existingCooperativeStats = [
+            'total' => $existingCooperatives->count(),
+            'mapped' => $existingCooperatives->filter(
+                fn ($item) => $hasCoordinates($item->latitude, $item->longitude)
+            )->count(),
+            'members' => (int) $existingCooperatives->sum('number_of_members'),
+            'districts' => $existingCooperatives->pluck('district_id')->filter()->unique()->count(),
+            'healthy' => $existingCooperatives->filter(
+                fn ($item) => $statusCategory($item->cooperativeStatus->name ?? null) === 'healthy'
+            )->count(),
+            'active' => $existingCooperatives->filter(
+                fn ($item) => $statusCategory($item->cooperativeStatus->name ?? null) === 'active'
+            )->count(),
+            'inactive' => $existingCooperatives->filter(
+                fn ($item) => $statusCategory($item->cooperativeStatus->name ?? null) === 'inactive'
+            )->count(),
+        ];
+
+        $businessActivityStats = $existingCooperatives
+            ->groupBy(fn ($item) => $item->businessActivity->name ?? 'Belum diisi')
+            ->map(fn ($items, $name) => ['name' => $name, 'count' => $items->count()])
+            ->sortByDesc('count')
+            ->take(6)
+            ->values();
 
         $villages = Village::select('id', 'type', 'name', 'geojson')->get();
-
         $districts = District::select('id', 'name', 'geojson')->get();
 
-        return view('welcome', compact('districts', 'assistants', 'locations', 'villages'));
+        return view('welcome', compact(
+            'cooperationPoints',
+            'existingCooperativePoints',
+            'cooperationStats',
+            'existingCooperativeStats',
+            'businessActivityStats',
+            'villages',
+            'districts'
+        ));
     }
 
     public function filter(Request $request)
